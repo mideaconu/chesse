@@ -8,36 +8,41 @@ NAME
     preprocess.sh -- preprocess a source PGN file
 
 SYNOPSIS
-    preprocess.sh [-a args_file] [--args-file args_file] [-h] [--help] [-o output_file] [--output-file output_file] file
+    preprocess.sh [-h/--help] [-a/--args-file args_file] [-o/--output-file output_file] file
 
 DESCRIPTION
     Preprocesses the source PGN file.
 
     By default, it finds the occurences of the 'UTCDate' and 'UTCTime' labels in the PGN file and replaces them with the 'Date' and 'Time' labels. Additional rules can be set in the args_file.
 
+    -h, --help
+        Print preprocess.sh documentation to stdout.
+
     -a args_file, --args-file args_file
         Process the PGN file according to a set of rules defined in args_file. The args_file needs to be compatible with the pgn-extract arguments file format. See https://www.cs.kent.ac.uk/people/staff/djb/pgn-extract/help.html#-A for details.
 
-    -h, --help
-        Print preprocess.sh documentation to std output.
-
     -o output_file, --output output_file
-        Print the output to the output_file. By default, the output is printed to output.pgn.
+        Save the output to the output_file. By default, the output is saved to output.pgn.
 
 EXAMPLES
-    Preprocess file1.pgn according to the criteria described above.
-        preprocess.sh file1.pgn
+    Preprocess file.pgn according to the criteria described above.
+        preprocess.sh file.pgn
+    Preprocess file.pgn according to the criteria described above, and additional rules from a pgn-extract args file.
+        preprocess.sh -a path/to/pgn-extract-args-file file.pgn
+    Preprocess file.pgn according to the criteria described above, and saves the output to output_file.pgn.
+        preprocess.sh -o output_file.pgn file.pgn
 EOF
    exit 1
 }
 
 main() {
     if [ $# -eq 0 ]; then print_usage; fi
+    for i in "$@" ; do [[ $i == "-h" ]] || [[ $i == "--help" ]] && print_usage ; done
 
     while [[ $# -gt 1 ]]; do
         key="$1"
 
-        case "$key" in 
+        case "${key}" in 
             -a|--args-file)
                 PGN_EXTRACT_ARGS_FILE="$2"
                 shift
@@ -58,10 +63,10 @@ main() {
     if [ -e "$1" ]; then
         TEMP_FILE=temp_$(basename "$1")
 
-        sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "$1" > "$TEMP_FILE"
-        pgn-extract -A ${PGN_EXTRACT_ARGS_FILE} -o ${OUTPUT_FILE:-output.pgn} "$TEMP_FILE"
+        sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "$1" > "${TEMP_FILE}"
+        pgn-extract -A ${PGN_EXTRACT_ARGS_FILE} -o ${OUTPUT_FILE:-output.pgn} "${TEMP_FILE}"
 
-        rm "$TEMP_FILE"
+        rm "${TEMP_FILE}"
     else
         echo "File $1 does not exist"
     fi
