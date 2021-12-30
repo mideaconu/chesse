@@ -58,8 +58,12 @@ main() {
 
     pgn-extract -#1 -A ${PGN_EXTRACT_ARGS_FILE} "$1"
 
-    if [[ ! -z "${OUTPUT_DIR}" ]]; then
-        mv [0-9]*.pgn ${OUTPUT_DIR}
+    if ls [0-9]*.pgn 1> /dev/null 2>&1; then
+        if [[ ! -z "${OUTPUT_DIR}" ]]; then
+            mv [0-9]*.pgn ${OUTPUT_DIR}
+        fi
+    else
+        echo "No games found in $1"
     fi
 }
 
