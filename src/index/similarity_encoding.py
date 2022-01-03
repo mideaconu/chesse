@@ -42,7 +42,8 @@ def get_naive_encoding(board: chess.Board) -> str:
     for square in chess.SQUARES:
         piece = board.piece_at(square)
         if piece:
-            naive_encoding += f"{piece}{chess.square_name(square)} "
+            piece_square = chess.square_name(square)
+            naive_encoding += f"{piece}{piece_square} "
 
     return naive_encoding.strip()
 
@@ -70,6 +71,27 @@ def get_activity_encoding(board: chess.Board) -> str:
     return activity_encoding.strip()
 
 
+def get_attack_encoding(board: chess.Board) -> str:
+    """Returns the attack encoding of a given chess position.
+
+    See Section 5.3.1 Attack Squares in Ganguly, D., Leveling, J., &
+    Jones, G. (2014). Retrieval of similar chess positions.
+    """
+    attack_encoding = ""
+
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece:
+            attacked_squares = board.attacks(square)
+            for attacked_square in attacked_squares:
+                attacked_piece = board.piece_at(attacked_square)
+                if attacked_piece and piece.color != attacked_piece.color:
+                    attacked_piece_square = chess.square_name(attacked_square)
+                    attack_encoding += f"{piece}>{attacked_piece}{attacked_piece_square} "
+
+    return attack_encoding.strip()
+
+
 def get_similarity_encoding(fen: str):
     """Returns the similarity encoding of a given chess position.
 
@@ -80,8 +102,9 @@ def get_similarity_encoding(fen: str):
 
     naive_encoding = get_naive_encoding(board)
     activity_encoding = get_activity_encoding(board)
+    attack_encoding = get_attack_encoding(board)
 
-    similarity_encoding = f"{naive_encoding}\n{activity_encoding}"
+    similarity_encoding = f"{naive_encoding}\n{activity_encoding}\n{attack_encoding}"
 
     return similarity_encoding
 
