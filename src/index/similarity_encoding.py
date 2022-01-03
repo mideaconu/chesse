@@ -71,12 +71,19 @@ def get_activity_encoding(board: chess.Board) -> str:
     return activity_encoding.strip()
 
 
-def get_attack_encoding(board: chess.Board) -> str:
+def get_connectivity_encoding(board: chess.Board, connection: str) -> str:
     """Returns the attack encoding of a given chess position.
 
-    See Section 5.3.1 Attack Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
+    See Section 5.3. Connectivity between the pieces in Ganguly, D.,
+    Leveling, J., & Jones, G. (2014). Retrieval of similar chess
+    positions.
     """
+    supported_connections = {"attack", "defense"}
+    if connection not in supported_connections:
+        raise ValueError(
+            f"Connection not supported: {connection}. Supported connections: {supported_connections}."
+        )
+
     attack_encoding = ""
 
     for square in chess.SQUARES:
@@ -85,9 +92,15 @@ def get_attack_encoding(board: chess.Board) -> str:
             attacked_squares = board.attacks(square)
             for attacked_square in attacked_squares:
                 attacked_piece = board.piece_at(attacked_square)
-                if attacked_piece and piece.color != attacked_piece.color:
-                    attacked_piece_square = chess.square_name(attacked_square)
-                    attack_encoding += f"{piece}>{attacked_piece}{attacked_piece_square} "
+
+                if connection == "attack":
+                    if attacked_piece and piece.color != attacked_piece.color:
+                        attacked_piece_square = chess.square_name(attacked_square)
+                        attack_encoding += f"{piece}>{attacked_piece}{attacked_piece_square} "
+                elif connection == "defense":
+                    if attacked_piece and piece.color == attacked_piece.color:
+                        attacked_piece_square = chess.square_name(attacked_square)
+                        attack_encoding += f"{piece}<{attacked_piece}{attacked_piece_square} "
 
     return attack_encoding.strip()
 
@@ -99,12 +112,16 @@ def get_similarity_encoding(fen: str):
     & Jones, G. (2014). Retrieval of similar chess positions.
     """
     board = chess.Board(fen=fen)
+    print(board)
 
     naive_encoding = get_naive_encoding(board)
     activity_encoding = get_activity_encoding(board)
-    attack_encoding = get_attack_encoding(board)
+    attack_encoding = get_connectivity_encoding(board, connection="attack")
+    defense_encoding = get_connectivity_encoding(board, connection="defense")
 
-    similarity_encoding = f"{naive_encoding}\n{activity_encoding}\n{attack_encoding}"
+    similarity_encoding = (
+        f"{naive_encoding}\n{activity_encoding}\n{attack_encoding}\n{defense_encoding}"
+    )
 
     return similarity_encoding
 
