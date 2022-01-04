@@ -1,3 +1,4 @@
+import copy
 from collections import defaultdict
 from typing import List
 
@@ -74,9 +75,8 @@ def get_activity_encoding(board: chess.Board) -> str:
 def get_connectivity_encoding(board: chess.Board, connection: str) -> str:
     """Returns the attack encoding of a given chess position.
 
-    See Section 5.3. Connectivity between the pieces in Ganguly, D.,
-    Leveling, J., & Jones, G. (2014). Retrieval of similar chess
-    positions.
+    See Section 5.3.1/2 Attack/Defense Squares in Ganguly, D., Leveling,
+    J., & Jones, G. (2014). Retrieval of similar chess positions.
     """
     supported_connections = {"attack", "defense"}
     if connection not in supported_connections:
@@ -105,6 +105,34 @@ def get_connectivity_encoding(board: chess.Board, connection: str) -> str:
     return attack_encoding.strip()
 
 
+def get_ray_attacks_encoding(board: chess.Board) -> str:
+    """Returns the attack encoding of a given chess position.
+
+    See Section 5.3.3 Ray-Attack Squares in Ganguly, D., Leveling, J., &
+    Jones, G. (2014). Retrieval of similar chess positions.
+    """
+    ray_attack_encoding = ""
+
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece:
+            new_board = copy.deepcopy(board)
+            attacked_squares = new_board.attacks(square)
+            while attacked_squares:
+                current_attacked_square = attacked_squares.pop()
+                attacked_piece = new_board.piece_at(current_attacked_square)
+                attacked_piece_square = chess.square_name(current_attacked_square)
+
+                if attacked_piece:
+                    if piece.color != attacked_piece.color:
+                        ray_attack_encoding += f"{piece}={attacked_piece}{attacked_piece_square} "
+
+                    new_board.remove_piece_at(current_attacked_square)
+                    attacked_squares |= new_board.attacks(square)
+
+    return ray_attack_encoding
+
+
 def get_similarity_encoding(fen: str):
     """Returns the similarity encoding of a given chess position.
 
@@ -118,13 +146,12 @@ def get_similarity_encoding(fen: str):
     activity_encoding = get_activity_encoding(board)
     attack_encoding = get_connectivity_encoding(board, connection="attack")
     defense_encoding = get_connectivity_encoding(board, connection="defense")
+    ray_attack_encoding = get_ray_attacks_encoding(board)
 
-    similarity_encoding = (
-        f"{naive_encoding}\n{activity_encoding}\n{attack_encoding}\n{defense_encoding}"
-    )
+    similarity_encoding = f"{naive_encoding}\n{activity_encoding}\n{attack_encoding}\n{defense_encoding}\n{ray_attack_encoding}"
 
     return similarity_encoding
 
 
 if __name__ == "__main__":
-    print(get_similarity_encoding("r1bk2r1/p1p5/1pqp3p/5Bp1/7Q/8/P2N2PP/3KR3 w - g6"))
+    print(get_similarity_encoding("rnbqkb1r/pp2pppp/5n2/2pp4/8/1P2P3/PBPP1PPP/RN1QKBNR w KQkq d6"))
