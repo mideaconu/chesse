@@ -3,7 +3,7 @@ from typing import Set
 import chess
 
 
-def get_naive_encodings(board: chess.Board) -> Set[str]:
+def _get_naive_encodings(board: chess.Board) -> Set[str]:
     """Returns the naive encodings of the chess pieces in a given chess
     position.
 
@@ -29,4 +29,4 @@ def get_naive_encoding(board: chess.Board) -> str:
     See Section 5.1. Naive Encoding in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
     """
-    return " ".join(get_naive_encodings(board))
+    return " ".join(_get_naive_encodings(board))
