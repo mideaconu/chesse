@@ -4,12 +4,8 @@ from typing import Set
 import chess
 
 
-def get_attack_encodings(piece: chess.Piece, square: chess.Square, board: chess.Board) -> Set[str]:
-    """Returns the attack encodings of a given chess position.
-
-    See Section 5.3.1 Attack Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
-    """
+def _get_attack_encodings(piece: chess.Piece, square: chess.Square, board: chess.Board) -> Set[str]:
+    """Returns a set of attack encodings of a given chess position."""
     attack_encodings = set()
 
     attacked_squares = board.attacks(square)
@@ -25,12 +21,10 @@ def get_attack_encodings(piece: chess.Piece, square: chess.Square, board: chess.
     return attack_encodings
 
 
-def get_defense_encodings(piece: chess.Piece, square: chess.Square, board: chess.Board) -> Set[str]:
-    """Returns the defense encodings of a given chess position.
-
-    See Section 5.3.2 Defense Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
-    """
+def _get_defense_encodings(
+    piece: chess.Piece, square: chess.Square, board: chess.Board
+) -> Set[str]:
+    """Returns a set of defense encodings of a given chess position."""
     defense_encodings = set()
 
     attacked_squares = board.attacks(square)
@@ -46,14 +40,10 @@ def get_defense_encodings(piece: chess.Piece, square: chess.Square, board: chess
     return defense_encodings
 
 
-def get_ray_attack_encodings(
+def _get_ray_attack_encodings(
     piece: chess.Piece, square: chess.Square, board: chess.Board
 ) -> Set[str]:
-    """Returns the ray attack encodings of a given chess position.
-
-    See Section 5.3.3 Ray-Attack Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
-    """
+    """Returns a set of ray attack encodings of a given chess position."""
     ray_attack_encodings = set()
     board_copy = copy.deepcopy(board)
 
@@ -77,13 +67,8 @@ def get_ray_attack_encodings(
     return ray_attack_encodings
 
 
-def get_connectivity_encodings(board: chess.Board, connection: str) -> str:
-    """Returns the attack encodings of a given chess position.
-
-    See Section 5.3. Connectivity between the pieces in Ganguly, D.,
-    Leveling, J., & Jones, G. (2014). Retrieval of similar chess
-    positions.
-    """
+def _get_connectivity_encodings(board: chess.Board, connection: str) -> str:
+    """Returns a set of connectivity encodings of a given chess position."""
     supported_connections = {"ray-attack", "attack", "defense"}
     if connection not in supported_connections:
         raise ValueError(
@@ -96,20 +81,20 @@ def get_connectivity_encodings(board: chess.Board, connection: str) -> str:
         piece = board.piece_at(square)
         if piece:
             if connection == "attack":
-                connect_encodings |= get_attack_encodings(piece, square, board)
+                connect_encodings |= _get_attack_encodings(piece, square, board)
             elif connection == "defense":
-                connect_encodings |= get_defense_encodings(piece, square, board)
+                connect_encodings |= _get_defense_encodings(piece, square, board)
             elif connection == "ray-attack":
-                connect_encodings |= get_ray_attack_encodings(piece, square, board)
+                connect_encodings |= _get_ray_attack_encodings(piece, square, board)
 
     return connect_encodings
 
 
 def get_connectivity_encoding(board: chess.Board, connection: str) -> str:
-    """Returns the attack encoding of a given chess position.
+    """Returns the connectivity encoding of a given chess position.
 
     See Section 5.3. Connectivity between the pieces in Ganguly, D.,
     Leveling, J., & Jones, G. (2014). Retrieval of similar chess
     positions.
     """
-    return " ".join(get_connectivity_encodings(board, connection))
+    return " ".join(_get_connectivity_encodings(board, connection))

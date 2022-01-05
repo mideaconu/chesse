@@ -4,15 +4,15 @@ from typing import List, Set
 import chess
 
 
-def chebyshev_distance(from_square: chess.Square, to_square: chess.Square) -> float:
+def _chebyshev_distance(from_square: chess.Square, to_square: chess.Square) -> float:
     """Returns the Chebyshev distance between two squares."""
     return chess.square_distance(from_square, to_square)
 
 
-def activity_weight(from_square: chess.Square, to_square: chess.Square) -> float:
+def _activity_weight(from_square: chess.Square, to_square: chess.Square) -> float:
     """Returns the activity weight of two squares, rounded to the 2nd
     decimal."""
-    return round(1 - (7 * chebyshev_distance(from_square, to_square) / 64), 2)
+    return round(1 - (7 * _chebyshev_distance(from_square, to_square) / 64), 2)
 
 
 def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
@@ -32,12 +32,8 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
     return pseudolegal_moves
 
 
-def get_activity_encodings(board: chess.Board) -> Set[str]:
-    """Returns the activity encodings in a given chess position.
-
-    See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
-    """
+def _get_activity_encodings(board: chess.Board) -> Set[str]:
+    """Returns a set of activity encodings in a given chess position."""
     activity_encodings = set()
     piece_activity = defaultdict(list)
 
@@ -49,7 +45,7 @@ def get_activity_encodings(board: chess.Board) -> Set[str]:
     for from_square, to_squares in piece_activity.items():
         for to_square in to_squares:
             piece = board.piece_at(from_square).symbol() + chess.square_name(to_square)
-            weight = activity_weight(from_square, to_square)
+            weight = _activity_weight(from_square, to_square)
             activity_encoding = f"{piece}|{weight}"
 
             activity_encodings.add(activity_encoding)
@@ -63,4 +59,4 @@ def get_activity_encoding(board: chess.Board) -> str:
     See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
     """
-    return " ".join(get_activity_encodings(board))
+    return " ".join(_get_activity_encodings(board))
