@@ -1,0 +1,33 @@
+repos:
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        args: ["--profile", "black"] # sort imports
+
+  - repo: https://github.com/ambv/black
+    rev: 21.12b0
+    hooks:
+      - id: black # code formatter
+        language_version: python3.8
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8 # checks style irregularities missed by black
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-docstring-first # checks docstring come before implementation
+      - id: check-json # checks JSON files for parseable syntax
+      - id: pretty-format-json # formats JSON
+        args: ["--autofix", "--no-sort-keys", "--indent", "4"]
+      - id: requirements-txt-fixer # sorts requirements.txt contents
+
+  - repo: https://github.com/myint/docformatter
+    rev: v1.4
+    hooks:
+      - id: docformatter # formats docstrings
+        args: [--in-place]

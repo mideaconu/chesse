@@ -1,0 +1,9 @@
+[tool.isort]
+line_length = 100
+include_trailing_comma = true
+known_third_party = ["chess"]
+# Sort libraries in accordance with black
+profile = "black"
+
+[tool.black]
+line-length = 100
