@@ -67,12 +67,17 @@ def _get_ray_attack_encodings(
     return ray_attack_encodings
 
 
-def _get_connectivity_encodings(board: chess.Board, connection: str) -> str:
-    """Returns a set of connectivity encodings of a given chess position."""
-    supported_connections = {"ray-attack", "attack", "defense"}
-    if connection not in supported_connections:
+def encode(board: chess.Board, connection_type: str) -> str:
+    """Returns a set of connectivity encodings of a given chess position.
+
+    See Section 5.3. Connectivity between the pieces in Ganguly, D.,
+    Leveling, J., & Jones, G. (2014). Retrieval of similar chess
+    positions.
+    """
+    supported_types = {"ray-attack", "attack", "defense"}
+    if connection_type not in supported_types:
         raise ValueError(
-            f"Connection not supported: {connection}. Supported connections: {supported_connections}."
+            f"Connection type not supported: {connection_type}. Supported connections: {supported_types}."
         )
 
     connect_encodings = set()
@@ -80,21 +85,11 @@ def _get_connectivity_encodings(board: chess.Board, connection: str) -> str:
     for square in chess.SQUARES:
         piece = board.piece_at(square)
         if piece:
-            if connection == "attack":
+            if connection_type == "attack":
                 connect_encodings |= _get_attack_encodings(piece, square, board)
-            elif connection == "defense":
+            elif connection_type == "defense":
                 connect_encodings |= _get_defense_encodings(piece, square, board)
-            elif connection == "ray-attack":
+            elif connection_type == "ray-attack":
                 connect_encodings |= _get_ray_attack_encodings(piece, square, board)
 
     return connect_encodings
-
-
-def get_connectivity_encoding(board: chess.Board, connection: str) -> str:
-    """Returns the connectivity encoding of a given chess position.
-
-    See Section 5.3. Connectivity between the pieces in Ganguly, D.,
-    Leveling, J., & Jones, G. (2014). Retrieval of similar chess
-    positions.
-    """
-    return " ".join(_get_connectivity_encodings(board, connection))

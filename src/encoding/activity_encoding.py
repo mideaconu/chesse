@@ -32,8 +32,12 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
     return pseudolegal_moves
 
 
-def _get_activity_encodings(board: chess.Board) -> Set[str]:
-    """Returns a set of activity encodings in a given chess position."""
+def encode(board: chess.Board) -> Set[str]:
+    """Returns a set of activity encodings in a given chess position.
+
+    See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
+    Jones, G. (2014). Retrieval of similar chess positions.
+    """
     activity_encodings = set()
     piece_activity = defaultdict(list)
 
@@ -51,12 +55,3 @@ def _get_activity_encodings(board: chess.Board) -> Set[str]:
             activity_encodings.add(activity_encoding)
 
     return activity_encodings
-
-
-def get_activity_encoding(board: chess.Board) -> str:
-    """Returns the activity encoding of a given chess position.
-
-    See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
-    Jones, G. (2014). Retrieval of similar chess positions.
-    """
-    return " ".join(_get_activity_encodings(board))
