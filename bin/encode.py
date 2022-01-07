@@ -1,0 +1,166 @@
+from typing import Callable, Optional, TextIO
+
+import chess
+import click
+
+from src.encoding import activity_encoding, connectivity_encoding, naive_encoding
+from src.utils import click as click_utils
+
+
+def run_encoding(
+    encoding_fct: Callable,
+    fen: str,
+    input_file: Optional[TextIO],
+    output_file: Optional[TextIO],
+    **kwargs,
+) -> None:
+    """Runs the encoding function on the FEN representation of the chess
+    position.
+
+    Optionally reads the FEN representation from `input_file` and/or
+    writes the encoding to `output_file`.
+    """
+    if input_file:
+        fen = input_file.readline().strip()
+
+    try:
+        board = chess.Board(fen=fen)
+    except Exception as e:
+        raise click.BadParameter(f"FEN {fen!r} is not valid: {e}")
+
+    encoding = " ".join(encoding_fct(board, **kwargs))
+
+    if output_file:
+        output_file.write(encoding + "\n")
+        output_file.flush()
+    else:
+        click.echo(encoding)
+
+
+@click.group()
+@click.version_option("0.1.0")
+@click.help_option()
+@click.pass_context
+def cli(ctx):
+    pass
+
+
+@cli.command("similarity")
+@click.option(
+    "--fen",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=str,
+    default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+    show_default=True,
+    help="FEN representation of the chess board to encode.",
+    mutually_exclusive=["input_file"],
+)
+@click.option(
+    "--input-file",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=click.File("r"),
+    help="File that contains the FEN representation of the chess board to encode. "
+    "'-' can be used to read from stdin.",
+    mutually_exclusive=["fen"],
+)
+@click.option(
+    "--output-file",
+    type=click.File("w"),
+    help="File that the encoding is written to. '-' can be used to redirect to stdout.",
+)
+@click.pass_context
+def similarity(ctx, fen: str, input_file: str, output_file: str) -> None:
+    """Returns the similarity encoding of a given chess position."""
+    if input_file:
+        fen = input_file.readline().strip()
+
+    ctx.invoke(naive, fen=fen, output_file=output_file)
+    ctx.invoke(activity, fen=fen, output_file=output_file)
+    ctx.invoke(connectivity, fen=fen, output_file=output_file, type="attack")
+    ctx.invoke(connectivity, fen=fen, output_file=output_file, type="defense")
+    ctx.invoke(connectivity, fen=fen, output_file=output_file, type="ray-attack")
+
+
+@cli.command("naive")
+@click.option(
+    "--fen",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=str,
+    default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+    show_default=True,
+    help="FEN representation of the chess board to encode.",
+    mutually_exclusive=["input_file"],
+)
+@click.option(
+    "--input-file",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=click.File("r"),
+    help="File that contains the FEN representation of the chess board to encode. "
+    "'-' can be used to read from stdin.",
+    mutually_exclusive=["fen"],
+)
+@click.option(
+    "--output-file",
+    type=click.File("w"),
+    help="File that the encoding is written to. '-' can be used to redirect to stdout.",
+)
+def naive(fen, input_file: str, output_file: str) -> None:
+    """Returns the naive encoding of a given chess position."""
+    run_encoding(naive_encoding.encode, fen, input_file, output_file)
+
+
+@cli.command("activity")
+@click.option(
+    "--fen",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=str,
+    default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+    show_default=True,
+    help="FEN representation of the chess board to encode.",
+    mutually_exclusive=["input_file"],
+)
+@click.option(
+    "--input-file",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=click.File("r"),
+    help="File that contains the FEN representation of the chess board to encode. "
+    "'-' can be used to read from stdin.",
+    mutually_exclusive=["fen"],
+)
+@click.option(
+    "--output-file",
+    type=click.File("w"),
+    help="File that the encoding is written to. '-' can be used to redirect to stdout.",
+)
+def activity(fen, input_file: str, output_file) -> None:
+    """Returns the activity encoding of a given chess position."""
+    run_encoding(activity_encoding.encode, fen, input_file, output_file)
+
+
+@cli.command("connectivity")
+@click.argument("type", type=str)
+@click.option(
+    "--fen",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=str,
+    default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+    show_default=True,
+    help="FEN representation of the chess board to encode.",
+    mutually_exclusive=["input_file"],
+)
+@click.option(
+    "--input-file",
+    cls=click_utils.MutuallyExclusiveOption,
+    type=click.File("r"),
+    help="File that contains the FEN representation of the chess board to encode. "
+    "'-' can be used to read from stdin.",
+    mutually_exclusive=["fen"],
+)
+@click.option(
+    "--output-file",
+    type=click.File("w"),
+    help="File that the encoding is written to. '-' can be used to redirect to stdout.",
+)
+def connectivity(type, fen, input_file, output_file) -> None:
+    """Returns the connectivity encoding of a given chess position."""
+    run_encoding(connectivity_encoding.encode, fen, input_file, output_file, connection_type=type)
