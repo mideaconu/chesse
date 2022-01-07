@@ -89,7 +89,4 @@ from src.encoding import activity_encoding
     ],
 )
 def test_get_activity_encoding(board, expected_encoding):
-    actual_encoding = activity_encoding.get_activity_encoding(board).split()
-
-    assert len(set(actual_encoding)) == len(actual_encoding)
-    assert expected_encoding == set(actual_encoding)
+    assert activity_encoding.encode(board) == expected_encoding

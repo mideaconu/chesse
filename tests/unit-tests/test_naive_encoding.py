@@ -44,7 +44,4 @@ from src.encoding import naive_encoding
     ],
 )
 def test_get_naive_encoding(board, expected_encoding):
-    actual_encoding = naive_encoding.get_naive_encoding(board).split()
-
-    assert len(set(actual_encoding)) == len(actual_encoding)
-    assert expected_encoding == set(actual_encoding)
+    assert naive_encoding.encode(board) == expected_encoding

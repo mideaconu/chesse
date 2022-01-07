@@ -88,7 +88,4 @@ from src.encoding import connectivity_encoding
     ],
 )
 def test_get_connectivity_encoding(board, connection, expected_encoding):
-    actual_encoding = connectivity_encoding.get_connectivity_encoding(board, connection).split()
-
-    assert len(set(actual_encoding)) == len(actual_encoding)
-    assert expected_encoding == set(actual_encoding)
+    assert connectivity_encoding.encode(board, connection) == expected_encoding
