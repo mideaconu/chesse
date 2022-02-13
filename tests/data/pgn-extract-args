@@ -1,0 +1,9 @@
+% Set lower bound for number of moves in a game
+:-bl10
+
+% Don't report each game as it is extracted
+:-s
+
+% Matching patterns
+:-t
+Elo >= "1400"
