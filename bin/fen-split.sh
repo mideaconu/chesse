@@ -17,7 +17,7 @@ DESCRIPTION
         Print fen-split.sh documentation to stdout.
 
     -o dir_name, --output-dir dir_name
-        The directory where the output is stored. By default, the output directory is the directory where the script is being called from.
+        The directory where the output is stored. By default, the output directory is the same directory as the input file.
 
 EXAMPLES
     fen-split.sh file.fen
@@ -51,15 +51,15 @@ main() {
 
     INPUT_FILE="${1}"
 
-    echo ${INPUT_FILE} ${INPUT_FILE%.*}
-    split -l 1 ${INPUT_FILE} ${INPUT_FILE%.*}
-    find . -type f ! -name "${INPUT_FILE%.*}*.*" -exec mv {} {}.fen \;
-    rm ${INPUT_FILE}
+    DIRNAME=$(dirname ${INPUT_FILE})
+    FILENAME=$(basename ${INPUT_FILE})
 
+    split -l 1 ${INPUT_FILE} "${INPUT_FILE%.*}-"
+    find ${DIRNAME} -type f \( -name "${FILENAME%.*}-*" -and \! -name "*.*" \) -exec mv {} {}.fen \;
 
-    if ls ${INPUT_FILE%.*}*.fen 1>/dev/null 2>&1; then
+    if ls ${INPUT_FILE%.*}-*.fen 1>/dev/null 2>&1; then
         if [[ ! -z "${OUTPUT_DIR}" ]]; then
-            mv ${INPUT_FILE%.*}*.fen ${OUTPUT_DIR}
+            mv ${INPUT_FILE%.*}-*.fen ${OUTPUT_DIR}
         fi
     fi
 }
