@@ -1,9 +1,10 @@
 #!/bin/sh
 
-set -euo pipefail
+set -e
 
-OUTPUT_FILE=""
+output_file=""
 
+## Prints script usage to stdout
 print_usage() {
    cat << EOF
 NAME
@@ -30,20 +31,26 @@ EOF
    exit 0
 }
 
-check_help_flag() {
-    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+## Checks if any arguments are passed to the script and prints usage if not
+check_no_flags() {
+    if [ "${1}" -eq 0 ]; then print_usage; fi
 }
 
-process_flags() {
-    if [ "$#" -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+## Checks if a help flag is passed to the script
+check_help_flags() {
+    if [[ " ${1} " =~ .*\ "-h"\ .* ]] || [[ " ${1} " =~ .*\ "--help"\ .* ]]; then print_usage; fi
+}
 
-    while [[ "$#" -gt 1 ]]; do
-        key="$1"
+main() {
+    check_no_flags "$#"
+    check_help_flags "$@"
+
+    while [[ "$#" -gt 2 ]]; do
+        key="${1}"
 
         case "$key" in 
             -o|--output-file)
-                OUTPUT_FILE="${2}"
+                output_file="${2}"
                 shift
                 shift
                 ;;
@@ -53,22 +60,18 @@ process_flags() {
                 ;;
         esac 
     done
-}
+    
+    args_file="${1}"
+    input_file="${2}"
 
-main() {
-    process_flags
-
-    ARGS_FILE="${1}"
-    INPUT_FILE="${2}"
-
-    if [ ! -e "${ARGS_FILE}" ]; then
-        echo "File ${ARGS_FILE} does not exist" >&2
-    elif [ ! -e "${INPUT_FILE}" ]; then
-        echo "File ${INPUT_FILE} does not exist" >&2
-    elif [ -z "${OUTPUT_FILE}" ]; then
-        pgn-extract -A "${ARGS_FILE}" "${INPUT_FILE}"
+    if [ ! -e "${args_file}" ]; then
+        echo "File ${args_file} does not exist" >&2
+    elif [ ! -e "${input_file}" ]; then
+        echo "File ${input_file} does not exist" >&2
+    elif [ -z "${output_file}" ]; then
+        pgn-extract -A "${args_file}" "${input_file}"
     else
-        pgn-extract -A "${ARGS_FILE}" -o "${OUTPUT_FILE}" "${INPUT_FILE}"
+        pgn-extract -A "${args_file}" -o "${output_file}" "${input_file}"
     fi
 }
 

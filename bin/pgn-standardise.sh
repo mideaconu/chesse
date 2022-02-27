@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-OUTPUT_FILE=""
+output_file=""
 
+## Prints script usage to stdout
 print_usage() {
    cat << EOF
 NAME
@@ -32,20 +33,26 @@ EOF
    exit 0
 }
 
-check_help_flag() {
-    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+## Checks if any arguments are passed to the script and prints usage if not
+check_no_flags() {
+    if [ "${1}" -eq 0 ]; then print_usage; fi
 }
 
-process_flags() {
-    if [ "$#" -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+## Checks if a help flag is passed to the script
+check_help_flags() {
+    if [[ " ${1} " =~ .*\ "-h"\ .* ]] || [[ " ${1} " =~ .*\ "--help"\ .* ]]; then print_usage; fi
+}
+
+main() {
+    check_no_flags "$#"
+    check_help_flags "$@"
 
     while [[ "$#" -gt 1 ]]; do
-        key="$1"
+        key="${1}"
 
         case "$key" in 
             -o|--output-file)
-                OUTPUT_FILE="${2}"
+                output_file="${2}"
                 shift
                 shift
                 ;;
@@ -55,22 +62,18 @@ process_flags() {
                 ;;
         esac 
     done
-}
 
-main() {
-    process_flags
+    input_file="${1}"
 
-    INPUT_FILE="${1}"
-
-    if [ -e "${INPUT_FILE}" ]; then
+    if [ -e "${input_file}" ]; then
         # TODO make sed command OS-agnostic - it currently is written for OSX
-        if [ -z "${OUTPUT_FILE}" ]; then
-            sed -i '' -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${INPUT_FILE}"
+        if [ -z "${output_file}" ]; then
+            sed -i '' -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${input_file}"
         else
-            sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${INPUT_FILE}" > "${OUTPUT_FILE}"
+            sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${input_file}" > "${output_file}"
         fi
     else
-        echo "File ${INPUT_FILE} does not exist" >&2
+        echo "File ${input_file} does not exist" >&2
     fi
 }
 

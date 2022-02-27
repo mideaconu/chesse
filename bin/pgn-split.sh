@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-OUTPUT_DIR=""
+output_file=""
 
+## Prints script usage to stdout
 print_usage() {
    cat << EOF
 NAME
@@ -31,20 +32,26 @@ EOF
    exit 0
 }
 
-check_help_flag() {
-    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+## Checks if any arguments are passed to the script and prints usage if not
+check_no_flags() {
+    if [ "${1}" -eq 0 ]; then print_usage; fi
 }
 
-process_flags() {
-    if [ "$#" -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+## Checks if a help flag is passed to the script
+check_help_flags() {
+    if [[ " ${1} " =~ .*\ "-h"\ .* ]] || [[ " ${1} " =~ .*\ "--help"\ .* ]]; then print_usage; fi
+}
+
+main() {
+    check_no_flags "$#"
+    check_help_flags "$@"
 
     while [[ "$#" -gt 1 ]]; do
         key="$1"
 
         case "$key" in 
             -o|--output-dir)
-                OUTPUT_DIR="${2}"
+                output_file="${2}"
                 shift
                 shift
                 ;;
@@ -54,18 +61,14 @@ process_flags() {
                 ;;
         esac 
     done
-}
 
-main() {
-    process_flags
+    input_file="${1}"
 
-    INPUT_FILE="${1}"
-
-    pgn-extract -#1 -s "${INPUT_FILE}"
+    pgn-extract -#1 -s "${input_file}"
 
     if ls [0-9]*.pgn 1>/dev/null 2>&1; then
-        if [[ ! -z "${OUTPUT_DIR}" ]]; then
-            mv [0-9]*.pgn "${OUTPUT_DIR}"
+        if [[ ! -z "${output_file}" ]]; then
+            mv [0-9]*.pgn "${output_file}"
         fi
     fi
 }
