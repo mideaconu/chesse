@@ -59,7 +59,7 @@ main() {
             sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' ${INPUT_FILE} > ${OUTPUT_FILE}
         fi
     else
-        echo "File $1 does not exist"
+        echo "File ${INPUT_FILE} does not exist"
     fi
 }
 
