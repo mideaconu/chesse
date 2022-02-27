@@ -1,6 +1,8 @@
 #!/bin/sh
 
-set -e
+set -euo pipefail
+
+OUTPUT_FILE=""
 
 print_usage() {
    cat << EOF
@@ -28,38 +30,46 @@ EOF
    exit 0
 }
 
-main() {
-    if [ $# -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do [[ $i == "-h" ]] || [[ $i == "--help" ]] && print_usage ; done
+check_help_flag() {
+    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+}
 
-    while [[ $# -gt 2 ]]; do
+process_flags() {
+    if [ "$#" -eq 0 ]; then print_usage; fi
+    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+
+    while [[ "$#" -gt 1 ]]; do
         key="$1"
 
-        case "${key}" in 
+        case "$key" in 
             -o|--output-file)
-                OUTPUT_FILE="$2"
+                OUTPUT_FILE="${2}"
                 shift
                 shift
                 ;;
             *)
-                echo "Unknown flag: $1"
+                echo "Unknown flag: ${1}" >&2
                 exit 1
                 ;;
         esac 
     done
+}
+
+main() {
+    process_flags
 
     ARGS_FILE="${1}"
     INPUT_FILE="${2}"
 
     if [ ! -e "${ARGS_FILE}" ]; then
-        echo "File ${ARGS_FILE} does not exist"
+        echo "File ${ARGS_FILE} does not exist" >&2
     elif [ ! -e "${INPUT_FILE}" ]; then
-        echo "File ${INPUT_FILE} does not exist"
+        echo "File ${INPUT_FILE} does not exist" >&2
     elif [ -z "${OUTPUT_FILE}" ]; then
-        pgn-extract -A ${ARGS_FILE} ${INPUT_FILE}
+        pgn-extract -A "${ARGS_FILE}" "${INPUT_FILE}"
     else
-        pgn-extract -A ${ARGS_FILE} -o ${OUTPUT_FILE} ${INPUT_FILE}
+        pgn-extract -A "${ARGS_FILE}" -o "${OUTPUT_FILE}" "${INPUT_FILE}"
     fi
 }
 
-main $@
+main "$@"

@@ -1,6 +1,8 @@
 #!/bin/sh
 
-set -e
+set -euo pipefail
+
+OUTPUT_FILE=""
 
 print_usage() {
    cat << EOF
@@ -30,37 +32,46 @@ EOF
    exit 0
 }
 
-main() {
-    if [ $# -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do [[ $i == "-h" ]] || [[ $i == "--help" ]] && print_usage ; done
+check_help_flag() {
+    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+}
 
-    while [[ $# -gt 1 ]]; do
+process_flags() {
+    if [ "$#" -eq 0 ]; then print_usage; fi
+    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+
+    while [[ "$#" -gt 1 ]]; do
         key="$1"
-        case "${key}" in 
+
+        case "$key" in 
             -o|--output-file)
-                OUTPUT_FILE="$2"
+                OUTPUT_FILE="${2}"
                 shift
                 shift
                 ;;
             *)
-                echo "Unknown flag: $1"
+                echo "Unknown flag: ${1}" >&2
                 exit 1
                 ;;
         esac 
     done
+}
+
+main() {
+    process_flags
 
     INPUT_FILE="${1}"
 
-    if [ -e ${INPUT_FILE} ]; then
+    if [ -e "${INPUT_FILE}" ]; then
         # TODO make sed command OS-agnostic - it currently is written for OSX
         if [ -z "${OUTPUT_FILE}" ]; then
-            sed -i '' -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' ${INPUT_FILE}
+            sed -i '' -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${INPUT_FILE}"
         else
-            sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' ${INPUT_FILE} > ${OUTPUT_FILE}
+            sed -e 's/\[UTCDate/\[Date/g' -e 's/\[UTCTime/\[Time/g' "${INPUT_FILE}" > "${OUTPUT_FILE}"
         fi
     else
-        echo "File ${INPUT_FILE} does not exist"
+        echo "File ${INPUT_FILE} does not exist" >&2
     fi
 }
 
-main $@
+main "$@"

@@ -1,6 +1,8 @@
 #!/bin/sh
 
-set -e
+set -euo pipefail
+
+OUTPUT_DIR=""
 
 print_usage() {
    cat << EOF
@@ -29,35 +31,43 @@ EOF
    exit 0
 }
 
-main() {
-    if [ $# -eq 0 ]; then print_usage; fi
-    for i in "$@" ; do [[ $i == "-h" ]] || [[ $i == "--help" ]] && print_usage ; done
+check_help_flag() {
+    [[ "${1}" == "-h" ]] || [[ "${1}" == "--help" ]]
+}
 
-    while [[ $# -gt 1 ]]; do
+process_flags() {
+    if [ "$#" -eq 0 ]; then print_usage; fi
+    for i in "$@" ; do check_help_flag "${i}" && print_usage ; done
+
+    while [[ "$#" -gt 1 ]]; do
         key="$1"
 
         case "$key" in 
             -o|--output-dir)
-                OUTPUT_DIR="$2"
+                OUTPUT_DIR="${2}"
                 shift
                 shift
                 ;;
             *)
-                echo "Unknown flag: $1"
+                echo "Unknown flag: ${1}" >&2
                 exit 1
                 ;;
         esac 
     done
+}
+
+main() {
+    process_flags
 
     INPUT_FILE="${1}"
 
-    pgn-extract -#1 -s ${INPUT_FILE}
+    pgn-extract -#1 -s "${INPUT_FILE}"
 
     if ls [0-9]*.pgn 1>/dev/null 2>&1; then
         if [[ ! -z "${OUTPUT_DIR}" ]]; then
-            mv [0-9]*.pgn ${OUTPUT_DIR}
+            mv [0-9]*.pgn "${OUTPUT_DIR}"
         fi
     fi
 }
 
-main $@
+main "$@"
