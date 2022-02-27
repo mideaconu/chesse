@@ -151,7 +151,7 @@ pipeline/reduce : $(games_file) $(positions_file)
 ## Clean up the temporary files created during the pipeline run
 .PHONY += index/clean
 pipeline/clean :
-	@$(gprint) "Pipeline cleaning"
+	@$(gprint) "Pipeline cleanup"
 	@rm $(filtered_pgn) $(preprocessed_pgn)
 	@rm -rf $(pgn_dir) $(epd_dir) $(fen_dir) $(json_dir)
 	@printf $(checkmark)
