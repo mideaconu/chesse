@@ -115,7 +115,7 @@ $(json_dir) : ; @mkdir $(json_dir)
 
 ## Convert each FEN file to a JSON object where each position in the game is encoded
 $(json_files) : $(json_dir)/%.json : $(fen_dir)/%.fen $(pgn_dir)/%.pgn | $(json_dir)
-	@generate-position-json.sh $^ $@
+	@generate-position-json.sh -o $@ $^
 
 
 ## Generate the JSON position encodings
@@ -130,7 +130,7 @@ $(output_dir) : ; @mkdir $(output_dir)
 ## Aggregate the games into a JSON file
 $(games_file) : | $(pgn_dir) $(output_dir)
 	@$(bprint) "- Generating aggregated games object JSON"
-	@generate-games-json.sh $(word 1, $|) $@
+	@generate-games-json.sh -o $@ $(word 1, $|)
 	@printf $(checkmark)
 
 

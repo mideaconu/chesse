@@ -2,4 +2,4 @@
 
 .PHONY += help
 help : 
-	$(MAKE) index/help
+	@$(MAKE) index/help
