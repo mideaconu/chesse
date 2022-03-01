@@ -10,7 +10,7 @@ print_usage() {
 NAME
     generate-position-json.sh -- TBC
 SYNOPSIS
-    generate-position-json.sh [-h/--help] [-o/--output-file output_file] fen_file pgn_file
+    generate-position-json.sh [-h/--help] [-o/--output-file output_file] fen_file json_game_file
 
 DESCRIPTION
     TBC
@@ -61,15 +61,15 @@ main() {
     done
 
     fen_file="${1}"
-    pgn_file="${2}"
+    json_game_file="${2}"
 
     echo "[]" > "${output_file}"
 
-    pgn_gzip=$(cat "${pgn_file}" | gzip | base64)
+    game_id=$(jq -r '.id' ${json_game_file})
 
     while IFS= read -r line; do
         encoding=$(encode similarity --fen "${line}")
-        cat <<< $(jq --arg encoding "${encoding}" --arg fen "${line}" --arg game_id "${pgn_gzip}" '. += [{"position": {"fen": $fen, "encoding": $encoding}, "games": [{"id": $game_id}]}]' ${output_file}) > ${output_file}
+        cat <<< $(jq --arg encoding "${encoding}" --arg fen "${line}" --arg game_id "${game_id}" '. += [{"position": {"fen": $fen, "encoding": $encoding}, "games": [{"id": $game_id}]}]' ${output_file}) > ${output_file}
     done < "${fen_file}"
 }
 
