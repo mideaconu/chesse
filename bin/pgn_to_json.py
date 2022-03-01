@@ -1,4 +1,6 @@
+import base64
 import json
+import zlib
 from typing import Optional, TextIO
 
 import chess.pgn
@@ -41,6 +43,11 @@ def cli(
         node = next_node
 
     game_json["moves"] = moves
+
+    id_ = "|".join([game_json[header] for header in ["event", "date", "round", "white", "black"]])
+    id_zlib = zlib.compress(bytes(id_, encoding="utf-8"))
+    id_base64 = base64.b64encode(id_zlib).decode(encoding="utf-8")
+    game_json["id"] = id_base64
 
     output_file.write(json.dumps(game_json))
     output_file.flush()
