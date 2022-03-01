@@ -11,7 +11,8 @@ output_dir ?= $(data_dir)/output
 pgn_dir := $(data_dir)/pgn
 epd_dir := $(data_dir)/epd
 fen_dir := $(data_dir)/fen
-json_dir := $(data_dir)/json
+games_json_dir := $(data_dir)/games_json
+positions_json_dir := $(data_dir)/positions_json
 
 
 ## Files
@@ -23,7 +24,8 @@ lock := $(data_dir)/encoding.lock
 pgn_files = $(wildcard $(pgn_dir)/*.pgn)
 epd_files = $(pgn_files:$(pgn_dir)/%.pgn=$(epd_dir)/%.epd)
 fen_files = $(pgn_files:$(pgn_dir)/%.pgn=$(fen_dir)/%.fen)
-json_files = $(pgn_files:$(pgn_dir)/%.pgn=$(json_dir)/%.json)
+games_json_files = $(pgn_files:$(pgn_dir)/%.pgn=$(games_json_dir)/%.json)
+positions_json_files = $(pgn_files:$(pgn_dir)/%.pgn=$(positions_json_dir)/%.json)
 
 games_file := $(output_dir)/games.json
 positions_file := $(output_dir)/positions.json
@@ -111,16 +113,23 @@ $(fen_files) : $(fen_dir)/%.fen : $(epd_dir)/%.epd | $(fen_dir)
 	@perl -pi -e "chomp if eof" $@
 
 
-$(json_dir) : ; @mkdir $(json_dir)
+$(games_json_dir) : ; @mkdir $(games_json_dir)
+
+## Convert each PGN file to a JSON object
+$(games_json_files) : $(games_json_dir)/%.json : $(pgn_dir)/%.pgn | $(games_json_dir)
+	@pgn-to-json --input-file $< --output-file $@
+
+
+$(positions_json_dir) : ; @mkdir $(positions_json_dir)
 
 ## Convert each FEN file to a JSON object where each position in the game is encoded
-$(json_files) : $(json_dir)/%.json : $(fen_dir)/%.fen $(pgn_dir)/%.pgn | $(json_dir)
+$(positions_json_files) : $(positions_json_dir)/%.json : $(fen_dir)/%.fen $(games_json_dir)/%.json | $(positions_json_dir)
 	@generate-position-json.sh -o $@ $^
 
 
 ## Generate the JSON position encodings
 .PHONY += pipeline/map
-pipeline/map : $(json_files)
+pipeline/map : $(games_json_files) $(positions_json_files)
 	@$(gprint) "Result generation"
 	@printf $(checkmark)
 
@@ -128,16 +137,16 @@ pipeline/map : $(json_files)
 $(output_dir) : ; @mkdir $(output_dir)
 
 ## Aggregate the games into a JSON file
-$(games_file) : | $(pgn_dir) $(output_dir)
+$(games_file) : | $(games_json_dir) $(output_dir)
 	@$(bprint) "- Generating aggregated games object JSON"
-	@generate-games-json.sh -o $@ $(word 1, $|)
+	@jq -s 'map(.)' $(games_json_dir)/?.json > $(games_file)
 	@printf $(checkmark)
 
 
 ## Aggregate the encoded positions into a JSON file
-$(positions_file) : $(json_files) | $(output_dir)
+$(positions_file) : $(positions_json_files) | $(output_dir)
 	@$(bprint) "- Generating aggregated positions object JSON"
-	@jq 'group_by(.position.fen) | map(.[0].games = [.[].games | add] | .[0])' $(json_dir)/?.json > $@
+	@jq 'group_by(.position.fen) | map(.[0].games = [.[].games | add] | .[0])' $(positions_json_dir)/?.json > $@
 	@printf $(checkmark)
 
 
@@ -153,7 +162,7 @@ pipeline/reduce : $(games_file) $(positions_file)
 pipeline/clean :
 	@$(gprint) "Pipeline cleanup"
 	@rm $(filtered_pgn) $(preprocessed_pgn)
-	@rm -rf $(pgn_dir) $(epd_dir) $(fen_dir) $(json_dir)
+	@rm -rf $(pgn_dir) $(epd_dir) $(fen_dir) $(json_dir) $(games_json_dir) $(positions_json_dir)
 	@printf $(checkmark)
 
 
