@@ -139,14 +139,14 @@ $(output_dir) : ; @mkdir $(output_dir)
 ## Aggregate the games into a JSON file
 $(games_file) : | $(games_json_dir) $(output_dir)
 	@$(bprint) "- Generating aggregated games object JSON"
-	@jq -s 'map(.)' $(games_json_dir)/?.json > $(games_file)
+	@jq -s '.' $(games_json_dir)/?.json > $(games_file)
 	@printf $(checkmark)
 
 
 ## Aggregate the encoded positions into a JSON file
 $(positions_file) : $(positions_json_files) | $(output_dir)
 	@$(bprint) "- Generating aggregated positions object JSON"
-	@jq 'group_by(.position.fen) | map(.[0].games = [.[].games | add] | .[0])' $(positions_json_dir)/?.json > $@
+	@jq -s 'add | group_by(.position.fen) | map(.[0].games = [.[].games | add] | .[0])' $(positions_json_dir)/?.json > $@
 	@printf $(checkmark)
 
 
