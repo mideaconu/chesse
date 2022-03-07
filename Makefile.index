@@ -157,6 +157,12 @@ pipeline/reduce : $(games_file) $(positions_file)
 	@printf $(checkmark)
 
 
+.PHONY += pipeline/insert
+pipeline/insert : 
+	@jq -c '.[] | {"index": {"_index": "games", "_id": .id}}, .' $(games_file) > $(data_dir)/games-query.txt
+	@jq -c '.[] | {"index": {"_index": "positions", "_id": .position.fen}}, .' $(positions_file) > $(data_dir)/positions-query.txt
+
+
 ## Clean up the temporary files created during the pipeline run
 .PHONY += index/clean
 pipeline/clean :
@@ -172,6 +178,7 @@ index/pipeline :
 	@$(MAKE) pipeline/init
 	@$(MAKE) pipeline/map -j 8
 	@$(MAKE) pipeline/reduce
+	@$(MAKE) pipeline/insert
 	@$(MAKE) pipeline/clean
 
 
