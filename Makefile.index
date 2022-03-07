@@ -139,7 +139,7 @@ $(output_dir) : ; @mkdir $(output_dir)
 ## Aggregate the games into a JSON file
 $(games_file) : | $(games_json_dir) $(output_dir)
 	@$(bprint) "- Generating aggregated games object JSON"
-	@jq -s 'map(.)' $(games_json_dir)/?.json > $(games_file)
+	@jq -s '.' $(games_json_dir)/?.json > $(games_file)
 	@printf $(checkmark)
 
 
