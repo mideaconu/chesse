@@ -1,0 +1,7 @@
+syntax = "proto3";
+package duchess_backend_api.v1alpha1;
+
+
+message Position {
+    string fen = 1;
+}
