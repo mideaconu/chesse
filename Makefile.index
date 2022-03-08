@@ -14,7 +14,6 @@ fen_dir := $(data_dir)/fen
 games_json_dir := $(data_dir)/games_json
 positions_json_dir := $(data_dir)/positions_json
 
-
 ## Files
 ## ---------------------------------------------------------------------------
 
@@ -35,21 +34,18 @@ pgn_extract_args := $(config_dir)/pgn-extract-args
 filtered_pgn := $(data_dir)/filtered-games.pgn
 preprocessed_pgn := $(data_dir)/preprocessed-games.pgn
 
-
 ## Commands
 ## ---------------------------------------------------------------------------
 
-## Coloured text
+# Coloured text
 gprint := printf '\033[32m%s\033[0m'  # green
 bprint := printf '\033[36m%s\033[0m'  # blue
-
 
 ## Variables
 ## ---------------------------------------------------------------------------
 
 checkmark := "  \xE2\x9C\x94\n"
 VPATH := $(bin_dir) $(data_dir) $(config_dir)
-
 
 ## Targets
 ## ---------------------------------------------------------------------------
