@@ -1,5 +1,5 @@
 syntax = "proto3";
-package duchess.v1alpha1;
+package duchess_backend_api.v1alpha1;
 
 
 message Position {

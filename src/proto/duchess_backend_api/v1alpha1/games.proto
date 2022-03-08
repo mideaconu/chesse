@@ -1,0 +1,17 @@
+syntax = "proto3";
+package duchess_backend_api.v1alpha1;
+
+import "duchess_backend_api/v1alpha1/positions.proto";
+
+
+message Game {
+    string id = 1;
+    duchess_backend_api.v1alpha1.Position position = 2;
+}
+
+message GetSimilarGamesRequest {
+    string position_fen = 1;
+}
+message GetSimilarGamesResponse {
+    repeated duchess_backend_api.v1alpha1.Game games = 1;
+}

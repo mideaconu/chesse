@@ -1,0 +1,11 @@
+syntax = "proto3";
+package duchess_backend_api.v1alpha1;
+
+import "duchess_backend_api/v1alpha1/games.proto";
+
+
+// Duchess Backend Service
+service DuchessBackendService {
+    // Fetch a collection of games
+    rpc GetSimilarGames(GetSimilarGamesRequest) returns (GetSimilarGamesResponse);
+}
