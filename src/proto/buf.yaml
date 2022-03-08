@@ -1,0 +1,8 @@
+version: v1
+name: buf.build/duchess/backend_api
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
