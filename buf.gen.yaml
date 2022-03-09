@@ -2,3 +2,6 @@ version: v1
 plugins:
   - name: python
     out: src/duchess-pb2-py
+  - name: python-grpc
+    out: src/duchess-pb2-py
+    path: grpc_python_plugin
