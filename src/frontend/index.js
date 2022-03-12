@@ -15,4 +15,5 @@ function searchPosition() {
 
 $('#startButton').on('click', board.start);
 $('#clearButton').on('click', board.clear);
+$('#flipButton').on('click', board.flip);
 $('#searchButton').on('click', searchPosition);
