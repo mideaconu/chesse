@@ -4,3 +4,4 @@ plugins:
     out: src/duchess-pb2-py
   - name: js
     out: src/duchess-pb2-js
+    opt: import_style=commonjs,binary
