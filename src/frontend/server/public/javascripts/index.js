@@ -4,8 +4,7 @@ var board_config = {
     pieceTheme: 'images/chesspieces/default/{piece}.png',
     draggable: true,
     sparePieces: true,
-    dropOffBoard: "trash",
-    showErrors: "alert"
+    dropOffBoard: "trash"
 };
 board = Chessboard("searchBoard", board_config);
 
