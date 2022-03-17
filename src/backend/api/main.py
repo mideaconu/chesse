@@ -7,10 +7,8 @@ from duchess_backend_api.v1alpha1.duchess_pb2_grpc import (
 )
 from grpc_reflection.v1alpha import reflection
 
-from backend_api import __version__
-from backend_api.v1alpha1.server import (
-    DuchessBackendServiceGRPC as DuchessBackendServiceGRPCb1alpha1,
-)
+from backend.api import __version__
+from backend.api.v1alpha1.server import DuchessBackendService as DuchessBackendServiceV1Alpha1
 from utils import logger
 
 LOGGER = logger.get_logger(__name__)
@@ -18,7 +16,7 @@ LOGGER = logger.get_logger(__name__)
 
 def serve(port: str, max_workers: int):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
-    add_DuchessBackendServiceServicer_to_server(DuchessBackendServiceGRPCb1alpha1(), server)
+    add_DuchessBackendServiceServicer_to_server(DuchessBackendServiceV1Alpha1(), server)
 
     SERVICE_NAMES = (
         duchess_pb2_v1alpha1.DESCRIPTOR.services_by_name["DuchessBackendService"].full_name,

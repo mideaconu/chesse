@@ -14,13 +14,13 @@ from utils import logger
 LOGGER = logger.get_logger(__name__)
 
 
-class DuchessBackendServiceGRPC(DuchessBackendServiceServicer):
+class DuchessBackendService(DuchessBackendServiceServicer):
     def GetSimilarGames(
         self, request: games_pb2.GetSimilarGamesRequest, context: grpc.ServicerContext
     ) -> games_pb2.GetSimilarGamesResponse:
-        """Retrieves similar chess games from DUCHESS."""
+        """Retrieves similar chess games from DUChess."""
         LOGGER.info("Retrieving games similar to position %s...", request.position_fen)
-        LOGGER.debug("Get Similar Games Request: %s", request)
+        LOGGER.info("Get Similar Games Request: %s", request)
 
         position_fen = request.position_fen
 
@@ -28,31 +28,36 @@ class DuchessBackendServiceGRPC(DuchessBackendServiceServicer):
 
         position_encoding = "\n".join(
             [
-                " ".join(encode_naively(board)),
-                " ".join(encode_activity(board)),
-                " ".join(encode_connectivity(board, "attack")),
-                " ".join(encode_connectivity(board, "defense")),
-                " ".join(encode_connectivity(board, "ray-attack")),
+                "\n".join(encode_naively(board)),
+                "\n".join(encode_activity(board)),
+                "\n".join(encode_connectivity(board, "attack")),
+                "\n".join(encode_connectivity(board, "defense")),
+                "\n".join(encode_connectivity(board, "ray-attack")),
             ]
         )
-
-        LOGGER.info(position_encoding)
 
         context = create_default_context(cafile="/Users/mihaideaconu/Documents/http_ca.crt")
         es = Elasticsearch(
             hosts=["https://localhost:9200"],
-            http_auth=("elastic", "q0JTP*8g*KdWcCXekYwM"),
+            http_auth=("elastic", "lCUjVzlIk52a++cG6UCX"),
             ssl_context=context,
         )
 
         query = {"query": {"match": {"position.encoding": position_encoding}}}
 
         res = es.search(index="positions", body=query)
-        print("Got %d Hits:" % res["hits"]["total"]["value"])
-        print(res)
 
-        # response = games_pb2.GetSimilarGamesResponse(
-        #     games=[
-        #         games_pb2.Game(id=, position=positions_pb2.Position(fen=position["fen"])) for position in res["hits"]["hits"]["_source"]
-        #     ]
-        # )
+        response = games_pb2.GetSimilarGamesResponse(
+            games=[
+                games_pb2.Game(
+                    id=game["id"],
+                    position=positions_pb2.Position(fen=result["_source"]["position"]["fen"]),
+                )
+                for result in res["hits"]["hits"]
+                for game in result["_source"]["games"]
+            ]
+        )
+
+        LOGGER.info("Get Similar Games Response: %s", response)
+
+        return response
