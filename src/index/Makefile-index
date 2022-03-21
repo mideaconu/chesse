@@ -1,8 +1,5 @@
 .DEFAULT_GOAL = index
 
-## Directories
-## ---------------------------------------------------------------------------
-
 bin_dir := $(PWD)/bin
 config_dir := $(PWD)/config
 data_dir := $(PWD)/data
@@ -11,11 +8,9 @@ output_dir ?= $(data_dir)/output
 pgn_dir := $(data_dir)/pgn
 epd_dir := $(data_dir)/epd
 fen_dir := $(data_dir)/fen
+
 games_json_dir := $(data_dir)/games_json
 positions_json_dir := $(data_dir)/positions_json
-
-## Files
-## ---------------------------------------------------------------------------
 
 pgn ?= $(data_dir)/input.pgn
 lock := $(data_dir)/encoding.lock
@@ -23,32 +18,27 @@ lock := $(data_dir)/encoding.lock
 pgn_files = $(wildcard $(pgn_dir)/*.pgn)
 epd_files = $(pgn_files:$(pgn_dir)/%.pgn=$(epd_dir)/%.epd)
 fen_files = $(pgn_files:$(pgn_dir)/%.pgn=$(fen_dir)/%.fen)
+
 games_json_files = $(pgn_files:$(pgn_dir)/%.pgn=$(games_json_dir)/%.json)
 positions_json_files = $(pgn_files:$(pgn_dir)/%.pgn=$(positions_json_dir)/%.json)
 
 games_file := $(output_dir)/games.json
 positions_file := $(output_dir)/positions.json
 
+games_es_query_file := $(output_dir)/games-query.txt
+positions_es_query_file := $(output_dir)/positions-query.txt
+
 pgn_extract_args := $(config_dir)/pgn-extract-args
 
 filtered_pgn := $(data_dir)/filtered-games.pgn
 preprocessed_pgn := $(data_dir)/preprocessed-games.pgn
 
-## Commands
-## ---------------------------------------------------------------------------
-
 # Coloured text
 gprint := printf '\033[32m%s\033[0m'  # green
 bprint := printf '\033[36m%s\033[0m'  # blue
 
-## Variables
-## ---------------------------------------------------------------------------
-
 checkmark := "  \xE2\x9C\x94\n"
 VPATH := $(bin_dir) $(data_dir) $(config_dir)
-
-## Targets
-## ---------------------------------------------------------------------------
 
 ## Show a list of available commands
 .PHONY += index/help
@@ -119,7 +109,7 @@ $(games_json_files) : $(games_json_dir)/%.json : $(pgn_dir)/%.pgn | $(games_json
 $(positions_json_dir) : ; @mkdir $(positions_json_dir)
 
 ## Convert each FEN file to a JSON object where each position in the game is encoded
-$(positions_json_files) : $(positions_json_dir)/%.json : $(fen_dir)/%.fen $(games_json_dir)/%.json | $(positions_json_dir)
+$(positions_json_files) : $(positions_json_dir)/%.json : $(fen_dir)/%.fen | $(positions_json_dir)
 	@generate-position-json.sh -o $@ $^
 
 
@@ -142,7 +132,7 @@ $(games_file) : | $(games_json_dir) $(output_dir)
 ## Aggregate the encoded positions into a JSON file
 $(positions_file) : $(positions_json_files) | $(output_dir)
 	@$(bprint) "- Generating aggregated positions object JSON"
-	@jq -s 'add | group_by(.position.fen) | map(.[0].games = [.[].games | add] | .[0])' $(positions_json_dir)/?.json > $@
+	@jq -s 'add | unique_by(.position.fen)' $(positions_json_dir)/?.json > $@
 	@printf $(checkmark)
 
 
@@ -153,10 +143,23 @@ pipeline/reduce : $(games_file) $(positions_file)
 	@printf $(checkmark)
 
 
+## Generate Elasticsearch bulk-insert query file for games
+$(games_es_query_file) : $(games_file)
+	@$(bprint) "- Generating games ES query file"
+	@jq -c '.[] | {"index": {"_index": "games", "_id": .id}}, .' $(games_file) > $(games_es_query_file)
+	@printf $(checkmark)
+
+## Generate Elasticsearch bulk-insert query file for positions
+$(positions_es_query_file) : $(positions_file)
+	@$(bprint) "- Generating positions ES query file"
+	@jq -c '.[] | {"index": {"_index": "positions", "_id": .position.fen}}, .' $(positions_file) > $(positions_es_query_file)
+	@printf $(checkmark)
+
+## Generate Elasticsearch bulk-insert query files
 .PHONY += pipeline/insert
-pipeline/insert : 
-	@jq -c '.[] | {"index": {"_index": "games", "_id": .id}}, .' $(games_file) > $(data_dir)/games-query.txt
-	@jq -c '.[] | {"index": {"_index": "positions", "_id": .position.fen}}, .' $(positions_file) > $(data_dir)/positions-query.txt
+pipeline/insert : $(games_es_query_file) $(positions_es_query_file)
+	@$(gprint) "ES query files generation"
+	@printf $(checkmark)
 
 
 ## Clean up the temporary files created during the pipeline run
@@ -175,7 +178,7 @@ index/pipeline :
 	@$(MAKE) pipeline/map -j 8
 	@$(MAKE) pipeline/reduce
 	@$(MAKE) pipeline/insert
-#	@$(MAKE) pipeline/clean
+	@$(MAKE) pipeline/clean
 
 
 .PHONY += index
