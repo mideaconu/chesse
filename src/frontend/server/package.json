@@ -6,10 +6,13 @@
         "start": "node ./bin/www"
     },
     "dependencies": {
-        "chessops": "^0.10.5",
+        "@grpc/grpc-js": "^1.5.9",
         "cookie-parser": "~1.4.4",
         "debug": "~2.6.9",
         "express": "~4.16.1",
+        "google-protobuf": "^3.20.0-rc.2",
+        "grpc": "^1.24.11",
+        "grpc-tools": "^1.11.2",
         "http-errors": "~1.6.3",
         "morgan": "~1.9.1",
         "pug": "^3.0.2"

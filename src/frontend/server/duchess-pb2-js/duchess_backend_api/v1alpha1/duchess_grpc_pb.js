@@ -2,7 +2,7 @@
 
 'use strict';
 var grpc = require('@grpc/grpc-js');
-var duchess_backend_api_v1alpha1_games_pb = require('../../duchess_backend_api/v1alpha1/games_pb.js');
+var duchess_backend_api_v1alpha1_games_pb = require('./games_pb.js');
 
 function serialize_duchess_backend_api_v1alpha1_GetSimilarGamesRequest(arg) {
   if (!(arg instanceof duchess_backend_api_v1alpha1_games_pb.GetSimilarGamesRequest)) {

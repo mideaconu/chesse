@@ -15,7 +15,7 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
-var duchess_backend_api_v1alpha1_positions_pb = require('../../duchess_backend_api/v1alpha1/positions_pb.js');
+var duchess_backend_api_v1alpha1_positions_pb = require('./positions_pb.js');
 goog.object.extend(proto, duchess_backend_api_v1alpha1_positions_pb);
 goog.exportSymbol('proto.duchess_backend_api.v1alpha1.Game', null, global);
 goog.exportSymbol('proto.duchess_backend_api.v1alpha1.GetSimilarGamesRequest', null, global);

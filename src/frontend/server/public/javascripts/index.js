@@ -10,6 +10,7 @@ board = Chessboard("searchBoard", board_config);
 
 function searchPosition() {
     console.log(`${board.fen()}`);
+    window.location.href = `/search?fen=${board.fen()}`;
 }
 
 $('#startButton').on('click', board.start);

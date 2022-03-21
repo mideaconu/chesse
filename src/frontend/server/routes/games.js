@@ -1,9 +1,9 @@
 const express = require('express');
 var router = express.Router();
 
-/* GET /. */
+/* GET /games. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'DUChess' });
+  res.render('games', { title: 'DUChess', id: req.query.id });
 });
 
 module.exports = router;
