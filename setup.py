@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="duchess",
+    name="chesse",
     version="0.1.0",
     py_modules=["bin.encode", "bin.pgn_to_json"],
     install_requires=[
