@@ -1,5 +1,5 @@
--include Makefile.index
--include Makefile.protobuf
+-include Makefile-index
+-include Makefile-proto
 
 .PHONY += help
 help : 

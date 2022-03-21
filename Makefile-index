@@ -175,7 +175,7 @@ index/pipeline :
 	@$(MAKE) pipeline/map -j 8
 	@$(MAKE) pipeline/reduce
 	@$(MAKE) pipeline/insert
-	@$(MAKE) pipeline/clean
+#	@$(MAKE) pipeline/clean
 
 
 .PHONY += index
