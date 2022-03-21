@@ -8,7 +8,7 @@ output_file=""
 print_usage() {
    cat << EOF
 NAME
-    pgn-split.sh -- splits a PGN file so that there is only one per game
+    pgn-split.sh -- splits a PGN file into one game per file
 
 SYNOPSIS
     pgn-split.sh [-h/--help] [-o/--output-dir dir_name] file

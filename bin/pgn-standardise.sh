@@ -8,7 +8,7 @@ output_file=""
 print_usage() {
    cat << EOF
 NAME
-    pgn-standardise.sh -- standardise a PGN file for compatibility with PGN-processing software
+    pgn-standardise.sh -- standardise a PGN file
 
 SYNOPSIS
     pgn-standardise.sh [-h/--help] [-o/--output-file output_file] file
