@@ -1,34 +1,11 @@
-import base64
 import collections
 import json
-import zlib
-from typing import Any, Dict, Iterable, List, Optional, TextIO
+from typing import Optional, TextIO
 
 import chess.pgn
 import click
 
-
-# TODO move to utils
-def gzip_compress(list: Iterable[str], delimiter: Optional[str] = None) -> str:
-    """Compress a list of string values using gzip.
-
-    Args:
-        list (Iterable): List of values to compress.
-        delimiter (Optional[str], optional): Delimiter for the values in the
-            list, before compression. If None, the pipe symbol is used ("|").
-            Defaults to None.
-
-    Returns:
-        str: Compressed list of values.
-    """
-    if not delimiter:
-        delimiter = "|"
-
-    list_str = delimiter.join(list)
-    gzip_list_bytes = zlib.compress(bytes(list_str, encoding="utf-8"))
-    gzip_list_str = base64.b64encode(gzip_list_bytes).decode(encoding="utf-8")
-
-    return gzip_list_str
+from utils import compress
 
 
 class GameJSONBuilder:
@@ -43,12 +20,16 @@ class GameJSONBuilder:
         """Set ID generated from identity fields using data compression
         (gzip)."""
         id_fields = [self.game.headers[header] for header in self.identity_headers]
-        id_ = gzip_compress(id_fields)
+        id_ = compress.gzip_compress("|".join(id_fields))
 
         self.game_dict["id"] = id_
 
     def set_context(self) -> None:
-        """_summary_"""
+        """Set fields that define the context of the game, i.e. event, date,
+        round, and site.
+
+        Fields are grouped under the 'context' group field.
+        """
         context = {}
         for header in self.context_headers:
             if header in self.game.headers:
@@ -57,7 +38,11 @@ class GameJSONBuilder:
         self.game_dict["context"] = context
 
     def set_white(self) -> None:
-        """_summary_"""
+        """Set fields that define the side with the white pieces, i.e. name and
+        elo.
+
+        Fields are grouped under the 'white' group field.
+        """
         white = {}
         white["name"] = self.game.headers["White"]
         white["elo"] = self.game.headers["WhiteElo"]
@@ -65,7 +50,11 @@ class GameJSONBuilder:
         self.game_dict["white"] = white
 
     def set_black(self) -> None:
-        """_summary_"""
+        """Set fields that define the side with the black pieces, i.e. name and
+        elo.
+
+        Fields are grouped under the 'black' group field.
+        """
         black = {}
         black["name"] = self.game.headers["Black"]
         black["elo"] = self.game.headers["BlackElo"]
@@ -73,7 +62,11 @@ class GameJSONBuilder:
         self.game_dict["black"] = black
 
     def set_moves(self) -> None:
-        """_summary_"""
+        """Set the list of moves in the game.
+
+        For each move the following representations are used: uci, san,
+        and fen.
+        """
         node = self.game
         moves = []
         while node.variations:
@@ -91,7 +84,7 @@ class GameJSONBuilder:
         self.game_dict["moves"] = moves
 
     def get_result(self) -> str:
-        """_summary_"""
+        """Retrieve the result upon constructing the game object."""
         return json.dumps(self.game_dict)
 
 
