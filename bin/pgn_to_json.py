@@ -9,7 +9,7 @@ from utils import compress, numeric
 
 
 class GameJSONBuilder:
-    identity_headers = ["Event", "Date", "Round", "White", "Black"]
+    identity_headers = ["Event", "Date", "Time", "Round", "White", "Black"]
 
     def __init__(self, game: chess.pgn.Game) -> None:
         self.game = game
