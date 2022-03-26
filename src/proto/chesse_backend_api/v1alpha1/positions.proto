@@ -8,7 +8,7 @@ message Position {
 
 message PositionRatingStats {
     int32 min = 1;
-    int32 avg = 2;
+    float avg = 2;
     int32 max = 3;
 }
 
@@ -26,6 +26,6 @@ message PositionStats {
 
 message SimilarPosition {
     chesse_backend_api.v1alpha1.Position position = 1;
-    int32 similarity_score = 2;
+    float similarity_score = 2;
     chesse_backend_api.v1alpha1.PositionStats position_stats = 3;
 }
