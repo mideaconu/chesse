@@ -288,7 +288,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.toObject = funct
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.toObject = function(includeInstance, msg) {
   var f, obj = {
     min: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    avg: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    avg: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
     max: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
@@ -331,7 +331,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.deserializeBinaryFromReade
       msg.setMin(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readFloat());
       msg.setAvg(value);
       break;
     case 3:
@@ -375,8 +375,8 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.serializeBinaryToWriter = 
     );
   }
   f = message.getAvg();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f !== 0.0) {
+    writer.writeFloat(
       2,
       f
     );
@@ -410,11 +410,11 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.setMin = functio
 
 
 /**
- * optional int32 avg = 2;
+ * optional float avg = 2;
  * @return {number}
  */
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.getAvg = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
 };
 
 
@@ -423,7 +423,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.getAvg = functio
  * @return {!proto.chesse_backend_api.v1alpha1.PositionRatingStats} returns this
  */
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.setAvg = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 
@@ -900,7 +900,7 @@ proto.chesse_backend_api.v1alpha1.SimilarPosition.prototype.toObject = function(
 proto.chesse_backend_api.v1alpha1.SimilarPosition.toObject = function(includeInstance, msg) {
   var f, obj = {
     position: (f = msg.getPosition()) && proto.chesse_backend_api.v1alpha1.Position.toObject(includeInstance, f),
-    similarityScore: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    similarityScore: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
     positionStats: (f = msg.getPositionStats()) && proto.chesse_backend_api.v1alpha1.PositionStats.toObject(includeInstance, f)
   };
 
@@ -944,7 +944,7 @@ proto.chesse_backend_api.v1alpha1.SimilarPosition.deserializeBinaryFromReader = 
       msg.setPosition(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readFloat());
       msg.setSimilarityScore(value);
       break;
     case 3:
@@ -990,8 +990,8 @@ proto.chesse_backend_api.v1alpha1.SimilarPosition.serializeBinaryToWriter = func
     );
   }
   f = message.getSimilarityScore();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f !== 0.0) {
+    writer.writeFloat(
       2,
       f
     );
@@ -1045,11 +1045,11 @@ proto.chesse_backend_api.v1alpha1.SimilarPosition.prototype.hasPosition = functi
 
 
 /**
- * optional int32 similarity_score = 2;
+ * optional float similarity_score = 2;
  * @return {number}
  */
 proto.chesse_backend_api.v1alpha1.SimilarPosition.prototype.getSimilarityScore = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
 };
 
 
@@ -1058,7 +1058,7 @@ proto.chesse_backend_api.v1alpha1.SimilarPosition.prototype.getSimilarityScore =
  * @return {!proto.chesse_backend_api.v1alpha1.SimilarPosition} returns this
  */
 proto.chesse_backend_api.v1alpha1.SimilarPosition.prototype.setSimilarityScore = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 

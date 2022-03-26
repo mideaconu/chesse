@@ -74,10 +74,10 @@ function deserialize_chesse_backend_api_v1alpha1_GetSimilarPositionsResponse(buf
 
 
 // CheSSE Backend Service
-var ChesseBackendServiceService = exports.ChesseBackendServiceService = {
+var CheSSEBackendServiceService = exports.CheSSEBackendServiceService = {
   // Fetch a collection of similar chess positions
 getSimilarPositions: {
-    path: '/chesse_backend_api.v1alpha1.ChesseBackendService/GetSimilarPositions',
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetSimilarPositions',
     requestStream: false,
     responseStream: false,
     requestType: chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsRequest,
@@ -89,7 +89,7 @@ getSimilarPositions: {
   },
   // Fetch a chess game
 getGame: {
-    path: '/chesse_backend_api.v1alpha1.ChesseBackendService/GetGame',
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGame',
     requestStream: false,
     responseStream: false,
     requestType: chesse_backend_api_v1alpha1_chesse_pb.GetGameRequest,
@@ -101,7 +101,7 @@ getGame: {
   },
   // Fetch a collection of chess games
 getGames: {
-    path: '/chesse_backend_api.v1alpha1.ChesseBackendService/GetGames',
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGames',
     requestStream: false,
     responseStream: false,
     requestType: chesse_backend_api_v1alpha1_chesse_pb.GetGamesRequest,
@@ -113,4 +113,4 @@ getGames: {
   },
 };
 
-exports.ChesseBackendServiceClient = grpc.makeGenericClientConstructor(ChesseBackendServiceService);
+exports.CheSSEBackendServiceClient = grpc.makeGenericClientConstructor(CheSSEBackendServiceService);
