@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n(chesse_backend_api/v1alpha1/chesse.proto\x12\x1b\x63hesse_backend_api.v1alpha1\x1a\'chesse_backend_api/v1alpha1/games.proto\x1a+chesse_backend_api/v1alpha1/positions.proto"_\n\x1aGetSimilarPositionsRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"x\n\x1bGetSimilarPositionsResponse\x12Y\n\x11similar_positions\x18\x01 \x03(\x0b\x32,.chesse_backend_api.v1alpha1.SimilarPositionR\x10similarPositions")\n\x0eGetGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"H\n\x0fGetGameResponse\x12\x35\n\x04game\x18\x01 \x01(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x04game"T\n\x0fGetGamesRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"\x8d\x01\n\x10GetGamesResponse\x12\x37\n\x05games\x18\x01 \x03(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x05games\x12@\n\x05stats\x18\x02 \x01(\x0b\x32*.chesse_backend_api.v1alpha1.PositionStatsR\x05stats2\xf0\x02\n\x14\x43hesseBackendService\x12\x88\x01\n\x13GetSimilarPositions\x12\x37.chesse_backend_api.v1alpha1.GetSimilarPositionsRequest\x1a\x38.chesse_backend_api.v1alpha1.GetSimilarPositionsResponse\x12\x64\n\x07GetGame\x12+.chesse_backend_api.v1alpha1.GetGameRequest\x1a,.chesse_backend_api.v1alpha1.GetGameResponse\x12g\n\x08GetGames\x12,.chesse_backend_api.v1alpha1.GetGamesRequest\x1a-.chesse_backend_api.v1alpha1.GetGamesResponseb\x06proto3',
+    serialized_pb=b'\n(chesse_backend_api/v1alpha1/chesse.proto\x12\x1b\x63hesse_backend_api.v1alpha1\x1a\'chesse_backend_api/v1alpha1/games.proto\x1a+chesse_backend_api/v1alpha1/positions.proto"_\n\x1aGetSimilarPositionsRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"x\n\x1bGetSimilarPositionsResponse\x12Y\n\x11similar_positions\x18\x01 \x03(\x0b\x32,.chesse_backend_api.v1alpha1.SimilarPositionR\x10similarPositions")\n\x0eGetGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"H\n\x0fGetGameResponse\x12\x35\n\x04game\x18\x01 \x01(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x04game"T\n\x0fGetGamesRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"\x8d\x01\n\x10GetGamesResponse\x12\x37\n\x05games\x18\x01 \x03(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x05games\x12@\n\x05stats\x18\x02 \x01(\x0b\x32*.chesse_backend_api.v1alpha1.PositionStatsR\x05stats2\xf0\x02\n\x14\x43heSSEBackendService\x12\x88\x01\n\x13GetSimilarPositions\x12\x37.chesse_backend_api.v1alpha1.GetSimilarPositionsRequest\x1a\x38.chesse_backend_api.v1alpha1.GetSimilarPositionsResponse\x12\x64\n\x07GetGame\x12+.chesse_backend_api.v1alpha1.GetGameRequest\x1a,.chesse_backend_api.v1alpha1.GetGameResponse\x12g\n\x08GetGames\x12,.chesse_backend_api.v1alpha1.GetGamesRequest\x1a-.chesse_backend_api.v1alpha1.GetGamesResponseb\x06proto3',
     dependencies=[
         chesse__backend__api_dot_v1alpha1_dot_games__pb2.DESCRIPTOR,
         chesse__backend__api_dot_v1alpha1_dot_positions__pb2.DESCRIPTOR,
@@ -398,8 +398,8 @@ _sym_db.RegisterMessage(GetGamesResponse)
 
 
 _CHESSEBACKENDSERVICE = _descriptor.ServiceDescriptor(
-    name="ChesseBackendService",
-    full_name="chesse_backend_api.v1alpha1.ChesseBackendService",
+    name="CheSSEBackendService",
+    full_name="chesse_backend_api.v1alpha1.CheSSEBackendService",
     file=DESCRIPTOR,
     index=0,
     serialized_options=None,
@@ -409,7 +409,7 @@ _CHESSEBACKENDSERVICE = _descriptor.ServiceDescriptor(
     methods=[
         _descriptor.MethodDescriptor(
             name="GetSimilarPositions",
-            full_name="chesse_backend_api.v1alpha1.ChesseBackendService.GetSimilarPositions",
+            full_name="chesse_backend_api.v1alpha1.CheSSEBackendService.GetSimilarPositions",
             index=0,
             containing_service=None,
             input_type=_GETSIMILARPOSITIONSREQUEST,
@@ -419,7 +419,7 @@ _CHESSEBACKENDSERVICE = _descriptor.ServiceDescriptor(
         ),
         _descriptor.MethodDescriptor(
             name="GetGame",
-            full_name="chesse_backend_api.v1alpha1.ChesseBackendService.GetGame",
+            full_name="chesse_backend_api.v1alpha1.CheSSEBackendService.GetGame",
             index=1,
             containing_service=None,
             input_type=_GETGAMEREQUEST,
@@ -429,7 +429,7 @@ _CHESSEBACKENDSERVICE = _descriptor.ServiceDescriptor(
         ),
         _descriptor.MethodDescriptor(
             name="GetGames",
-            full_name="chesse_backend_api.v1alpha1.ChesseBackendService.GetGames",
+            full_name="chesse_backend_api.v1alpha1.CheSSEBackendService.GetGames",
             index=2,
             containing_service=None,
             input_type=_GETGAMESREQUEST,
@@ -441,6 +441,6 @@ _CHESSEBACKENDSERVICE = _descriptor.ServiceDescriptor(
 )
 _sym_db.RegisterServiceDescriptor(_CHESSEBACKENDSERVICE)
 
-DESCRIPTOR.services_by_name["ChesseBackendService"] = _CHESSEBACKENDSERVICE
+DESCRIPTOR.services_by_name["CheSSEBackendService"] = _CHESSEBACKENDSERVICE
 
 # @@protoc_insertion_point(module_scope)
