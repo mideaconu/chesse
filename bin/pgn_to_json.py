@@ -5,11 +5,10 @@ from typing import Optional, TextIO
 import chess.pgn
 import click
 
-from utils import compress
+from utils import compress, numeric
 
 
 class GameJSONBuilder:
-    context_headers = ["Event", "Date", "Round", "Site"]
     identity_headers = ["Event", "Date", "Round", "White", "Black"]
 
     def __init__(self, game: chess.pgn.Game) -> None:
@@ -31,9 +30,15 @@ class GameJSONBuilder:
         Fields are grouped under the 'context' group field.
         """
         context = {}
-        for header in self.context_headers:
+        for header in ["Event", "Date", "Site"]:
             if header in self.game.headers:
                 context[header.lower()] = self.game.headers[header]
+
+        context["round"] = (
+            float(self.game.headers["Round"])
+            if numeric.is_float(self.game.headers["Round"])
+            else None
+        )
 
         self.game_dict["context"] = context
 
@@ -45,7 +50,11 @@ class GameJSONBuilder:
         """
         white = {}
         white["name"] = self.game.headers["White"]
-        white["elo"] = self.game.headers["WhiteElo"]
+        white["elo"] = (
+            int(self.game.headers["WhiteElo"])
+            if numeric.is_int(self.game.headers["WhiteElo"])
+            else None
+        )
 
         self.game_dict["white"] = white
 
@@ -57,9 +66,25 @@ class GameJSONBuilder:
         """
         black = {}
         black["name"] = self.game.headers["Black"]
-        black["elo"] = self.game.headers["BlackElo"]
+        black["elo"] = (
+            int(self.game.headers["BlackElo"])
+            if numeric.is_int(self.game.headers["BlackElo"])
+            else None
+        )
 
         self.game_dict["black"] = black
+
+    def set_result(self) -> None:
+        """Set the result of the game: 1 if white won, 0.5 for draw, 0 if black
+        won, and None if the result is invalid."""
+        if self.game.headers["Result"] == "1-0":
+            self.game_dict["result"] = 1
+        elif self.game.headers["Result"] == "1/2-1/2":
+            self.game_dict["result"] = 0.5
+        elif self.game.headers["Result"] == "0-1":
+            self.game_dict["result"] = 0
+        else:
+            self.game_dict["result"] = None
 
     def set_moves(self) -> None:
         """Set the list of moves in the game.
@@ -115,6 +140,7 @@ def cli(
     game_json_builder.set_context()
     game_json_builder.set_white()
     game_json_builder.set_black()
+    game_json_builder.set_result()
     game_json_builder.set_moves()
     game_json = game_json_builder.get_result()
 
