@@ -6,7 +6,7 @@ import "chesse_backend_api/v1alpha1/positions.proto";
 
 
 // CheSSE Backend Service
-service ChesseBackendService {
+service CheSSEBackendService {
     // Fetch a collection of similar chess positions
     rpc GetSimilarPositions(GetSimilarPositionsRequest) returns (GetSimilarPositionsResponse);
 
