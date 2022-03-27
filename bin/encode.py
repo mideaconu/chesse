@@ -4,7 +4,7 @@ import chess
 import click
 
 from src.encoding import activity_encoding, connectivity_encoding, naive_encoding
-from src.utils import click as click_utils
+from utils import click as click_utils
 
 
 def run_encoding(

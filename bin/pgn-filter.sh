@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -euo pipefail
 
 output_file=""
 
@@ -8,7 +8,7 @@ output_file=""
 print_usage() {
    cat << EOF
 NAME
-    pgn-flter.sh -- filter a PGN file according to given criteria
+    pgn-flter.sh -- filter a PGN file
 
 SYNOPSIS
     pgn-flter.sh [-h/--help] [-o/--output-file output_file] args_file file

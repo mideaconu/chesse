@@ -1,0 +1,42 @@
+syntax = "proto3";
+package chesse_backend_api.v1alpha1;
+
+import "chesse_backend_api/v1alpha1/games.proto";
+import "chesse_backend_api/v1alpha1/positions.proto";
+
+
+// CheSSE Backend Service
+service CheSSEBackendService {
+    // Fetch a collection of similar chess positions
+    rpc GetSimilarPositions(GetSimilarPositionsRequest) returns (GetSimilarPositionsResponse);
+
+    // Fetch a chess game
+    rpc GetGame(GetGameRequest) returns (GetGameResponse);
+    // Fetch a collection of chess games
+    rpc GetGames(GetGamesRequest) returns (GetGamesResponse);
+}
+
+message GetSimilarPositionsRequest {
+    chesse_backend_api.v1alpha1.Position position = 1;
+}
+
+message GetSimilarPositionsResponse {
+    repeated chesse_backend_api.v1alpha1.SimilarPosition similar_positions = 1;
+}
+
+message GetGameRequest {
+    string game_id = 1;
+}
+
+message GetGameResponse {
+    chesse_backend_api.v1alpha1.Game game = 1;
+}
+
+message GetGamesRequest {
+    chesse_backend_api.v1alpha1.Position position = 1;
+}
+
+message GetGamesResponse {
+    repeated chesse_backend_api.v1alpha1.Game games = 1;
+    chesse_backend_api.v1alpha1.PositionStats stats = 2;
+}

@@ -8,12 +8,13 @@ output_file="output.json"
 print_usage() {
    cat << EOF
 NAME
-    generate-position-json.sh -- TBC
+    generate-position-json.sh -- generates a position object JSON
+
 SYNOPSIS
-    generate-position-json.sh [-h/--help] [-o/--output-file output_file] fen_file json_game_file
+    generate-position-json.sh [-h/--help] [-o/--output-file output_file] fen_file
 
 DESCRIPTION
-    TBC
+    Generated a position object JSON file from a FEN file. The position object contains the FEN representation of the position (excluding castling, en pessant, or move count) and the similarity encoding for that position.
 
     -h, --help
         Print generate-position-json.sh documentation to stdout.
@@ -22,10 +23,10 @@ DESCRIPTION
         Save the output to the output_file. By default, the output is saved to output.json.
 
 EXAMPLES
-    generate-position-json.sh file.fen file.pgn
-        TBC
-    generate-position-json.sh -o file.json file.fen file.pgn
-        TBC
+    generate-position-json.sh file.fen
+        Generates the position object JSON from file.fen and writes is to output.json.
+    generate-position-json.sh -o file.json file.fen
+        Generates the position object JSON from file.fen and writes is to file.json.
 EOF
    exit 0
 }
@@ -61,16 +62,13 @@ main() {
     done
 
     fen_file="${1}"
-    json_game_file="${2}"
 
     echo "[]" > "${output_file}"
 
-    game_id=$(jq -r '.id' ${json_game_file})
-
-    while IFS= read -r line; do
+    cut -d ' ' -f 1 < "${fen_file}" | while IFS= read -r line; do
         encoding=$(encode similarity --fen "${line}")
-        cat <<< $(jq --arg encoding "${encoding}" --arg fen "${line}" --arg game_id "${game_id}" '. += [{"position": {"fen": $fen, "encoding": $encoding}, "games": [{"id": $game_id}]}]' ${output_file}) > ${output_file}
-    done < "${fen_file}"
+        cat <<< $(jq --arg encoding "${encoding}" --arg fen "${line}" '. += [{"position": {"fen": $fen, "encoding": $encoding}}]' ${output_file}) > ${output_file}
+    done
 }
 
 main "$@"

@@ -1,15 +1,15 @@
 version: v1
 plugins:
   - name: python
-    out: src/duchess-pb2-py
+    out: src/chesse-pb2-py
   - name: python-grpc
-    out: src/duchess-pb2-py
+    out: src/chesse-pb2-py
     path: grpc_python_plugin
   - name: js
-    out: src/duchess-pb2-js
+    out: src/chesse-pb2-js
     opt: import_style=commonjs,binary
   - name: js-grpc
-    out: src/duchess-pb2-js
+    out: src/chesse-pb2-js
     opt:
       - import_style=commonjs,binary
       - grpc_js
