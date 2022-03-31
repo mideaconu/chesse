@@ -1,33 +1,44 @@
 repos:
-
   - repo: https://github.com/pycqa/isort
     rev: 5.10.1
     hooks:
+      # sort imports
       - id: isort
-        args: ["--profile", "black"] # sort imports
-
+        args: ["--profile", "black"] 
   - repo: https://github.com/ambv/black
     rev: 21.12b0
     hooks:
-      - id: black # code formatter
+      # code formatter
+      - id: black 
         language_version: python3.8
-
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
     hooks:
-      - id: flake8 # checks style irregularities missed by black
-
+      # checks style irregularities missed by black
+      - id: flake8
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
-      - id: check-docstring-first # checks docstring come before implementation
-      - id: check-json # checks JSON files for parseable syntax
-      - id: pretty-format-json # formats JSON
+      # checks docstring come before implementation
+      - id: check-docstring-first 
+      # ensures that (non-binary) executables have a shebang
+      - id: check-executables-have-shebangs
+      # checks JSON files for parseable syntax
+      - id: check-json
+      # checks toml files for parseable syntax
+      - id: check-toml
+      # detects the presence of private keys
+      - id: detect-private-key
+      # ensures that a file is either empty, or ends with one newline
+      - id: end-of-file-fixer
+      # formats JSON
+      - id: pretty-format-json
         args: ["--autofix", "--no-sort-keys", "--indent", "4"]
-      - id: requirements-txt-fixer # sorts requirements.txt contents
-
+      # sorts requirements.txt contents
+      - id: requirements-txt-fixer
   - repo: https://github.com/myint/docformatter
     rev: v1.4
     hooks:
-      - id: docformatter # formats docstrings
+      # formats docstrings
+      - id: docformatter
         args: [--in-place]
