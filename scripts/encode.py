@@ -1,10 +1,10 @@
 from typing import Callable, Optional, TextIO
 
-import chess
 import click
 
-from src.encoding import activity_encoding, connectivity_encoding, naive_encoding
 from utils import click as click_utils
+from utils import exception as exc
+from utils.encoding import activity_encoding, connectivity_encoding, naive_encoding
 
 
 def run_encoding(
@@ -24,11 +24,11 @@ def run_encoding(
         fen = input_file.readline().strip()
 
     try:
-        board = chess.Board(fen=fen)
-    except Exception as e:
-        raise click.BadParameter(f"FEN {fen!r} is not valid: {e}")
+        encodings = encoding_fct(fen, **kwargs)
+    except exc.InvalidFENError as e:
+        raise click.BadParameter(f"Encoding error: {e}")
 
-    encoding = " ".join(encoding_fct(board, **kwargs))
+    encoding = " ".join(encodings)
 
     if output_file:
         output_file.write(encoding + "\n")

@@ -3,6 +3,8 @@ from typing import List, Set
 
 import chess
 
+from utils import exception as exc
+
 
 def _chebyshev_distance(from_square: chess.Square, to_square: chess.Square) -> float:
     """Returns the Chebyshev distance between two squares."""
@@ -32,26 +34,26 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
     return pseudolegal_moves
 
 
-def encode(board: chess.Board) -> Set[str]:
-    """Returns a set of activity encodings in a given chess position.
+def get_activity_encodings(fen: str) -> List[str]:
+    """Returns a list of activity encodings in a given chess position.
 
     See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
     """
-    activity_encodings = set()
-    piece_activity = defaultdict(list)
+    activity_encodings = []
+
+    try:
+        board = chess.Board(fen=fen)
+    except Exception as e:
+        raise exc.InvalidFENError(f"FEN {fen!r} is not valid: {e}")
 
     pseudolegal_moves = _get_pseudolegal_moves(board)
 
     for move in pseudolegal_moves:
-        piece_activity[move.from_square].append(move.to_square)
+        piece = board.piece_at(move.from_square).symbol() + chess.square_name(move.to_square)
+        weight = _activity_weight(move.from_square, move.to_square)
+        activity_encoding = f"{piece}|{weight}"
 
-    for from_square, to_squares in piece_activity.items():
-        for to_square in to_squares:
-            piece = board.piece_at(from_square).symbol() + chess.square_name(to_square)
-            weight = _activity_weight(from_square, to_square)
-            activity_encoding = f"{piece}|{weight}"
-
-            activity_encodings.add(activity_encoding)
+        activity_encodings.append(activity_encoding)
 
     return activity_encodings

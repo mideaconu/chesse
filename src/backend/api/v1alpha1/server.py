@@ -5,22 +5,27 @@ import grpc
 from chesse_backend_api.v1alpha1 import chesse_pb2, games_pb2, positions_pb2
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import CheSSEBackendServiceServicer
 from elasticsearch import Elasticsearch
+from google.protobuf import text_format
 
-from encoding.activity_encoding import encode as encode_activity
-from encoding.connectivity_encoding import encode as encode_connectivity
-from encoding.naive_encoding import encode as encode_naively
 from utils import logger, query
+from utils.encoding.activity_encoding import encode as encode_activity
+from utils.encoding.connectivity_encoding import encode as encode_connectivity
+from utils.encoding.naive_encoding import encode as encode_naively
 
 LOGGER = logger.get_logger(__name__)
 
 
 class CheSSEBackendService(CheSSEBackendServiceServicer):
+    def __init__(self, db_url: str) -> None:
+        self.controller = ...
+
     def GetSimilarPositions(
         self, request: chesse_pb2.GetSimilarPositionsRequest, context: grpc.ServicerContext
     ) -> chesse_pb2.GetSimilarPositionsResponse:
         """Retrieves similar chess positions from CheSSE."""
-        LOGGER.info("Retrieving positions similar to %s...", request.position.fen)
-        LOGGER.info("Get Similar Positions Request: %s", request)
+        LOGGER.info(f"Get Similar Positions Request: {request}")
+
+        response = chesse_pb2.GetSimilarPositionsResponse()
 
         position_fen = request.position.fen
 

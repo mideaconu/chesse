@@ -3,7 +3,10 @@ from concurrent import futures
 import grpc
 from chesse_backend_api.v1alpha1 import chesse_pb2 as chesse_pb2_v1alpha1
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import add_CheSSEBackendServiceServicer_to_server
+from dotenv import load_dotenv
 from grpc_reflection.v1alpha import reflection
+
+load_dotenv()
 
 from backend.api import __version__
 from backend.api.v1alpha1.server import CheSSEBackendService as CheSSEBackendServiceV1Alpha1
