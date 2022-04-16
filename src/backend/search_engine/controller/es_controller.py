@@ -36,8 +36,9 @@ def _filter_position_stats(position_stats_raw: JSON) -> JSON:
                 "min": int(
                     min(bucket["white"]["min_elo"]["value"], bucket["black"]["min_elo"]["value"])
                 ),
-                "avg": (bucket["white"]["avg_elo"]["value"] + bucket["black"]["avg_elo"]["value"])
-                / 2,
+                "avg": int(
+                    (bucket["white"]["avg_elo"]["value"] + bucket["black"]["avg_elo"]["value"]) / 2
+                ),
                 "max": int(
                     max(bucket["white"]["max_elo"]["value"], bucket["black"]["max_elo"]["value"])
                 ),
@@ -51,16 +52,16 @@ def _filter_position_stats(position_stats_raw: JSON) -> JSON:
         for side in bucket["results"]["side_won"]["buckets"]:
             match side["key"]:
                 case 1:
-                    positions_stats[fen]["results"]["white"] = round(
-                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100, 2
+                    positions_stats[fen]["results"]["white"] = (
+                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100
                     )
                 case 0.5:
-                    positions_stats[fen]["results"]["draw"] = round(
-                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100, 2
+                    positions_stats[fen]["results"]["draw"] = (
+                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100
                     )
                 case 0:
-                    positions_stats[fen]["results"]["black"] = round(
-                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100, 2
+                    positions_stats[fen]["results"]["black"] = (
+                        side["doc_count"] / positions_stats[fen]["nr_games"] * 100
                     )
                 case _:
                     logger.error(
@@ -124,5 +125,7 @@ class ESController(controller_interface.AbstractSearchEngineController):
         response = query.execute()
         positions_stats_raw = response.to_dict()
         positions_stats = _filter_position_stats(positions_stats_raw)
+
+        logger.debug(positions_stats)
 
         return positions_stats
