@@ -3,6 +3,7 @@
 # source: chesse_backend_api/v1alpha1/games.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
@@ -12,60 +13,12 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-    name="chesse_backend_api/v1alpha1/games.proto",
-    package="chesse_backend_api.v1alpha1",
-    syntax="proto3",
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-    serialized_pb=b"\n'chesse_backend_api/v1alpha1/games.proto\x12\x1b\x63hesse_backend_api.v1alpha1\"\x16\n\x04Game\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02idb\x06proto3",
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b"\n'chesse_backend_api/v1alpha1/games.proto\x12\x1b\x63hesse_backend_api.v1alpha1\"\x16\n\x04Game\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02idb\x06proto3"
 )
 
 
-_GAME = _descriptor.Descriptor(
-    name="Game",
-    full_name="chesse_backend_api.v1alpha1.Game",
-    filename=None,
-    file=DESCRIPTOR,
-    containing_type=None,
-    create_key=_descriptor._internal_create_key,
-    fields=[
-        _descriptor.FieldDescriptor(
-            name="id",
-            full_name="chesse_backend_api.v1alpha1.Game.id",
-            index=0,
-            number=1,
-            type=9,
-            cpp_type=9,
-            label=1,
-            has_default_value=False,
-            default_value=b"".decode("utf-8"),
-            message_type=None,
-            enum_type=None,
-            containing_type=None,
-            is_extension=False,
-            extension_scope=None,
-            serialized_options=None,
-            json_name="id",
-            file=DESCRIPTOR,
-            create_key=_descriptor._internal_create_key,
-        ),
-    ],
-    extensions=[],
-    nested_types=[],
-    enum_types=[],
-    serialized_options=None,
-    is_extendable=False,
-    syntax="proto3",
-    extension_ranges=[],
-    oneofs=[],
-    serialized_start=72,
-    serialized_end=94,
-)
-
-DESCRIPTOR.message_types_by_name["Game"] = _GAME
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
+_GAME = DESCRIPTOR.message_types_by_name["Game"]
 Game = _reflection.GeneratedProtocolMessageType(
     "Game",
     (_message.Message,),
@@ -77,5 +30,9 @@ Game = _reflection.GeneratedProtocolMessageType(
 )
 _sym_db.RegisterMessage(Game)
 
+if _descriptor._USE_C_DESCRIPTORS == False:
 
+    DESCRIPTOR._options = None
+    _GAME._serialized_start = 72
+    _GAME._serialized_end = 94
 # @@protoc_insertion_point(module_scope)
