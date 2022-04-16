@@ -1,0 +1,31 @@
+syntax = "proto3";
+package chesse_backend_api.v1alpha1;
+
+
+message Position {
+    string fen = 1;
+}
+
+message PositionRatingStats {
+    int32 min = 1;
+    int32 avg = 2;
+    int32 max = 3;
+}
+
+message PositionResultStats {
+    float white = 1;
+    float draw = 2;
+    float black = 3;
+}
+
+message PositionStats {
+    int32 nr_games = 1;
+    chesse_backend_api.v1alpha1.PositionRatingStats rating_stats = 2;
+    chesse_backend_api.v1alpha1.PositionResultStats result_stats = 3;
+}
+
+message SimilarPosition {
+    chesse_backend_api.v1alpha1.Position position = 1;
+    float similarity_score = 2;
+    chesse_backend_api.v1alpha1.PositionStats position_stats = 3;
+}

@@ -1,0 +1,7 @@
+elasticsearch==7.17.2
+elasticsearch-dsl==7.4.0
+google-api-python-client==2.39.0
+grpcio==1.44.0
+grpcio-reflection==1.44.0
+grpcio-tools==1.44.0
+pyfiglet==0.8.post1

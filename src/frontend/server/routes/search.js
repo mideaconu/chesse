@@ -2,12 +2,14 @@ const express = require('express');
 
 var router = express.Router();
 
-const services = require('../chesse-pb2-js/chesse_backend_api/v1alpha1/chesse_grpc_pb');
-const messages = require('../chesse-pb2-js/chesse_backend_api/v1alpha1/chesse_pb');
-const pos = require('../chesse-pb2-js/chesse_backend_api/v1alpha1/positions_pb');
+const services = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_grpc_pb');
+const messages = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_pb');
+const pos = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/positions_pb');
 const grpc = require('@grpc/grpc-js');
 
-const client = new services.CheSSEBackendServiceClient('localhost:50051', grpc.credentials.createInsecure());
+require('dotenv').config()
+
+const client = new services.CheSSEBackendServiceClient(`localhost:${process.env.BACKEND_API_PORT}`, grpc.ChannelCredentials.createInsecure());
 
 /* GET /search. */
 router.get('/', function(req, res, next) {
@@ -35,9 +37,9 @@ router.get('/', function(req, res, next) {
 						max: position_pb.getPositionStats().getRatingStats().getMax(),
 					},
 					result: {
-						white: position_pb.getPositionStats().getResultStats().getWhiteWinPct(),
-						draw: position_pb.getPositionStats().getResultStats().getDrawPct(),
-						black: position_pb.getPositionStats().getResultStats().getBlackWinPct(),
+						white: position_pb.getPositionStats().getResultStats().getWhite(),
+						draw: position_pb.getPositionStats().getResultStats().getDraw(),
+						black: position_pb.getPositionStats().getResultStats().getBlack(),
 					}
 				}
 			});
@@ -45,7 +47,7 @@ router.get('/', function(req, res, next) {
 
 		console.log(positions);
 
-		res.render('search', { title: 'DUChess', fen: req.query.fen, positions: positions });
+		res.render('search', { title: 'CheSSE', fen: req.query.fen, positions: positions });
   	});
 });
 

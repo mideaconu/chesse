@@ -1,7 +1,2 @@
-chess==1.8.0
-click==8.0.3
-elasticsearch==8.1.0
-google-api-python-client==2.39.0
-grpcio==1.44.0
-grpcio-reflection==1.44.0
-grpcio-tools==1.44.0
+loguru==0.6.0
+python-dotenv==0.20.0
