@@ -1,8 +1,10 @@
 .DEFAULT_GOAL = index
 
-bin_dir := $(PWD)/bin
-config_dir := $(PWD)/config
-data_dir := $(PWD)/data
+ROOT_DIR := /Users/mihaideaconu/Documents/chessplusplus
+
+scripts_dir := $(ROOT_DIR)/scripts
+config_dir := $(ROOT_DIR)/config
+data_dir := $(ROOT_DIR)/data
 output_dir ?= $(data_dir)/output
 
 pgn_dir := $(data_dir)/pgn
@@ -38,7 +40,7 @@ gprint := printf '\033[32m%s\033[0m'  # green
 bprint := printf '\033[36m%s\033[0m'  # blue
 
 checkmark := "  \xE2\x9C\x94\n"
-VPATH := $(bin_dir) $(data_dir) $(config_dir)
+VPATH := $(scripts_dir) $(data_dir) $(config_dir)
 
 ## Show a list of available commands
 .PHONY += index/help
