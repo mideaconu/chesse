@@ -8,14 +8,14 @@ message Position {
 
 message PositionRatingStats {
     int32 min = 1;
-    float avg = 2;
+    int32 avg = 2;
     int32 max = 3;
 }
 
 message PositionResultStats {
-    float white_win_pct = 1;
-    float draw_pct = 2;
-    float black_win_pct = 3;
+    float white = 1;
+    float draw = 2;
+    float black = 3;
 }
 
 message PositionStats {

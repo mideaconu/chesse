@@ -294,7 +294,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.toObject = funct
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.toObject = function(includeInstance, msg) {
   var f, obj = {
     min: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    avg: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+    avg: jspb.Message.getFieldWithDefault(msg, 2, 0),
     max: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
@@ -337,7 +337,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.deserializeBinaryFromReade
       msg.setMin(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setAvg(value);
       break;
     case 3:
@@ -381,8 +381,8 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.serializeBinaryToWriter = 
     );
   }
   f = message.getAvg();
-  if (f !== 0.0) {
-    writer.writeFloat(
+  if (f !== 0) {
+    writer.writeInt32(
       2,
       f
     );
@@ -416,11 +416,11 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.setMin = functio
 
 
 /**
- * optional float avg = 2;
+ * optional int32 avg = 2;
  * @return {number}
  */
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.getAvg = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -429,7 +429,7 @@ proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.getAvg = functio
  * @return {!proto.chesse_backend_api.v1alpha1.PositionRatingStats} returns this
  */
 proto.chesse_backend_api.v1alpha1.PositionRatingStats.prototype.setAvg = function(value) {
-  return jspb.Message.setProto3FloatField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -483,9 +483,9 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.toObject = funct
  */
 proto.chesse_backend_api.v1alpha1.PositionResultStats.toObject = function(includeInstance, msg) {
   var f, obj = {
-    whiteWinPct: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    drawPct: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    blackWinPct: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+    white: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
+    draw: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+    black: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
   };
 
   if (includeInstance) {
@@ -524,15 +524,15 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.deserializeBinaryFromReade
     switch (field) {
     case 1:
       var value = /** @type {number} */ (reader.readFloat());
-      msg.setWhiteWinPct(value);
+      msg.setWhite(value);
       break;
     case 2:
       var value = /** @type {number} */ (reader.readFloat());
-      msg.setDrawPct(value);
+      msg.setDraw(value);
       break;
     case 3:
       var value = /** @type {number} */ (reader.readFloat());
-      msg.setBlackWinPct(value);
+      msg.setBlack(value);
       break;
     default:
       reader.skipField();
@@ -563,21 +563,21 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.serializeBinary 
  */
 proto.chesse_backend_api.v1alpha1.PositionResultStats.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getWhiteWinPct();
+  f = message.getWhite();
   if (f !== 0.0) {
     writer.writeFloat(
       1,
       f
     );
   }
-  f = message.getDrawPct();
+  f = message.getDraw();
   if (f !== 0.0) {
     writer.writeFloat(
       2,
       f
     );
   }
-  f = message.getBlackWinPct();
+  f = message.getBlack();
   if (f !== 0.0) {
     writer.writeFloat(
       3,
@@ -588,10 +588,10 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.serializeBinaryToWriter = 
 
 
 /**
- * optional float white_win_pct = 1;
+ * optional float white = 1;
  * @return {number}
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getWhiteWinPct = function() {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getWhite = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 1, 0.0));
 };
 
@@ -600,16 +600,16 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getWhiteWinPct =
  * @param {number} value
  * @return {!proto.chesse_backend_api.v1alpha1.PositionResultStats} returns this
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setWhiteWinPct = function(value) {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setWhite = function(value) {
   return jspb.Message.setProto3FloatField(this, 1, value);
 };
 
 
 /**
- * optional float draw_pct = 2;
+ * optional float draw = 2;
  * @return {number}
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getDrawPct = function() {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getDraw = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
 };
 
@@ -618,16 +618,16 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getDrawPct = fun
  * @param {number} value
  * @return {!proto.chesse_backend_api.v1alpha1.PositionResultStats} returns this
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setDrawPct = function(value) {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setDraw = function(value) {
   return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 
 /**
- * optional float black_win_pct = 3;
+ * optional float black = 3;
  * @return {number}
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getBlackWinPct = function() {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getBlack = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
 };
 
@@ -636,7 +636,7 @@ proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.getBlackWinPct =
  * @param {number} value
  * @return {!proto.chesse_backend_api.v1alpha1.PositionResultStats} returns this
  */
-proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setBlackWinPct = function(value) {
+proto.chesse_backend_api.v1alpha1.PositionResultStats.prototype.setBlack = function(value) {
   return jspb.Message.setProto3FloatField(this, 3, value);
 };
 
