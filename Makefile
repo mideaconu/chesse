@@ -39,4 +39,4 @@ start/backend-api : ### Start backend API
 
 .PHONY: start/frontend-server
 start/frontend-server :  ## Start frontend server
-	@DEBUG=server:* npm start --prefix src/frontend/server
+	@DEBUG=server:* npm start --prefix src/frontend

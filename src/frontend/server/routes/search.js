@@ -7,6 +7,8 @@ const messages = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/
 const pos = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/positions_pb');
 const grpc = require('@grpc/grpc-js');
 
+require('dotenv').config()
+
 const client = new services.CheSSEBackendServiceClient(`localhost:${process.env.BACKEND_API_PORT}`, grpc.ChannelCredentials.createInsecure());
 
 /* GET /search. */
@@ -21,7 +23,6 @@ router.get('/', function(req, res, next) {
 	var positions;
 
 	client.getSimilarPositions(request, function(err, response) {
-		console.log(response);
 		var similar_positions_pb = response.getSimilarPositionsList();
 		positions = [];
 		for (let position_pb of similar_positions_pb) {

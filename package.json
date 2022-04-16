@@ -1,5 +1,6 @@
 {
     "dependencies": {
-        "server": "file:src/frontend/server"
+        "dotenv": "^16.0.0",
+        "server": "file:src/frontend"
     }
 }

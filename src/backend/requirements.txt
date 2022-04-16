@@ -4,6 +4,4 @@ google-api-python-client==2.39.0
 grpcio==1.44.0
 grpcio-reflection==1.44.0
 grpcio-tools==1.44.0
-loguru==0.6.0
 pyfiglet==0.8.post1
-python-dotenv==0.20.0
