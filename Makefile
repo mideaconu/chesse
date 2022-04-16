@@ -1,4 +1,5 @@
 protobufs_dir := src/protobufs
+index_dir := src/backend/index
 
 # Coloured text
 gprint := printf '\033[32m%s\033[0m'  # green
@@ -26,3 +27,16 @@ clean : clean/py  ## Clean up the repository
 .PHONY: proto
 proto :  ## Run the protobuf code generation pipeline
 	@$(MAKE) -C $(protobufs_dir) proto
+
+.PHONY: index
+index :  ## Run the indexing pipeline
+	@$(MAKE) -C $(index_dir) index
+
+
+.PHONY: start/backend-api
+start/backend-api : ### Start backend API
+	@python src/backend/api/main.py
+
+.PHONY: start/frontend-server
+start/frontend-server :  ## Start frontend server
+	@DEBUG=server:* npm start --prefix src/frontend/server
