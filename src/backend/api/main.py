@@ -2,6 +2,7 @@ import os
 from concurrent import futures
 
 import grpc
+import pyfiglet
 from chesse_backend_api.v1alpha1 import chesse_pb2 as chesse_pb2_v1alpha1
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import add_CheSSEBackendServiceServicer_to_server
 from dotenv import load_dotenv
@@ -28,8 +29,8 @@ def serve(port: str, max_workers: int):
     server.add_insecure_port(f"[::]:{port}")
 
     server.start()
-    with open("src/backend/api/banner.txt") as banner:
-        logger.info(banner.read())
+    startup_banner = pyfiglet.Figlet(font="slant", width=100).renderText("Chesse Backend API")
+    logger.info(f"\n{startup_banner}")
     logger.info(f"Version: {__version__}")
     logger.info(f"Host: localhost:{port}")
     server.wait_for_termination()
