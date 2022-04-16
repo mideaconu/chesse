@@ -1,6 +1,5 @@
 import chess
 import pytest
-
 from src.encoding import activity_encoding
 
 

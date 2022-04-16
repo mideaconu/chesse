@@ -1,11 +1,9 @@
-from typing import List
-
 import chess
 
 from utils import exception as exc
 
 
-def get_naive_encodings(fen: str) -> List[str]:
+def get_naive_encoding(fen: str) -> str:
     """Returns a set of naive encodings of the chess pieces in a given chess
     position.
 
@@ -27,4 +25,6 @@ def get_naive_encodings(fen: str) -> List[str]:
 
             naive_encodings.append(naive_encoding)
 
-    return naive_encodings
+    naive_encoding = " ".join(naive_encodings)
+
+    return naive_encoding

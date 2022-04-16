@@ -1,5 +1,4 @@
-from collections import defaultdict
-from typing import List, Set
+from typing import List
 
 import chess
 
@@ -34,7 +33,7 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
     return pseudolegal_moves
 
 
-def get_activity_encodings(fen: str) -> List[str]:
+def get_activity_encoding(fen: str) -> str:
     """Returns a list of activity encodings in a given chess position.
 
     See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
@@ -56,4 +55,6 @@ def get_activity_encodings(fen: str) -> List[str]:
 
         activity_encodings.append(activity_encoding)
 
-    return activity_encodings
+    activity_encoding = " ".join(activity_encodings)
+
+    return activity_encoding

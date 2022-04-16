@@ -72,7 +72,7 @@ def _get_ray_attack_encodings(
     return ray_attack_encodings
 
 
-def get_connectivity_encodings(fen: str) -> List[str]:
+def get_connectivity_encoding(fen: str) -> str:
     """Returns a list of connectivity encodings of a given chess position.
 
     See Section 5.3. Connectivity between the pieces in Ganguly, D.,
@@ -99,4 +99,6 @@ def get_connectivity_encodings(fen: str) -> List[str]:
         itertools.chain(attack_encodings, defense_encodings, ray_attack_encodings)
     )
 
-    return connectivity_encodings
+    connectivity_encoding = " ".join(connectivity_encodings)
+
+    return connectivity_encoding
