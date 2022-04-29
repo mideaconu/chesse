@@ -1,5 +1,5 @@
 protobufs_dir := src/protobufs
-index_dir := src/backend/index
+index_dir := src/backend/search_engine/index
 
 # Coloured text
 gprint := printf '\033[32m%s\033[0m'  # green

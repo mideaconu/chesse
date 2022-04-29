@@ -15,4 +15,4 @@
 
 % Matching patterns
 :-t
-Elo >= "2400"
+Elo >= "2200"
