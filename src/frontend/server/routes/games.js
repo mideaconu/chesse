@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET /games. */
 router.get('/', function(req, res, next) {
-  res.render('games', { title: 'DUChess', id: req.query.id });
+  res.render('games', { title: 'CheSSE', id: req.query.id });
 });
 
 module.exports = router;

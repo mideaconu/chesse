@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+
+@import "index/index";
+@import "index/screens/iphone";
+@import "index/screens/laptop";
+
+
+html {
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Raleway', sans-serif;
+    
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+button {
+    cursor: pointer;
+
+    color: #b58863;
+    background: white;
+}

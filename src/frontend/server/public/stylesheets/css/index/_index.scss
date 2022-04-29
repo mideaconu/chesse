@@ -1,0 +1,23 @@
+@import "../header/header";
+@import "../header/title";
+
+@import "../footer/footer";
+
+@import "title";
+@import "board";
+@import "util_buttons";
+@import "search_button";
+
+
+.search-container {
+    background-color: white;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
+    grid-template-rows: 300px 600px 100px auto;
+    grid-template-areas:
+        "title search-board util-buttons ."
+        ". search-board . ."
+        ". search-button . ."
+        ". . . .";
+}

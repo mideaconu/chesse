@@ -5,6 +5,8 @@ block scripts
 		href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css",
 		integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU", 
 		crossorigin="anonymous")
+	link(rel="stylesheet", 
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 	script(defer, 
 		src="https://code.jquery.com/jquery-3.5.1.min.js", 
 		integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2",
@@ -16,8 +18,22 @@ block scripts
 	script(defer, type="module", src="/javascripts/index.js")
 
 block content
-	div#searchBoard(style="width: 400px")
-	button#startButton Starting Position
-	button#clearButton Clear Board
-	button#flipButton Flip Board
-	button#searchButton Search
+	header
+		a.sitename(href="/") CheSSE
+			span.domain(href="/") .io
+	.search-container
+		.title-item
+			#title CheSSE
+			#subtitle Chess Similarity Search Engine
+		.search-board-item 
+			#search-board
+		.util-buttons-item
+			button#start-button.util-button.fa.fa-backward &nbsp; STARTING POSITION
+			button#clear-button.util-button.fa.fa-trash &nbsp; CLEAR BOARD
+			button#flip-button.util-button.fa.fa-refresh &nbsp; FLIP BOARD
+		.search-button-item
+			button#search-button SEARCH
+	footer
+		.credits &copy; Mihai Ionut Deaconu 
+			script.
+				document.write(/\d{4}/.exec(Date())[0])

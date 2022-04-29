@@ -20,22 +20,29 @@ block content
     |
     script.
         var board_config = {
-                pieceTheme: 'images/chesspieces/default/{piece}.png',
-                position: "#{fen}",
-                showNotation: true
-            };
+            pieceTheme: 'images/chesspieces/default/{piece}.png',
+            position: "#{fen}",
+            showNotation: true
+        };
         Chessboard("queryBoard", board_config);
     - var i = 0
-    each game in games
+    each position in positions
         - i++
         - var k = "board" + i
-        a(href=`/games?id=${game.id}`)
+        a(href=`/games?position.fen=${position.fen}`)
             div(id=k, style="width: 300px")
         script.
             var board_config = {
                 pieceTheme: 'images/chesspieces/default/{piece}.png',
-                position: "#{game.position_fen}"
+                position: "#{position.fen}"
             };
             Chessboard("board#{i}", board_config);
             console.log("board#{i}");
-            console.log("#{game.position_fen}");
+            console.log("#{position.fen}");
+        p #{position.stats.nr_games}
+        p #{position.stats.rating.min}
+        p #{position.stats.rating.avg}
+        p #{position.stats.rating.max}
+        p #{position.stats.result.white}
+        p #{position.stats.result.draw}
+        p #{position.stats.result.black}

@@ -6,14 +6,14 @@ var board_config = {
     sparePieces: true,
     dropOffBoard: "trash"
 };
-board = Chessboard("searchBoard", board_config);
+board = Chessboard("search-board", board_config);
 
 function searchPosition() {
     console.log(`${board.fen()}`);
     window.location.href = `/search?fen=${board.fen()}`;
 }
 
-$('#startButton').on('click', board.start);
-$('#clearButton').on('click', board.clear);
-$('#flipButton').on('click', board.flip);
-$('#searchButton').on('click', searchPosition);
+$('#start-button').on('click', board.start);
+$('#clear-button').on('click', board.clear);
+$('#flip-button').on('click', board.flip);
+$('#search-button').on('click', searchPosition);

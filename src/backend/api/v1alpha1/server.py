@@ -1,63 +1,48 @@
-from ssl import create_default_context
-
-import chess
 import grpc
-from duchess_backend_api.v1alpha1 import games_pb2, positions_pb2
-from duchess_backend_api.v1alpha1.duchess_pb2_grpc import DuchessBackendServiceServicer
-from elasticsearch import Elasticsearch
+from chesse_backend_api.v1alpha1 import chesse_pb2, positions_pb2
+from chesse_backend_api.v1alpha1.chesse_pb2_grpc import CheSSEBackendServiceServicer
+from loguru import logger
 
-from encoding.activity_encoding import encode as encode_activity
-from encoding.connectivity_encoding import encode as encode_connectivity
-from encoding.naive_encoding import encode as encode_naively
-from utils import logger
-
-LOGGER = logger.get_logger(__name__)
+from backend.api import controller
 
 
-class DuchessBackendService(DuchessBackendServiceServicer):
-    def GetSimilarGames(
-        self, request: games_pb2.GetSimilarGamesRequest, context: grpc.ServicerContext
-    ) -> games_pb2.GetSimilarGamesResponse:
-        """Retrieves similar chess games from DUChess."""
-        LOGGER.info("Retrieving games similar to position %s...", request.position_fen)
-        LOGGER.info("Get Similar Games Request: %s", request)
+class CheSSEBackendService(CheSSEBackendServiceServicer):
+    def __init__(self) -> None:
+        self.chesse_backend_controller = controller.CheSSEBackendController()
 
-        position_fen = request.position_fen
+    def GetSimilarPositions(
+        self, request: chesse_pb2.GetSimilarPositionsRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetSimilarPositionsResponse:
+        """Retrieves similar chess positions from CheSSE."""
+        logger.info(f"GetSimilarPositionsRequest: {request}")
 
-        board = chess.Board(fen=position_fen)
-
-        position_encoding = "\n".join(
-            [
-                "\n".join(encode_naively(board)),
-                "\n".join(encode_activity(board)),
-                "\n".join(encode_connectivity(board, "attack")),
-                "\n".join(encode_connectivity(board, "defense")),
-                "\n".join(encode_connectivity(board, "ray-attack")),
-            ]
+        search_position_results = self.chesse_backend_controller.get_search_position_results(
+            fen=request.position.fen
         )
 
-        context = create_default_context(cafile="/Users/mihaideaconu/Documents/http_ca.crt")
-        es = Elasticsearch(
-            hosts=["https://localhost:9200"],
-            http_auth=("elastic", "lCUjVzlIk52a++cG6UCX"),
-            ssl_context=context,
-        )
-
-        query = {"query": {"match": {"position.encoding": position_encoding}}}
-
-        res = es.search(index="positions", body=query)
-
-        response = games_pb2.GetSimilarGamesResponse(
-            games=[
-                games_pb2.Game(
-                    id=game["id"],
-                    position=positions_pb2.Position(fen=result["_source"]["position"]["fen"]),
+        response = chesse_pb2.GetSimilarPositionsResponse(
+            similar_positions=[
+                positions_pb2.SimilarPosition(
+                    position=positions_pb2.Position(fen=position["fen"]),
+                    similarity_score=position["similarity_score"],
+                    position_stats=positions_pb2.PositionStats(
+                        nr_games=position["stats"]["nr_games"],
+                        rating_stats=positions_pb2.PositionRatingStats(
+                            min=position["stats"]["rating"]["min"],
+                            avg=position["stats"]["rating"]["avg"],
+                            max=position["stats"]["rating"]["max"],
+                        ),
+                        result_stats=positions_pb2.PositionResultStats(
+                            white=position["stats"]["results"]["white"],
+                            draw=position["stats"]["results"]["draw"],
+                            black=position["stats"]["results"]["black"],
+                        ),
+                    ),
                 )
-                for result in res["hits"]["hits"]
-                for game in result["_source"]["games"]
+                for position in search_position_results
             ]
         )
 
-        LOGGER.info("Get Similar Games Response: %s", response)
+        logger.info(f"Get Similar Games Response: {response}")
 
         return response

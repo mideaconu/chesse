@@ -1,0 +1,32 @@
+.util-buttons-item {
+    grid-area: util-buttons;
+    justify-self: left;
+
+    margin-top: 160px;
+}
+
+.util-button.fa::before {
+    font-family: 'FontAwesome';
+}
+
+.util-button.fa {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+
+    width: 85%;
+    margin: 7px;
+    padding: 13px;
+
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: #b58863;
+}
+
+.util-button:hover {
+    box-shadow: 2px 8px 15px rgba(0, 0, 0, 0.3);
+}
