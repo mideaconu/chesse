@@ -4,4 +4,26 @@ package chesse_backend_api.v1alpha1;
 
 message Game {
     string id = 1;
+    chesse_backend_api.v1alpha1.GameContext context = 2;
+    chesse_backend_api.v1alpha1.White white = 3;
+    chesse_backend_api.v1alpha1.Black black = 4;
+    float result = 5;
+    int32 nr_moves = 6;
+}
+
+message GameContext {
+    string event = 1;
+    string date = 2;
+    string site = 3;
+    float round = 4;
+}
+
+message White {
+    string name = 1;
+    int32 elo = 2;
+}
+
+message Black {
+    string name = 1;
+    int32 elo = 2;
 }
