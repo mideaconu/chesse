@@ -29,7 +29,7 @@ block content
     each position in positions
         - i++
         - var k = "board" + i
-        a(href=`/games?position.fen=${position.fen}`)
+        a(href=`/games?fen=${position.fen}`)
             div(id=k, style="width: 300px")
         script.
             var board_config = {
