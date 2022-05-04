@@ -48,7 +48,7 @@ class CheSSEBackendServiceServicer(object):
         raise NotImplementedError("Method not implemented!")
 
     def GetGames(self, request, context):
-        """Fetch a collection of chess games."""
+        """Fetch a list of chess games."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")

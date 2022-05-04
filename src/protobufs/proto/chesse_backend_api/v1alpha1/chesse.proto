@@ -12,7 +12,7 @@ service CheSSEBackendService {
 
     // Fetch a chess game
     rpc GetGame(GetGameRequest) returns (GetGameResponse);
-    // Fetch a collection of chess games
+    // Fetch a list of chess games
     rpc GetGames(GetGamesRequest) returns (GetGamesResponse);
 }
 
