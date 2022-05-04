@@ -1,6 +1,46 @@
 extends layout
 
 block scripts
+    link(rel="stylesheet",
+        href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css",
+        integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU",
+        crossorigin="anonymous")
+    script(
+        src="https://code.jquery.com/jquery-3.5.1.min.js",
+        integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2",
+        crossorigin="anonymous")
+    script(
+        src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
+        integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
+        crossorigin="anonymous")
+    script(type="module", src="/javascripts/search.js")
 
 block content
-    p #{id}
+    header
+        a.sitename(href="/") CheSSE
+            span.domain(href="/") .io
+    .games-container
+        .title-item
+            #title CheSSE
+            #subtitle Chess Similarity Search Engine
+        .position-board-item
+            #position-board
+        .games-item
+            p #{stats.nr_games} games found
+            p Rating: #{stats.rating.min} min, #{stats.rating.avg} average, #{stats.rating.max} max
+            p Win rate: #{stats.result.white}% white, #{stats.result.draw}% draw, #{stats.result.black}% black
+            each game in games
+                script
+                a(href="/games/" + encodeURIComponent(game.id))
+                    p #{game.id}
+    footer
+        .credits &copy; Mihai Ionut Deaconu 
+            script.
+                document.write(/\d{4}/.exec(Date())[0])
+    script.
+        var board_config = {
+            pieceTheme: 'images/chesspieces/default/{piece}.png',
+            position: "#{fen}",
+            showNotation: false
+        };
+        Chessboard("position-board", board_config);

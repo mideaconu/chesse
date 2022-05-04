@@ -65,8 +65,13 @@ router.get('/', function(req, res, next) {
         console.log(stats);
 		console.log(games);
 
-		res.render('games', { title: 'CheSSE', stats: stats, game: games });
+		res.render('games', { title: 'CheSSE', fen: req.query.fen, stats: stats, games: games });
   	});
+});
+
+/* GET /games/{gameId}. */
+router.get('/:gameId', function(req, res, next) {
+    console.log(req.params.gameId);
 });
 
 module.exports = router;

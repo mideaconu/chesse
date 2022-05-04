@@ -7,7 +7,7 @@
 
 .search-result {
     display: grid;
-    grid-template-columns: 350px 1fr auto;
+    grid-template-columns: 230px 1fr auto;
     grid-template-areas: "board stats .";
 
     margin: 30px;
@@ -17,6 +17,8 @@
 .result-board {
     grid-area: board;
     place-self: left;
+
+    width: 200px;
 }
 
 .result-stats {
