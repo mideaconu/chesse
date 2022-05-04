@@ -14,11 +14,14 @@ _sym_db = _symbol_database.Default()
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b"\n'chesse_backend_api/v1alpha1/games.proto\x12\x1b\x63hesse_backend_api.v1alpha1\"\x16\n\x04Game\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02idb\x06proto3"
+    b'\n\'chesse_backend_api/v1alpha1/games.proto\x12\x1b\x63hesse_backend_api.v1alpha1"\x81\x02\n\x04Game\x12\x0e\n\x02id\x18\x01 \x01(\tR\x02id\x12\x42\n\x07\x63ontext\x18\x02 \x01(\x0b\x32(.chesse_backend_api.v1alpha1.GameContextR\x07\x63ontext\x12\x38\n\x05white\x18\x03 \x01(\x0b\x32".chesse_backend_api.v1alpha1.WhiteR\x05white\x12\x38\n\x05\x62lack\x18\x04 \x01(\x0b\x32".chesse_backend_api.v1alpha1.BlackR\x05\x62lack\x12\x16\n\x06result\x18\x05 \x01(\x02R\x06result\x12\x19\n\x08nr_moves\x18\x06 \x01(\x05R\x07nrMoves"a\n\x0bGameContext\x12\x14\n\x05\x65vent\x18\x01 \x01(\tR\x05\x65vent\x12\x12\n\x04\x64\x61te\x18\x02 \x01(\tR\x04\x64\x61te\x12\x12\n\x04site\x18\x03 \x01(\tR\x04site\x12\x14\n\x05round\x18\x04 \x01(\x02R\x05round"-\n\x05White\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n\x03\x65lo\x18\x02 \x01(\x05R\x03\x65lo"-\n\x05\x42lack\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n\x03\x65lo\x18\x02 \x01(\x05R\x03\x65lob\x06proto3'
 )
 
 
 _GAME = DESCRIPTOR.message_types_by_name["Game"]
+_GAMECONTEXT = DESCRIPTOR.message_types_by_name["GameContext"]
+_WHITE = DESCRIPTOR.message_types_by_name["White"]
+_BLACK = DESCRIPTOR.message_types_by_name["Black"]
 Game = _reflection.GeneratedProtocolMessageType(
     "Game",
     (_message.Message,),
@@ -30,9 +33,48 @@ Game = _reflection.GeneratedProtocolMessageType(
 )
 _sym_db.RegisterMessage(Game)
 
+GameContext = _reflection.GeneratedProtocolMessageType(
+    "GameContext",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GAMECONTEXT,
+        "__module__": "chesse_backend_api.v1alpha1.games_pb2"
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GameContext)
+    },
+)
+_sym_db.RegisterMessage(GameContext)
+
+White = _reflection.GeneratedProtocolMessageType(
+    "White",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _WHITE,
+        "__module__": "chesse_backend_api.v1alpha1.games_pb2"
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.White)
+    },
+)
+_sym_db.RegisterMessage(White)
+
+Black = _reflection.GeneratedProtocolMessageType(
+    "Black",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _BLACK,
+        "__module__": "chesse_backend_api.v1alpha1.games_pb2"
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.Black)
+    },
+)
+_sym_db.RegisterMessage(Black)
+
 if _descriptor._USE_C_DESCRIPTORS == False:
 
     DESCRIPTOR._options = None
-    _GAME._serialized_start = 72
-    _GAME._serialized_end = 94
+    _GAME._serialized_start = 73
+    _GAME._serialized_end = 330
+    _GAMECONTEXT._serialized_start = 332
+    _GAMECONTEXT._serialized_end = 429
+    _WHITE._serialized_start = 431
+    _WHITE._serialized_end = 476
+    _BLACK._serialized_start = 478
+    _BLACK._serialized_end = 523
 # @@protoc_insertion_point(module_scope)

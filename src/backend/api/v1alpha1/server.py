@@ -1,5 +1,5 @@
 import grpc
-from chesse_backend_api.v1alpha1 import chesse_pb2, positions_pb2
+from chesse_backend_api.v1alpha1 import chesse_pb2, games_pb2, positions_pb2
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import CheSSEBackendServiceServicer
 from loguru import logger
 
@@ -43,6 +43,52 @@ class CheSSEBackendService(CheSSEBackendServiceServicer):
             ]
         )
 
-        logger.info(f"Get Similar Games Response: {response}")
+        logger.info(f"Get Similar Positions Response: {response}")
+
+        return response
+
+    def GetGames(
+        self, request: chesse_pb2.GetGamesRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetGamesResponse:
+        """Retrieves the games that a given position appears in."""
+        logger.info(f"GetGamesRequest: {request}")
+
+        games = self.chesse_backend_controller.get_games(fen=request.position.fen)
+
+        games_pb = [
+            games_pb2.Game(
+                id=id,
+                context=games_pb2.GameContext(
+                    event=game["context"]["event"],
+                    date=game["context"]["date"],
+                    site=game["context"]["site"],
+                    round=game["context"]["round"],
+                ),
+                white=games_pb2.White(name=game["white"]["name"], elo=game["white"]["elo"]),
+                black=games_pb2.Black(name=game["black"]["name"], elo=game["black"]["elo"]),
+                result=game["result"],
+                nr_moves=len(game["moves"]),
+            )
+            for id, game in games["games"].items()
+        ]
+
+        response = chesse_pb2.GetGamesResponse(
+            games=games_pb,
+            stats=positions_pb2.PositionStats(
+                nr_games=games["stats"]["nr_games"],
+                rating_stats=positions_pb2.PositionRatingStats(
+                    min=games["stats"]["rating"]["min"],
+                    avg=games["stats"]["rating"]["avg"],
+                    max=games["stats"]["rating"]["max"],
+                ),
+                result_stats=positions_pb2.PositionResultStats(
+                    white=games["stats"]["results"]["white"],
+                    draw=games["stats"]["results"]["draw"],
+                    black=games["stats"]["results"]["black"],
+                ),
+            ),
+        )
+
+        logger.info(f"Get Games Response: {response}")
 
         return response

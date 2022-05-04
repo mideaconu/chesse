@@ -32,3 +32,17 @@ class CheSSEBackendController:
             position["stats"] = postion_stats[position["fen"]]
 
         return similar_positions
+
+    def get_games(self, fen: str) -> JSON:
+        """_summary_
+
+        Args:
+            fen (str): _description_
+
+        Returns:
+            JSON: _description_
+        """
+
+        games = self.search_engine_controller.get_games(fen)
+
+        return games
