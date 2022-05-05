@@ -71,7 +71,37 @@ router.get('/', function(req, res, next) {
 
 /* GET /games/{gameId}. */
 router.get('/:gameId', function(req, res, next) {
-    console.log(req.params.gameId);
+	var request = new messages.GetGameRequest();
+	request.setGameId(req.params.gameId);
+
+    var game;
+
+	client.getGame(request, function(err, response) {
+		var game_pb = response.getGame();
+        game = {
+            id: game_pb.getId(),
+            context: {
+                event: game_pb.getContext().getEvent(),
+                date: game_pb.getContext().getDate(),
+                site: game_pb.getContext().getSite(),
+                round: game_pb.getContext().getRound(),
+            },
+            white: {
+                name: game_pb.getWhite().getName(),
+                elo: game_pb.getWhite().getElo(),
+            },
+            black: {
+                name: game_pb.getBlack().getName(),
+                elo: game_pb.getBlack().getElo(),
+            },
+            result: game_pb.getResult(),
+            nr_moves: game_pb.getNrMoves()
+        };
+
+		console.log(game);
+
+        res.render('game', { title: 'CheSSE', game: game });
+  	});
 });
 
 module.exports = router;

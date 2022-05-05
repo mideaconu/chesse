@@ -1,0 +1,20 @@
+@import "../header/header";
+@import "../header/title";
+
+@import "../footer/footer";
+
+@import "title";
+@import "game";
+
+
+.game-container {
+    background-color: white;
+
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 0.5fr;
+    grid-template-rows: 300px 300px auto;
+    grid-template-areas:
+        "title . ."
+        ". game ."
+        ". game .";
+}
