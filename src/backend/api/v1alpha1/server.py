@@ -92,3 +92,31 @@ class CheSSEBackendService(CheSSEBackendServiceServicer):
         logger.info(f"Get Games Response: {response}")
 
         return response
+
+    def GetGame(
+        self, request: chesse_pb2.GetGameRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetGameResponse:
+        """Retrieve a chess game."""
+        logger.info(f"GetGameRequest: {request}")
+
+        game = self.chesse_backend_controller.get_game(id=request.game_id)
+
+        game_pb = games_pb2.Game(
+            id=game["id"],
+            context=games_pb2.GameContext(
+                event=game["context"]["event"],
+                date=game["context"]["date"],
+                site=game["context"]["site"],
+                round=game["context"]["round"],
+            ),
+            white=games_pb2.White(name=game["white"]["name"], elo=game["white"]["elo"]),
+            black=games_pb2.Black(name=game["black"]["name"], elo=game["black"]["elo"]),
+            result=game["result"],
+            nr_moves=len(game["moves"]),
+        )
+
+        response = chesse_pb2.GetGameResponse(game=game_pb)
+
+        logger.info(f"GetGameResponse: {response}")
+
+        return response
