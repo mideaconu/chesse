@@ -42,7 +42,19 @@ class CheSSEBackendController:
         Returns:
             JSON: _description_
         """
-
         games = self.search_engine_controller.get_games(fen)
 
         return games
+
+    def get_game(self, id: str) -> JSON:
+        """_summary_
+
+        Args:
+            id (str): _description_
+
+        Returns:
+            JSON: _description_
+        """
+        game = self.search_engine_controller.get_game(id)
+
+        return game
