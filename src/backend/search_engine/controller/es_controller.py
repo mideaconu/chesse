@@ -71,6 +71,31 @@ def _filter_position_stats(position_stats_raw: JSON) -> JSON:
     return positions_stats
 
 
+def _filter_game(game_raw: JSON) -> JSON:
+    """Filters the raw ES response so that only relevant information in the
+    game response is kept."""
+    game = {
+        "id": game_raw["hits"]["hits"][0]["_source"]["id"],
+        "context": {
+            "event": game_raw["hits"]["hits"][0]["_source"]["context"]["event"],
+            "date": game_raw["hits"]["hits"][0]["_source"]["context"]["date"],
+            "site": game_raw["hits"]["hits"][0]["_source"]["context"]["site"],
+            "round": game_raw["hits"]["hits"][0]["_source"]["context"]["round"],
+        },
+        "white": {
+            "name": game_raw["hits"]["hits"][0]["_source"]["white"]["name"],
+            "elo": game_raw["hits"]["hits"][0]["_source"]["white"]["elo"],
+        },
+        "black": {
+            "name": game_raw["hits"]["hits"][0]["_source"]["black"]["name"],
+            "elo": game_raw["hits"]["hits"][0]["_source"]["black"]["elo"],
+        },
+        "result": game_raw["hits"]["hits"][0]["_source"]["result"],
+        "moves": game_raw["hits"]["hits"][0]["_source"]["moves"],
+    }
+    return game
+
+
 def _filter_games(games_raw: JSON) -> JSON:
     """Filters the raw ES response so that only relevant information in the
     games response is kept."""
@@ -245,3 +270,14 @@ class ESController(controller_interface.AbstractSearchEngineController):
         logger.debug(games)
 
         return games
+
+    def get_game(self, id: str) -> JSON:
+        query = es_dsl.Search(using=self.client, index="games").query("match", id=id)
+
+        response = query.execute()
+        game_raw = response.to_dict()
+        game = _filter_game(game_raw)
+
+        logger.debug(game)
+
+        return game

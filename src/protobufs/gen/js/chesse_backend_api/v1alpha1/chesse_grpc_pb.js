@@ -99,7 +99,7 @@ getGame: {
     responseSerialize: serialize_chesse_backend_api_v1alpha1_GetGameResponse,
     responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetGameResponse,
   },
-  // Fetch a collection of chess games
+  // Fetch a list of chess games
 getGames: {
     path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGames',
     requestStream: false,
