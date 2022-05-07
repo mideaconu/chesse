@@ -67,7 +67,10 @@ class CheSSEBackendService(CheSSEBackendServiceServicer):
                 white=games_pb2.White(name=game["white"]["name"], elo=game["white"]["elo"]),
                 black=games_pb2.Black(name=game["black"]["name"], elo=game["black"]["elo"]),
                 result=game["result"],
-                nr_moves=len(game["moves"]),
+                moves=[
+                    games_pb2.Move(uci=move["uci"], san=move["san"], fen=move["fen"])
+                    for move in game["moves"]
+                ],
             )
             for id, game in games["games"].items()
         ]
