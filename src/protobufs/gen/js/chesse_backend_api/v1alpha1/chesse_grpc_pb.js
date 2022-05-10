@@ -6,110 +6,144 @@ var chesse_backend_api_v1alpha1_chesse_pb = require('../../chesse_backend_api/v1
 var chesse_backend_api_v1alpha1_games_pb = require('../../chesse_backend_api/v1alpha1/games_pb.js');
 var chesse_backend_api_v1alpha1_positions_pb = require('../../chesse_backend_api/v1alpha1/positions_pb.js');
 
-function serialize_chesse_backend_api_v1alpha1_GetGameRequest(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetGameRequest)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetGameRequest');
+function serialize_chesse_backend_api_v1alpha1_GetChessGameRequest(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessGameRequest)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessGameRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetGameRequest(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetGameRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessGameRequest(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessGameRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_chesse_backend_api_v1alpha1_GetGameResponse(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetGameResponse)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetGameResponse');
+function serialize_chesse_backend_api_v1alpha1_GetChessGameResponse(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessGameResponse)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessGameResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetGameResponse(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetGameResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessGameResponse(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessGameResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_chesse_backend_api_v1alpha1_GetGamesRequest(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetGamesRequest)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetGamesRequest');
+function serialize_chesse_backend_api_v1alpha1_GetChessGamesRequest(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesRequest)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessGamesRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetGamesRequest(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetGamesRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessGamesRequest(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_chesse_backend_api_v1alpha1_GetGamesResponse(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetGamesResponse)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetGamesResponse');
+function serialize_chesse_backend_api_v1alpha1_GetChessGamesResponse(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesResponse)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessGamesResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetGamesResponse(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetGamesResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessGamesResponse(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_chesse_backend_api_v1alpha1_GetSimilarPositionsRequest(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsRequest)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetSimilarPositionsRequest');
+function serialize_chesse_backend_api_v1alpha1_GetChessPositionRequest(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionRequest)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessPositionRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetSimilarPositionsRequest(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessPositionRequest(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_chesse_backend_api_v1alpha1_GetSimilarPositionsResponse(arg) {
-  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsResponse)) {
-    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetSimilarPositionsResponse');
+function serialize_chesse_backend_api_v1alpha1_GetChessPositionResponse(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionResponse)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessPositionResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_chesse_backend_api_v1alpha1_GetSimilarPositionsResponse(buffer_arg) {
-  return chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_chesse_backend_api_v1alpha1_GetChessPositionResponse(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_chesse_backend_api_v1alpha1_GetChessPositionsRequest(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsRequest)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessPositionsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_chesse_backend_api_v1alpha1_GetChessPositionsRequest(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_chesse_backend_api_v1alpha1_GetChessPositionsResponse(arg) {
+  if (!(arg instanceof chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsResponse)) {
+    throw new Error('Expected argument of type chesse_backend_api.v1alpha1.GetChessPositionsResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_chesse_backend_api_v1alpha1_GetChessPositionsResponse(buffer_arg) {
+  return chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
-// CheSSE Backend Service
+// CheSSE Backend Service.
 var CheSSEBackendServiceService = exports.CheSSEBackendServiceService = {
-  // Fetch a collection of similar chess positions
-getSimilarPositions: {
-    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetSimilarPositions',
+  // Fetch a chess position.
+getChessPosition: {
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPosition',
     requestStream: false,
     responseStream: false,
-    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsRequest,
-    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetSimilarPositionsResponse,
-    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetSimilarPositionsRequest,
-    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetSimilarPositionsRequest,
-    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetSimilarPositionsResponse,
-    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetSimilarPositionsResponse,
+    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionRequest,
+    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionResponse,
+    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetChessPositionRequest,
+    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessPositionRequest,
+    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetChessPositionResponse,
+    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessPositionResponse,
   },
-  // Fetch a chess game
-getGame: {
-    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGame',
+  // Fetch a list of chess positions.
+getChessPositions: {
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPositions',
     requestStream: false,
     responseStream: false,
-    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetGameRequest,
-    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetGameResponse,
-    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetGameRequest,
-    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetGameRequest,
-    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetGameResponse,
-    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetGameResponse,
+    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsRequest,
+    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetChessPositionsResponse,
+    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetChessPositionsRequest,
+    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessPositionsRequest,
+    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetChessPositionsResponse,
+    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessPositionsResponse,
   },
-  // Fetch a collection of chess games
-getGames: {
-    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGames',
+  // Fetch a chess game.
+getChessGame: {
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGame',
     requestStream: false,
     responseStream: false,
-    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetGamesRequest,
-    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetGamesResponse,
-    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetGamesRequest,
-    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetGamesRequest,
-    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetGamesResponse,
-    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetGamesResponse,
+    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetChessGameRequest,
+    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetChessGameResponse,
+    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetChessGameRequest,
+    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessGameRequest,
+    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetChessGameResponse,
+    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessGameResponse,
+  },
+  // Fetch a list of chess games.
+getChessGames: {
+    path: '/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGames',
+    requestStream: false,
+    responseStream: false,
+    requestType: chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesRequest,
+    responseType: chesse_backend_api_v1alpha1_chesse_pb.GetChessGamesResponse,
+    requestSerialize: serialize_chesse_backend_api_v1alpha1_GetChessGamesRequest,
+    requestDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessGamesRequest,
+    responseSerialize: serialize_chesse_backend_api_v1alpha1_GetChessGamesResponse,
+    responseDeserialize: deserialize_chesse_backend_api_v1alpha1_GetChessGamesResponse,
   },
 };
 
