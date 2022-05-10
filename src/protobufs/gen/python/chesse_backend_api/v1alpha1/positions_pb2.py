@@ -14,26 +14,14 @@ _sym_db = _symbol_database.Default()
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n+chesse_backend_api/v1alpha1/positions.proto\x12\x1b\x63hesse_backend_api.v1alpha1"\x1c\n\x08Position\x12\x10\n\x03\x66\x65n\x18\x01 \x01(\tR\x03\x66\x65n"K\n\x13PositionRatingStats\x12\x10\n\x03min\x18\x01 \x01(\x05R\x03min\x12\x10\n\x03\x61vg\x18\x02 \x01(\x05R\x03\x61vg\x12\x10\n\x03max\x18\x03 \x01(\x05R\x03max"U\n\x13PositionResultStats\x12\x14\n\x05white\x18\x01 \x01(\x02R\x05white\x12\x12\n\x04\x64raw\x18\x02 \x01(\x02R\x04\x64raw\x12\x14\n\x05\x62lack\x18\x03 \x01(\x02R\x05\x62lack"\xd4\x01\n\rPositionStats\x12\x19\n\x08nr_games\x18\x01 \x01(\x05R\x07nrGames\x12S\n\x0crating_stats\x18\x02 \x01(\x0b\x32\x30.chesse_backend_api.v1alpha1.PositionRatingStatsR\x0bratingStats\x12S\n\x0cresult_stats\x18\x03 \x01(\x0b\x32\x30.chesse_backend_api.v1alpha1.PositionResultStatsR\x0bresultStats"\xd2\x01\n\x0fSimilarPosition\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position\x12)\n\x10similarity_score\x18\x02 \x01(\x02R\x0fsimilarityScore\x12Q\n\x0eposition_stats\x18\x03 \x01(\x0b\x32*.chesse_backend_api.v1alpha1.PositionStatsR\rpositionStatsb\x06proto3'
+    b'\n+chesse_backend_api/v1alpha1/positions.proto\x12\x1b\x63hesse_backend_api.v1alpha1"K\n\x13PositionRatingStats\x12\x10\n\x03min\x18\x01 \x01(\x05R\x03min\x12\x10\n\x03\x61vg\x18\x02 \x01(\x05R\x03\x61vg\x12\x10\n\x03max\x18\x03 \x01(\x05R\x03max"x\n\x13PositionResultStats\x12"\n\rwhite_win_pct\x18\x01 \x01(\x02R\x0bwhiteWinPct\x12\x19\n\x08\x64raw_pct\x18\x02 \x01(\x02R\x07\x64rawPct\x12"\n\rblack_win_pct\x18\x03 \x01(\x02R\x0b\x62lackWinPct"\xd4\x01\n\rPositionStats\x12\x19\n\x08nr_games\x18\x01 \x01(\x05R\x07nrGames\x12S\n\x0crating_stats\x18\x02 \x01(\x0b\x32\x30.chesse_backend_api.v1alpha1.PositionRatingStatsR\x0bratingStats\x12S\n\x0cresult_stats\x18\x03 \x01(\x0b\x32\x30.chesse_backend_api.v1alpha1.PositionResultStatsR\x0bresultStats"\x80\x01\n\x08Position\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding\x12Q\n\x0eposition_stats\x18\x02 \x01(\x0b\x32*.chesse_backend_api.v1alpha1.PositionStatsR\rpositionStatsb\x06proto3'
 )
 
 
-_POSITION = DESCRIPTOR.message_types_by_name["Position"]
 _POSITIONRATINGSTATS = DESCRIPTOR.message_types_by_name["PositionRatingStats"]
 _POSITIONRESULTSTATS = DESCRIPTOR.message_types_by_name["PositionResultStats"]
 _POSITIONSTATS = DESCRIPTOR.message_types_by_name["PositionStats"]
-_SIMILARPOSITION = DESCRIPTOR.message_types_by_name["SimilarPosition"]
-Position = _reflection.GeneratedProtocolMessageType(
-    "Position",
-    (_message.Message,),
-    {
-        "DESCRIPTOR": _POSITION,
-        "__module__": "chesse_backend_api.v1alpha1.positions_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.Position)
-    },
-)
-_sym_db.RegisterMessage(Position)
-
+_POSITION = DESCRIPTOR.message_types_by_name["Position"]
 PositionRatingStats = _reflection.GeneratedProtocolMessageType(
     "PositionRatingStats",
     (_message.Message,),
@@ -67,28 +55,26 @@ PositionStats = _reflection.GeneratedProtocolMessageType(
 )
 _sym_db.RegisterMessage(PositionStats)
 
-SimilarPosition = _reflection.GeneratedProtocolMessageType(
-    "SimilarPosition",
+Position = _reflection.GeneratedProtocolMessageType(
+    "Position",
     (_message.Message,),
     {
-        "DESCRIPTOR": _SIMILARPOSITION,
+        "DESCRIPTOR": _POSITION,
         "__module__": "chesse_backend_api.v1alpha1.positions_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.SimilarPosition)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.Position)
     },
 )
-_sym_db.RegisterMessage(SimilarPosition)
+_sym_db.RegisterMessage(Position)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
 
     DESCRIPTOR._options = None
-    _POSITION._serialized_start = 76
-    _POSITION._serialized_end = 104
-    _POSITIONRATINGSTATS._serialized_start = 106
-    _POSITIONRATINGSTATS._serialized_end = 181
-    _POSITIONRESULTSTATS._serialized_start = 183
-    _POSITIONRESULTSTATS._serialized_end = 268
-    _POSITIONSTATS._serialized_start = 271
-    _POSITIONSTATS._serialized_end = 483
-    _SIMILARPOSITION._serialized_start = 486
-    _SIMILARPOSITION._serialized_end = 696
+    _POSITIONRATINGSTATS._serialized_start = 76
+    _POSITIONRATINGSTATS._serialized_end = 151
+    _POSITIONRESULTSTATS._serialized_start = 153
+    _POSITIONRESULTSTATS._serialized_end = 273
+    _POSITIONSTATS._serialized_start = 276
+    _POSITIONSTATS._serialized_end = 488
+    _POSITION._serialized_start = 491
+    _POSITION._serialized_end = 619
 # @@protoc_insertion_point(module_scope)

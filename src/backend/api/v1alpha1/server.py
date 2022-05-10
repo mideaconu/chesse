@@ -1,125 +1,118 @@
 import grpc
-from chesse_backend_api.v1alpha1 import chesse_pb2, games_pb2, positions_pb2
+from chesse_backend_api.v1alpha1 import chesse_pb2
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import CheSSEBackendServiceServicer
+from google.protobuf import json_format
 from loguru import logger
 
 from backend.api import controller
+from backend.utils import pb2 as pb2_utils
+from utils import exception as exc_utils
+from utils.exception import CheSSEBackendServerError
 
 
 class CheSSEBackendService(CheSSEBackendServiceServicer):
     def __init__(self) -> None:
         self.chesse_backend_controller = controller.CheSSEBackendController()
 
-    def GetSimilarPositions(
-        self, request: chesse_pb2.GetSimilarPositionsRequest, context: grpc.ServicerContext
-    ) -> chesse_pb2.GetSimilarPositionsResponse:
-        """Retrieves similar chess positions from CheSSE."""
-        logger.info(f"GetSimilarPositionsRequest: {request}")
+    def GetChessPosition(
+        self, request: chesse_pb2.GetChessPositionRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetChessPositionResponse:
+        """Retrieves a chess position."""
+        logger.info(f"GetChessPositionRequest: {json_format.MessageToDict(request)}")
 
-        search_position_results = self.chesse_backend_controller.get_search_position_results(
-            fen=request.position.fen
-        )
+        response = chesse_pb2.GetChessPositionResponse()
 
-        response = chesse_pb2.GetSimilarPositionsResponse(
-            similar_positions=[
-                positions_pb2.SimilarPosition(
-                    position=positions_pb2.Position(fen=position["fen"]),
-                    similarity_score=position["similarity_score"],
-                    position_stats=positions_pb2.PositionStats(
-                        nr_games=position["stats"]["nr_games"],
-                        rating_stats=positions_pb2.PositionRatingStats(
-                            min=position["stats"]["rating"]["min"],
-                            avg=position["stats"]["rating"]["avg"],
-                            max=position["stats"]["rating"]["max"],
-                        ),
-                        result_stats=positions_pb2.PositionResultStats(
-                            white=position["stats"]["results"]["white"],
-                            draw=position["stats"]["results"]["draw"],
-                            black=position["stats"]["results"]["black"],
-                        ),
-                    ),
-                )
-                for position in search_position_results
-            ]
-        )
-
-        logger.info(f"Get Similar Positions Response: {response}")
-
-        return response
-
-    def GetGames(
-        self, request: chesse_pb2.GetGamesRequest, context: grpc.ServicerContext
-    ) -> chesse_pb2.GetGamesResponse:
-        """Retrieves the games that a given position appears in."""
-        logger.info(f"GetGamesRequest: {request}")
-
-        games = self.chesse_backend_controller.get_games(fen=request.position.fen)
-
-        games_pb = [
-            games_pb2.Game(
-                id=id,
-                context=games_pb2.GameContext(
-                    event=game["context"]["event"],
-                    date=game["context"]["date"],
-                    site=game["context"]["site"],
-                    round=game["context"]["round"],
-                ),
-                white=games_pb2.White(name=game["white"]["name"], elo=game["white"]["elo"]),
-                black=games_pb2.Black(name=game["black"]["name"], elo=game["black"]["elo"]),
-                result=game["result"],
-                moves=[
-                    games_pb2.Move(uci=move["uci"], san=move["san"], fen=move["fen"])
-                    for move in game["moves"]
-                ],
+        try:
+            chess_position_json = self.chesse_backend_controller.get_chess_position(
+                fen_encoding=request.fen_encoding
             )
-            for id, game in games["games"].items()
-        ]
+            logger.debug(
+                f"Chess position retrieved with FEN encoding {request.fen_encoding}: "
+                f"{chess_position_json}"
+            )
 
-        response = chesse_pb2.GetGamesResponse(
-            games=games_pb,
-            stats=positions_pb2.PositionStats(
-                nr_games=games["stats"]["nr_games"],
-                rating_stats=positions_pb2.PositionRatingStats(
-                    min=games["stats"]["rating"]["min"],
-                    avg=games["stats"]["rating"]["avg"],
-                    max=games["stats"]["rating"]["max"],
-                ),
-                result_stats=positions_pb2.PositionResultStats(
-                    white=games["stats"]["results"]["white"],
-                    draw=games["stats"]["results"]["draw"],
-                    black=games["stats"]["results"]["black"],
-                ),
-            ),
-        )
+            chess_position_pb2 = pb2_utils.convert_json_to_pb2(
+                chess_position_json=chess_position_json
+            )
+            response = chesse_pb2.GetChessPositionResponse(position=chess_position_pb2)
+        except CheSSEBackendServerError as e:
+            exc_utils.set_error_context(context, details=str(e), status_code=e.status_code)
 
-        logger.info(f"Get Games Response: {response}")
+        logger.info(f"GetChessPositionResponse: {json_format.MessageToDict(response)}")
 
         return response
 
-    def GetGame(
-        self, request: chesse_pb2.GetGameRequest, context: grpc.ServicerContext
-    ) -> chesse_pb2.GetGameResponse:
-        """Retrieve a chess game."""
-        logger.info(f"GetGameRequest: {request}")
+    def GetChessPositions(
+        self, request: chesse_pb2.GetChessPositionsRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetChessPositionsResponse:
+        """Retrieves a list of chess positions."""
+        logger.info(f"GetChessPositionsRequest: {json_format.MessageToDict(request)}")
 
-        game = self.chesse_backend_controller.get_game(id=request.game_id)
+        response = chesse_pb2.GetChessPositionsResponse()
 
-        game_pb = games_pb2.Game(
-            id=game["id"],
-            context=games_pb2.GameContext(
-                event=game["context"]["event"],
-                date=game["context"]["date"],
-                site=game["context"]["site"],
-                round=game["context"]["round"],
-            ),
-            white=games_pb2.White(name=game["white"]["name"], elo=game["white"]["elo"]),
-            black=games_pb2.Black(name=game["black"]["name"], elo=game["black"]["elo"]),
-            result=game["result"],
-            nr_moves=len(game["moves"]),
-        )
+        try:
+            chess_positions_json = self.chesse_backend_controller.get_chess_positions(
+                fen_encoding=request.fen_encoding
+            )
+            logger.debug(
+                f"Number of chess positions retrieved similar to position {request.fen_encoding}: "
+                f"{len(chess_positions_json)}"
+            )
 
-        response = chesse_pb2.GetGameResponse(game=game_pb)
+            chess_positions_pb2 = pb2_utils.convert_json_to_pb2(
+                chess_positions_json=chess_positions_json
+            )
+            response = chesse_pb2.GetChessPositionsResponse(positions=chess_positions_pb2)
+        except CheSSEBackendServerError as e:
+            exc_utils.set_error_context(context, details=str(e), status_code=e.status_code)
 
-        logger.info(f"GetGameResponse: {response}")
+        logger.info(f"GetChessPositionsResponse: {json_format.MessageToDict(response)}")
+
+        return response
+
+    def GetChessGame(
+        self, request: chesse_pb2.GetChessGameRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetChessGameResponse:
+        """Retrieves a chess game."""
+        logger.info(f"GetChessGameRequest: {json_format.MessageToDict(request)}")
+
+        response = chesse_pb2.GetChessGameRequest()
+
+        try:
+            chess_game_json = self.chesse_backend_controller.get_chess_game(id=request.game_id)
+            logger.debug(f"Chess game retrieved with ID {request.game_id}: {chess_game_json}")
+
+            chess_game_pb2 = pb2_utils.convert_json_to_pb2(chess_game_json=chess_game_json)
+            response = chesse_pb2.GetChessGameResponse(game=chess_game_pb2)
+        except CheSSEBackendServerError as e:
+            exc_utils.set_error_context(context, details=str(e), status_code=e.status_code)
+
+        logger.info(f"GetChessGameResponse: {json_format.MessageToDict(response)}")
+
+        return response
+
+    def GetChessGames(
+        self, request: chesse_pb2.GetChessGamesRequest, context: grpc.ServicerContext
+    ) -> chesse_pb2.GetChessGamesResponse:
+        """Retrieves a list of chess games."""
+        logger.info(f"GetChessGamesRequest: {json_format.MessageToDict(request)}")
+
+        response = chesse_pb2.GetChessGamesRequest()
+
+        try:
+            chess_games_json = self.chesse_backend_controller.get_chess_games(
+                fen_encoding=request.fen_encoding
+            )
+            logger.debug(
+                f"Chess games retrieved with FEN encoding {request.fen_encoding}: "
+                f"{chess_games_json}"
+            )
+
+            chess_games_pb2 = pb2_utils.convert_json_to_pb2(chess_games_json=chess_games_json)
+            response = chesse_pb2.GetChessGamesResponse(games=chess_games_pb2)
+        except CheSSEBackendServerError as e:
+            exc_utils.set_error_context(context, details=str(e), status_code=e.status_code)
+
+        logger.info(f"GetChessGamesResponse: {json_format.MessageToDict(response)}")
 
         return response

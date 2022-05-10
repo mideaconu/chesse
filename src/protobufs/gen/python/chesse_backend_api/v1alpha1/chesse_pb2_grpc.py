@@ -15,39 +15,50 @@ class CheSSEBackendServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetSimilarPositions = channel.unary_unary(
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetSimilarPositions",
-            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsRequest.SerializeToString,
-            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsResponse.FromString,
+        self.GetChessPosition = channel.unary_unary(
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPosition",
+            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionRequest.SerializeToString,
+            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionResponse.FromString,
         )
-        self.GetGame = channel.unary_unary(
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGame",
-            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameRequest.SerializeToString,
-            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameResponse.FromString,
+        self.GetChessPositions = channel.unary_unary(
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPositions",
+            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsRequest.SerializeToString,
+            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsResponse.FromString,
         )
-        self.GetGames = channel.unary_unary(
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGames",
-            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesRequest.SerializeToString,
-            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesResponse.FromString,
+        self.GetChessGame = channel.unary_unary(
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGame",
+            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameRequest.SerializeToString,
+            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameResponse.FromString,
+        )
+        self.GetChessGames = channel.unary_unary(
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGames",
+            request_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesRequest.SerializeToString,
+            response_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesResponse.FromString,
         )
 
 
 class CheSSEBackendServiceServicer(object):
     """CheSSE Backend Service."""
 
-    def GetSimilarPositions(self, request, context):
-        """Fetch a collection of similar chess positions."""
+    def GetChessPosition(self, request, context):
+        """Fetch a chess position."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
-    def GetGame(self, request, context):
+    def GetChessPositions(self, request, context):
+        """Fetch a list of chess positions."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
+    def GetChessGame(self, request, context):
         """Fetch a chess game."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
-    def GetGames(self, request, context):
+    def GetChessGames(self, request, context):
         """Fetch a list of chess games."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -56,20 +67,25 @@ class CheSSEBackendServiceServicer(object):
 
 def add_CheSSEBackendServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "GetSimilarPositions": grpc.unary_unary_rpc_method_handler(
-            servicer.GetSimilarPositions,
-            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsRequest.FromString,
-            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsResponse.SerializeToString,
+        "GetChessPosition": grpc.unary_unary_rpc_method_handler(
+            servicer.GetChessPosition,
+            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionRequest.FromString,
+            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionResponse.SerializeToString,
         ),
-        "GetGame": grpc.unary_unary_rpc_method_handler(
-            servicer.GetGame,
-            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameRequest.FromString,
-            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameResponse.SerializeToString,
+        "GetChessPositions": grpc.unary_unary_rpc_method_handler(
+            servicer.GetChessPositions,
+            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsRequest.FromString,
+            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsResponse.SerializeToString,
         ),
-        "GetGames": grpc.unary_unary_rpc_method_handler(
-            servicer.GetGames,
-            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesRequest.FromString,
-            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesResponse.SerializeToString,
+        "GetChessGame": grpc.unary_unary_rpc_method_handler(
+            servicer.GetChessGame,
+            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameRequest.FromString,
+            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameResponse.SerializeToString,
+        ),
+        "GetChessGames": grpc.unary_unary_rpc_method_handler(
+            servicer.GetChessGames,
+            request_deserializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesRequest.FromString,
+            response_serializer=chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -83,7 +99,7 @@ class CheSSEBackendService(object):
     """CheSSE Backend Service."""
 
     @staticmethod
-    def GetSimilarPositions(
+    def GetChessPosition(
         request,
         target,
         options=(),
@@ -98,9 +114,9 @@ class CheSSEBackendService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetSimilarPositions",
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsRequest.SerializeToString,
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetSimilarPositionsResponse.FromString,
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPosition",
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionRequest.SerializeToString,
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -112,7 +128,7 @@ class CheSSEBackendService(object):
         )
 
     @staticmethod
-    def GetGame(
+    def GetChessPositions(
         request,
         target,
         options=(),
@@ -127,9 +143,9 @@ class CheSSEBackendService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGame",
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameRequest.SerializeToString,
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGameResponse.FromString,
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessPositions",
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsRequest.SerializeToString,
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessPositionsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -141,7 +157,7 @@ class CheSSEBackendService(object):
         )
 
     @staticmethod
-    def GetGames(
+    def GetChessGame(
         request,
         target,
         options=(),
@@ -156,9 +172,38 @@ class CheSSEBackendService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetGames",
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesRequest.SerializeToString,
-            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetGamesResponse.FromString,
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGame",
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameRequest.SerializeToString,
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGameResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
+
+    @staticmethod
+    def GetChessGames(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/chesse_backend_api.v1alpha1.CheSSEBackendService/GetChessGames",
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesRequest.SerializeToString,
+            chesse__backend__api_dot_v1alpha1_dot_chesse__pb2.GetChessGamesResponse.FromString,
             options,
             channel_credentials,
             insecure,

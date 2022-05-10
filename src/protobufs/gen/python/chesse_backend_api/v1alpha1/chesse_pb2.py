@@ -21,98 +21,126 @@ from chesse_backend_api.v1alpha1 import (
 )
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n(chesse_backend_api/v1alpha1/chesse.proto\x12\x1b\x63hesse_backend_api.v1alpha1\x1a\'chesse_backend_api/v1alpha1/games.proto\x1a+chesse_backend_api/v1alpha1/positions.proto"_\n\x1aGetSimilarPositionsRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"x\n\x1bGetSimilarPositionsResponse\x12Y\n\x11similar_positions\x18\x01 \x03(\x0b\x32,.chesse_backend_api.v1alpha1.SimilarPositionR\x10similarPositions")\n\x0eGetGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"H\n\x0fGetGameResponse\x12\x35\n\x04game\x18\x01 \x01(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x04game"T\n\x0fGetGamesRequest\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"\x8d\x01\n\x10GetGamesResponse\x12\x37\n\x05games\x18\x01 \x03(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x05games\x12@\n\x05stats\x18\x02 \x01(\x0b\x32*.chesse_backend_api.v1alpha1.PositionStatsR\x05stats2\xf0\x02\n\x14\x43heSSEBackendService\x12\x88\x01\n\x13GetSimilarPositions\x12\x37.chesse_backend_api.v1alpha1.GetSimilarPositionsRequest\x1a\x38.chesse_backend_api.v1alpha1.GetSimilarPositionsResponse\x12\x64\n\x07GetGame\x12+.chesse_backend_api.v1alpha1.GetGameRequest\x1a,.chesse_backend_api.v1alpha1.GetGameResponse\x12g\n\x08GetGames\x12,.chesse_backend_api.v1alpha1.GetGamesRequest\x1a-.chesse_backend_api.v1alpha1.GetGamesResponseb\x06proto3'
+    b'\n(chesse_backend_api/v1alpha1/chesse.proto\x12\x1b\x63hesse_backend_api.v1alpha1\x1a\'chesse_backend_api/v1alpha1/games.proto\x1a+chesse_backend_api/v1alpha1/positions.proto"<\n\x17GetChessPositionRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"]\n\x18GetChessPositionResponse\x12\x41\n\x08position\x18\x01 \x01(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\x08position"=\n\x18GetChessPositionsRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"`\n\x19GetChessPositionsResponse\x12\x43\n\tpositions\x18\x01 \x03(\x0b\x32%.chesse_backend_api.v1alpha1.PositionR\tpositions".\n\x13GetChessGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"M\n\x14GetChessGameResponse\x12\x35\n\x04game\x18\x01 \x01(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x04game"9\n\x14GetChessGamesRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"P\n\x15GetChessGamesResponse\x12\x37\n\x05games\x18\x01 \x03(\x0b\x32!.chesse_backend_api.v1alpha1.GameR\x05games2\x89\x04\n\x14\x43heSSEBackendService\x12\x7f\n\x10GetChessPosition\x12\x34.chesse_backend_api.v1alpha1.GetChessPositionRequest\x1a\x35.chesse_backend_api.v1alpha1.GetChessPositionResponse\x12\x82\x01\n\x11GetChessPositions\x12\x35.chesse_backend_api.v1alpha1.GetChessPositionsRequest\x1a\x36.chesse_backend_api.v1alpha1.GetChessPositionsResponse\x12s\n\x0cGetChessGame\x12\x30.chesse_backend_api.v1alpha1.GetChessGameRequest\x1a\x31.chesse_backend_api.v1alpha1.GetChessGameResponse\x12v\n\rGetChessGames\x12\x31.chesse_backend_api.v1alpha1.GetChessGamesRequest\x1a\x32.chesse_backend_api.v1alpha1.GetChessGamesResponseb\x06proto3'
 )
 
 
-_GETSIMILARPOSITIONSREQUEST = DESCRIPTOR.message_types_by_name["GetSimilarPositionsRequest"]
-_GETSIMILARPOSITIONSRESPONSE = DESCRIPTOR.message_types_by_name["GetSimilarPositionsResponse"]
-_GETGAMEREQUEST = DESCRIPTOR.message_types_by_name["GetGameRequest"]
-_GETGAMERESPONSE = DESCRIPTOR.message_types_by_name["GetGameResponse"]
-_GETGAMESREQUEST = DESCRIPTOR.message_types_by_name["GetGamesRequest"]
-_GETGAMESRESPONSE = DESCRIPTOR.message_types_by_name["GetGamesResponse"]
-GetSimilarPositionsRequest = _reflection.GeneratedProtocolMessageType(
-    "GetSimilarPositionsRequest",
+_GETCHESSPOSITIONREQUEST = DESCRIPTOR.message_types_by_name["GetChessPositionRequest"]
+_GETCHESSPOSITIONRESPONSE = DESCRIPTOR.message_types_by_name["GetChessPositionResponse"]
+_GETCHESSPOSITIONSREQUEST = DESCRIPTOR.message_types_by_name["GetChessPositionsRequest"]
+_GETCHESSPOSITIONSRESPONSE = DESCRIPTOR.message_types_by_name["GetChessPositionsResponse"]
+_GETCHESSGAMEREQUEST = DESCRIPTOR.message_types_by_name["GetChessGameRequest"]
+_GETCHESSGAMERESPONSE = DESCRIPTOR.message_types_by_name["GetChessGameResponse"]
+_GETCHESSGAMESREQUEST = DESCRIPTOR.message_types_by_name["GetChessGamesRequest"]
+_GETCHESSGAMESRESPONSE = DESCRIPTOR.message_types_by_name["GetChessGamesResponse"]
+GetChessPositionRequest = _reflection.GeneratedProtocolMessageType(
+    "GetChessPositionRequest",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETSIMILARPOSITIONSREQUEST,
+        "DESCRIPTOR": _GETCHESSPOSITIONREQUEST,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetSimilarPositionsRequest)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessPositionRequest)
     },
 )
-_sym_db.RegisterMessage(GetSimilarPositionsRequest)
+_sym_db.RegisterMessage(GetChessPositionRequest)
 
-GetSimilarPositionsResponse = _reflection.GeneratedProtocolMessageType(
-    "GetSimilarPositionsResponse",
+GetChessPositionResponse = _reflection.GeneratedProtocolMessageType(
+    "GetChessPositionResponse",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETSIMILARPOSITIONSRESPONSE,
+        "DESCRIPTOR": _GETCHESSPOSITIONRESPONSE,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetSimilarPositionsResponse)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessPositionResponse)
     },
 )
-_sym_db.RegisterMessage(GetSimilarPositionsResponse)
+_sym_db.RegisterMessage(GetChessPositionResponse)
 
-GetGameRequest = _reflection.GeneratedProtocolMessageType(
-    "GetGameRequest",
+GetChessPositionsRequest = _reflection.GeneratedProtocolMessageType(
+    "GetChessPositionsRequest",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETGAMEREQUEST,
+        "DESCRIPTOR": _GETCHESSPOSITIONSREQUEST,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetGameRequest)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessPositionsRequest)
     },
 )
-_sym_db.RegisterMessage(GetGameRequest)
+_sym_db.RegisterMessage(GetChessPositionsRequest)
 
-GetGameResponse = _reflection.GeneratedProtocolMessageType(
-    "GetGameResponse",
+GetChessPositionsResponse = _reflection.GeneratedProtocolMessageType(
+    "GetChessPositionsResponse",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETGAMERESPONSE,
+        "DESCRIPTOR": _GETCHESSPOSITIONSRESPONSE,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetGameResponse)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessPositionsResponse)
     },
 )
-_sym_db.RegisterMessage(GetGameResponse)
+_sym_db.RegisterMessage(GetChessPositionsResponse)
 
-GetGamesRequest = _reflection.GeneratedProtocolMessageType(
-    "GetGamesRequest",
+GetChessGameRequest = _reflection.GeneratedProtocolMessageType(
+    "GetChessGameRequest",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETGAMESREQUEST,
+        "DESCRIPTOR": _GETCHESSGAMEREQUEST,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetGamesRequest)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessGameRequest)
     },
 )
-_sym_db.RegisterMessage(GetGamesRequest)
+_sym_db.RegisterMessage(GetChessGameRequest)
 
-GetGamesResponse = _reflection.GeneratedProtocolMessageType(
-    "GetGamesResponse",
+GetChessGameResponse = _reflection.GeneratedProtocolMessageType(
+    "GetChessGameResponse",
     (_message.Message,),
     {
-        "DESCRIPTOR": _GETGAMESRESPONSE,
+        "DESCRIPTOR": _GETCHESSGAMERESPONSE,
         "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
-        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetGamesResponse)
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessGameResponse)
     },
 )
-_sym_db.RegisterMessage(GetGamesResponse)
+_sym_db.RegisterMessage(GetChessGameResponse)
+
+GetChessGamesRequest = _reflection.GeneratedProtocolMessageType(
+    "GetChessGamesRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETCHESSGAMESREQUEST,
+        "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessGamesRequest)
+    },
+)
+_sym_db.RegisterMessage(GetChessGamesRequest)
+
+GetChessGamesResponse = _reflection.GeneratedProtocolMessageType(
+    "GetChessGamesResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _GETCHESSGAMESRESPONSE,
+        "__module__": "chesse_backend_api.v1alpha1.chesse_pb2"
+        # @@protoc_insertion_point(class_scope:chesse_backend_api.v1alpha1.GetChessGamesResponse)
+    },
+)
+_sym_db.RegisterMessage(GetChessGamesResponse)
 
 _CHESSEBACKENDSERVICE = DESCRIPTOR.services_by_name["CheSSEBackendService"]
 if _descriptor._USE_C_DESCRIPTORS == False:
 
     DESCRIPTOR._options = None
-    _GETSIMILARPOSITIONSREQUEST._serialized_start = 159
-    _GETSIMILARPOSITIONSREQUEST._serialized_end = 254
-    _GETSIMILARPOSITIONSRESPONSE._serialized_start = 256
-    _GETSIMILARPOSITIONSRESPONSE._serialized_end = 376
-    _GETGAMEREQUEST._serialized_start = 378
-    _GETGAMEREQUEST._serialized_end = 419
-    _GETGAMERESPONSE._serialized_start = 421
-    _GETGAMERESPONSE._serialized_end = 493
-    _GETGAMESREQUEST._serialized_start = 495
-    _GETGAMESREQUEST._serialized_end = 579
-    _GETGAMESRESPONSE._serialized_start = 582
-    _GETGAMESRESPONSE._serialized_end = 723
-    _CHESSEBACKENDSERVICE._serialized_start = 726
-    _CHESSEBACKENDSERVICE._serialized_end = 1094
+    _GETCHESSPOSITIONREQUEST._serialized_start = 159
+    _GETCHESSPOSITIONREQUEST._serialized_end = 219
+    _GETCHESSPOSITIONRESPONSE._serialized_start = 221
+    _GETCHESSPOSITIONRESPONSE._serialized_end = 314
+    _GETCHESSPOSITIONSREQUEST._serialized_start = 316
+    _GETCHESSPOSITIONSREQUEST._serialized_end = 377
+    _GETCHESSPOSITIONSRESPONSE._serialized_start = 379
+    _GETCHESSPOSITIONSRESPONSE._serialized_end = 475
+    _GETCHESSGAMEREQUEST._serialized_start = 477
+    _GETCHESSGAMEREQUEST._serialized_end = 523
+    _GETCHESSGAMERESPONSE._serialized_start = 525
+    _GETCHESSGAMERESPONSE._serialized_end = 602
+    _GETCHESSGAMESREQUEST._serialized_start = 604
+    _GETCHESSGAMESREQUEST._serialized_end = 661
+    _GETCHESSGAMESRESPONSE._serialized_start = 663
+    _GETCHESSGAMESRESPONSE._serialized_end = 743
+    _CHESSEBACKENDSERVICE._serialized_start = 746
+    _CHESSEBACKENDSERVICE._serialized_end = 1267
 # @@protoc_insertion_point(module_scope)

@@ -2,30 +2,44 @@ syntax = "proto3";
 package chesse_backend_api.v1alpha1;
 
 
-message Position {
-    string fen = 1;
-}
-
+// Chess position rating statistics.
 message PositionRatingStats {
+    // The lowest rating of all players that played a game reaching the 
+    // position.
     int32 min = 1;
+    // The average rating of all players that played a game reaching the 
+    // position.
     int32 avg = 2;
+    // The highest rating of all players that played a game reaching the 
+    // position.
     int32 max = 3;
 }
 
+// Chess position result statistics, i.e. winning percentages for each side.
 message PositionResultStats {
-    float white = 1;
-    float draw = 2;
-    float black = 3;
+    // The percentage of games reaching the position ending in a win for white.
+    float white_win_pct = 1;
+    // The percentage of games reaching the position ending in a draw.
+    float draw_pct = 2;
+    // The percentage of games reaching the position ending in a win for black.
+    float black_win_pct = 3;
 }
 
+// Chess position statistics.
 message PositionStats {
+    // The number of games that reached the position.
     int32 nr_games = 1;
+    // The rating statistics of the position.
     chesse_backend_api.v1alpha1.PositionRatingStats rating_stats = 2;
+    // The result statistics of the position.
     chesse_backend_api.v1alpha1.PositionResultStats result_stats = 3;
 }
 
-message SimilarPosition {
-    chesse_backend_api.v1alpha1.Position position = 1;
-    float similarity_score = 2;
-    chesse_backend_api.v1alpha1.PositionStats position_stats = 3;
+// Chess position.
+message Position {
+    // Forsyth–Edwards Notation (FEN) encoding of the position. Example:
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+    string fen_encoding = 1;
+    // The statistics of the position.
+    chesse_backend_api.v1alpha1.PositionStats position_stats = 2;
 }

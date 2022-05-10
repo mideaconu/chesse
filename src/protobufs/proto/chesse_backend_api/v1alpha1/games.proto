@@ -2,34 +2,60 @@ syntax = "proto3";
 package chesse_backend_api.v1alpha1;
 
 
-message Game {
-    string id = 1;
-    chesse_backend_api.v1alpha1.GameContext context = 2;
-    chesse_backend_api.v1alpha1.White white = 3;
-    chesse_backend_api.v1alpha1.Black black = 4;
-    repeated chesse_backend_api.v1alpha1.Move moves = 5;
-    float result = 6;
-}
-
+// Context of a chess game.
 message GameContext {
+    // The event in which the game was played, e.g. the name of the tournament.
     string event = 1;
+    // The date when the game was played. The format is YYYY.MM.dd
     string date = 2;
+    // The site where the game can be accessed.
     string site = 3;
+    // The round the game was played in. Example: 1 (round 1), 1.2 (round 1, 
+    // board 2), or null (N/A, such as online games).
     float round = 4;
 }
 
+// Details about the side playing the white pieces in a chess game.
 message White {
+    // The name of the side with the white pieces.
     string name = 1;
+    // The elo of the side with the white pieces. This can be online, FIDE, or 
+    // other national or international rating.
     int32 elo = 2;
 }
 
+// Details about the side playing the black pieces in a chess game.
 message Black {
+    // The name of the side with the black pieces.
     string name = 1;
+    // The elo of the side with the black pieces. This can be online, FIDE, or 
+    // other national or international rating.
     int32 elo = 2;
 }
 
+// Chess move.
 message Move {
+    // Universal Chess Interface (UCI). Example: e2e4.
     string uci = 1;
+    // Short Algebraic Notation (SAN). Example: e4.
     string san = 2;
+    // Forsyth–Edwards Notation (FEN). Example:
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1.
     string fen = 3;
+}
+
+// Chess game.
+message Game {
+    // The game ID. 
+    string id = 1;
+    // The game context.
+    chesse_backend_api.v1alpha1.GameContext context = 2;
+    // The side playing white in the game.
+    chesse_backend_api.v1alpha1.White white = 3;
+    // The side playing black in the game.
+    chesse_backend_api.v1alpha1.Black black = 4;
+    // The moves played in the game.
+    repeated chesse_backend_api.v1alpha1.Move moves = 5;
+    // The game result.
+    float result = 6;
 }

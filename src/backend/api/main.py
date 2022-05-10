@@ -29,7 +29,7 @@ def serve(port: str, max_workers: int):
     server.add_insecure_port(f"[::]:{port}")
 
     server.start()
-    startup_banner = pyfiglet.Figlet(font="slant", width=100).renderText("Chesse Backend API")
+    startup_banner = pyfiglet.Figlet(font="slant", width=100).renderText("CheSSE Backend API")
     logger.info(f"\n{startup_banner}")
     logger.info(f"Version: {__version__}")
     logger.info(f"Host: localhost:{port}")
