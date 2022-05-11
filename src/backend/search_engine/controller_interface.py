@@ -34,7 +34,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             - similarity_score (float): A score indicating how similar
             the position is to the query position.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_position_stats(self, **kwargs: Any) -> JSON:
@@ -68,7 +68,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
                 - draw (float): Percentage of draws.
                 - black (float): Percentage of wins by black.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_positions(self, **kwargs: Any) -> JSON:
@@ -96,7 +96,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             - similarity_score (float): A score indicating how similar
             the position is to the query position.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_positions_stats(self, **kwargs: Any) -> JSON:
@@ -132,7 +132,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
                 - draw (float): Percentage of draws.
                 - black (float): Percentage of wins by black.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_game(self, **kwargs) -> JSON:
@@ -174,7 +174,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             black won.
         }
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_games(self, **kwargs) -> JSON:
@@ -217,4 +217,4 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             - result (float): Game result: 1 if white won, 0.5 for draw, 0 if
             black won.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
