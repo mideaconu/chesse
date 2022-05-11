@@ -1,1 +1,2 @@
 pre-commit==2.18.1
+pytest==7.1.2
