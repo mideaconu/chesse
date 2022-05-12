@@ -1,9 +1,9 @@
 from concurrent import futures
 
 import pyfiglet
+from chesse_backend_api.v1alpha1 import chesse_pb2
 from chesse_backend_api.v1alpha1.chesse_pb2_grpc import add_CheSSEBackendServiceServicer_to_server
-
-# from grpc_reflection.v1alpha import reflection
+from grpc_reflection.v1alpha import reflection
 from loguru import logger
 
 import grpc
@@ -21,11 +21,11 @@ class CheSSEBackendServer:
             v1alpha1service.CheSSEBackendService(), self.server
         )
 
-        # service_names = (
-        #     chesse_pb2_v1alpha1.DESCRIPTOR.services_by_name["CheSSEBackendService"].full_name,
-        #     reflection.SERVICE_NAME,
-        # )
-        # reflection.enable_server_reflection(service_names, server)
+        service_names = (
+            chesse_pb2.DESCRIPTOR.services_by_name["CheSSEBackendService"].full_name,
+            reflection.SERVICE_NAME,
+        )
+        reflection.enable_server_reflection(service_names, self.server)
 
     def _print_startup_logs(self) -> None:
         figlet = pyfiglet.Figlet(font="slant", width=150)
@@ -39,6 +39,7 @@ class CheSSEBackendServer:
         self._print_startup_logs()
 
     def run(self) -> None:
+        self.start()
         self.server.wait_for_termination()
 
     def stop(self) -> None:

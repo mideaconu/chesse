@@ -1,0 +1,50 @@
+[
+    {
+        "fen_encoding": "3R2k1/pp3p2/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5",
+        "stats": {
+            "nr_games": 1,
+            "rating": {
+                "min": 1856,
+                "avg": 2033,
+                "max": 2211
+            },
+            "results": {
+                "white": 100,
+                "draw": 0,
+                "black": 0
+            }
+        }
+    },
+    {
+        "fen_encoding": "3R4/pp3pk1/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5",
+        "stats": {
+            "nr_games": 1,
+            "rating": {
+                "min": 1856,
+                "avg": 2033,
+                "max": 2211
+            },
+            "results": {
+                "white": 100,
+                "draw": 0,
+                "black": 0
+            }
+        }
+    },
+    {
+        "fen_encoding": "3R4/pp3pk1/2Q3pp/8/1P6/P3P1P1/5PKP/2r5",
+        "stats": {
+            "nr_games": 1,
+            "rating": {
+                "min": 1856,
+                "avg": 2033,
+                "max": 2211
+            },
+            "results": {
+                "white": 100,
+                "draw": 0,
+                "black": 0
+            }
+        }
+    }
+]
