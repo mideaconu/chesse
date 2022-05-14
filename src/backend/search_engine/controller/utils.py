@@ -19,7 +19,7 @@ def filter_chess_position_response(chess_position_response: Response) -> JSON:
     try:
         chess_position = {
             "fen_encoding": chess_position_raw.position.fen,
-            "similarity_score": chess_position_raw.meta.score,
+            "similarity_encoding": chess_position_raw.position.encoding,
         }
     except AttributeError as e:
         exc_utils.log_and_raise(
@@ -93,6 +93,7 @@ def filter_chess_positions_response(chess_positions_response: Response) -> JSON:
         chess_positions = [
             {
                 "fen_encoding": chess_position.position.fen,
+                "similarity_encoding": chess_position.position.encoding,
                 "similarity_score": chess_position.meta.score,
             }
             for chess_position in chess_positions_raw
