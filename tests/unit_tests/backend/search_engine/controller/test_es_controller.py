@@ -6,6 +6,7 @@ import pytest
 
 from backend.search_engine import controller as controller
 from tests import data as test_data
+from utils.exception import ElasticSearchQueryError, IllegalArgumentError, NotFoundError
 
 MockElasticsearch: mock.Mock()
 
@@ -40,8 +41,8 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        MockResponse.hits.return_value = {"hits": [test_data.chess_position_json]}
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        MockResponse.hits = {"hits": [test_data.chess_position_json]}
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_position = es_controller.get_chess_position(
@@ -50,6 +51,51 @@ class TestESController:
 
         # THEN
         assert chess_position == filtered_chess_position
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_position_by_fen_encoding_es_query_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        MockResponse.hits = {"hits": [test_data.chess_position_json]}
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_position(
+                fen_encoding=test_data.chess_position_json["fen_encoding"]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_position_by_fen_encoding_not_found_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = True
+        MockResponse.hits = None
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(NotFoundError):
+            es_controller.get_chess_position(
+                fen_encoding=test_data.chess_position_json["fen_encoding"]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_position_by_illegal_arg_err(self, mock_es_utils, mock_es_dsl, es_controller):
+        # GIVEN
+        MockResponse = mock.Mock()
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_position(illegal_arg_err=None)
 
     @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
     @mock.patch("backend.search_engine.controller.es_controller.es_utils")
@@ -64,7 +110,7 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_position_stats = es_controller.get_chess_position_stats(
@@ -73,6 +119,35 @@ class TestESController:
 
         # THEN
         assert chess_position_stats == filtered_chess_position_stats
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_position_stats_by_fen_encoding_es_query_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_position_stats(
+                fen_encoding=test_data.chess_position_json["fen_encoding"]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_position_stats_by_illegal_arg_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # WHEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_position_stats(illegal_arg_err=None)
 
     @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
     @mock.patch("backend.search_engine.controller.es_controller.es_utils")
@@ -92,7 +167,7 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_positions = es_controller.get_chess_positions(
@@ -101,6 +176,35 @@ class TestESController:
 
         # THEN
         assert chess_positions == filtered_chess_positions
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_positions_by_similarity_encoding_es_query_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_positions(
+                similarity_encoding=test_data.chess_position_json["similarity_encoding"]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_positions_by_illegal_arg_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_positions(illegal_arg_err=None)
 
     @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
     @mock.patch("backend.search_engine.controller.es_controller.es_utils")
@@ -117,7 +221,7 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_positions_stats = es_controller.get_chess_positions_stats(
@@ -131,6 +235,38 @@ class TestESController:
 
     @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
     @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_positions_stats_by_fen_encoding_es_query_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_positions_stats(
+                fen_encodings=[
+                    chess_position["fen_encoding"]
+                    for chess_position in test_data.chess_positions_json
+                ]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_positions_stats_by_illegal_arg_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_positions_stats(illegal_arg_err=None)
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
     def test_get_chess_game_by_id(self, mock_es_utils, mock_es_dsl, es_controller):
         # GIVEN
         filtered_chess_game = test_data.chess_game_json
@@ -138,13 +274,36 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_game = es_controller.get_chess_game(id=test_data.chess_game_json["id"])
 
         # THEN
         assert chess_game == filtered_chess_game
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_game_by_id_es_query_err(self, mock_es_utils, mock_es_dsl, es_controller):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_game(id=test_data.chess_game_json["id"])
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_game_by_illegal_arg_err(self, mock_es_utils, mock_es_dsl, es_controller):
+        # GIVEN
+        MockResponse = mock.Mock()
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_game(illegal_arg_err=None)
 
     @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
     @mock.patch("backend.search_engine.controller.es_controller.es_utils")
@@ -155,7 +314,7 @@ class TestESController:
 
         MockResponse = mock.Mock()
         MockResponse.success.return_value = True
-        mock_es_dsl.Search.query.execute.return_value = MockResponse
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
 
         # WHEN
         chess_games = es_controller.get_chess_games(
@@ -164,3 +323,34 @@ class TestESController:
 
         # THEN
         assert chess_games == filtered_chess_games
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_games_by_fen_encoding_es_query_err(
+        self, mock_es_utils, mock_es_dsl, es_controller
+    ):
+        # GIVEN
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = False
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(ElasticSearchQueryError):
+            es_controller.get_chess_games(
+                fen_encoding=test_data.chess_position_json["fen_encoding"]
+            )
+
+    @mock.patch("backend.search_engine.controller.es_controller.es_dsl")
+    @mock.patch("backend.search_engine.controller.es_controller.es_utils")
+    def test_get_chess_games_by_illegal_arg_err(self, mock_es_utils, mock_es_dsl, es_controller):
+        # GIVEN
+        filtered_chess_games = test_data.chess_games_json
+        mock_es_utils.filter_chess_games_response.return_value = filtered_chess_games
+
+        MockResponse = mock.Mock()
+        MockResponse.success.return_value = True
+        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = MockResponse
+
+        # THEN
+        with pytest.raises(IllegalArgumentError):
+            es_controller.get_chess_games(illegal_arg_err=None)
