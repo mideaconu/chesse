@@ -1,7 +1,8 @@
 from typing import Callable
 
-import grpc
 import loguru
+
+import grpc
 
 
 def set_error_context(
@@ -40,6 +41,10 @@ class NotFoundError(CheSSEBackendServerError):
 
 class InternalServerError(CheSSEBackendServerError):
     status_code = grpc.StatusCode.INTERNAL
+
+
+class InvalidCredentialsError(InternalServerError):
+    ...
 
 
 class IllegalArgumentError(InternalServerError):

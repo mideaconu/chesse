@@ -26,7 +26,9 @@ class CheSSEBackendController:
 
         Returns:
             JSON: A JSON object of the following structure:
-            - fen_encoding (str): FEN encoding of the position.
+            - fen_encoding (str): FEN encoding of the chess position.
+            - similarity_encoding (str): Similarity encoding of the chess
+            position.
             - stats (JSON): Position statistics:
                 - nr_games (int): Number of games the positions appears
                 in.
@@ -63,7 +65,9 @@ class CheSSEBackendController:
         Returns:
             JSON: A list of JSON objects of the following structure sorted by
             similarity score:
-            - fen_encoding (str): FEN encoding of the position.
+            - fen_encoding (str): FEN encoding of the chess position.
+            - similarity_encoding (str): Similarity encoding of the chess
+            position.
             - stats (JSON): Position statistics:
                 - nr_games (int): Number of games the positions appears
                 in.

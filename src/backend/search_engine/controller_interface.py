@@ -30,11 +30,11 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
 
         Returns:
             JSON: A JSON object of the following structure:
-            - fen_encoding (str): FEN encoding of the similar position.
-            - similarity_score (float): A score indicating how similar
-            the position is to the query position.
+            - fen_encoding (str): FEN encoding of the chess position.
+            - similarity_encoding (str): Similarity encoding of the chess
+            position.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_position_stats(self, **kwargs: Any) -> JSON:
@@ -68,7 +68,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
                 - draw (float): Percentage of draws.
                 - black (float): Percentage of wins by black.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_positions(self, **kwargs: Any) -> JSON:
@@ -93,10 +93,12 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             JSON: A list of JSON objects of the following structure (sorted by
             the similarity_score):
             - fen_encoding (str): FEN encoding of the similar position.
+            - similarity_encoding (str): Similarity encoding of the similar
+            position.
             - similarity_score (float): A score indicating how similar
             the position is to the query position.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_positions_stats(self, **kwargs: Any) -> JSON:
@@ -132,7 +134,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
                 - draw (float): Percentage of draws.
                 - black (float): Percentage of wins by black.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_game(self, **kwargs) -> JSON:
@@ -174,7 +176,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             black won.
         }
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def get_chess_games(self, **kwargs) -> JSON:
@@ -217,4 +219,4 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             - result (float): Game result: 1 if white won, 0.5 for draw, 0 if
             black won.
         """
-        raise NotImplementedError
+        raise NotImplementedError()

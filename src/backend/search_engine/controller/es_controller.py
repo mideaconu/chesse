@@ -11,7 +11,12 @@ from loguru import logger
 from backend.search_engine import controller_interface
 from backend.search_engine.controller import utils as es_utils
 from utils import exception as exc_utils
-from utils.exception import ElasticSearchQueryError, IllegalArgumentError, NotFoundError
+from utils.exception import (
+    ElasticSearchQueryError,
+    IllegalArgumentError,
+    InvalidCredentialsError,
+    NotFoundError,
+)
 from utils.typing import JSON
 
 warnings.simplefilter("ignore", ElasticsearchWarning)
@@ -19,9 +24,12 @@ warnings.simplefilter("ignore", ElasticsearchWarning)
 
 class ESController(controller_interface.AbstractSearchEngineController):
     def __init__(self) -> None:
-        url = os.getenv("SEARCH_ENGINE_URL")
+        url = os.getenv("SEARCH_ENGINE_URL", "https://localhost:9200")
         username = os.getenv("SEARCH_ENGINE_USERNAME")
         password = os.getenv("SEARCH_ENGINE_PASSWORD")
+
+        if not username or not password:
+            raise InvalidCredentialsError("ElasticSearch username of password not provided.")
 
         context = ssl.create_default_context(cafile="/Users/mihaideaconu/Documents/http_ca.crt")
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=context)
