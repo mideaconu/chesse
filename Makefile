@@ -1,4 +1,4 @@
-protobufs_dir := src/protobufs
+protobufs_dir := pb
 index_dir := src/backend/search_engine/index
 
 # Coloured text
