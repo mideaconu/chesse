@@ -1,22 +1,22 @@
 syntax = "proto3";
-package chesse_backend_api.v1alpha1;
+package chesse.v1alpha1;
 
 
 // Chess position rating statistics.
-message PositionRatingStats {
-    // The lowest rating of all players that played a game reaching the 
-    // position.
+message ChessPositionRatingStats {
+    // The rating of the lowest-rated player who has played a game where the
+    // given position was reached.
     int32 min = 1;
-    // The average rating of all players that played a game reaching the 
-    // position.
+    // The average rating of all players that played a game where the given
+    // position was reached.
     int32 avg = 2;
-    // The highest rating of all players that played a game reaching the 
-    // position.
+    // The rating of the highest-rated player who has played a game where the
+    // given position was reached.
     int32 max = 3;
 }
 
 // Chess position result statistics, i.e. winning percentages for each side.
-message PositionResultStats {
+message ChessPositionResultStats {
     // The percentage of games reaching the position ending in a win for white.
     float white_win_pct = 1;
     // The percentage of games reaching the position ending in a draw.
@@ -26,20 +26,21 @@ message PositionResultStats {
 }
 
 // Chess position statistics.
-message PositionStats {
+message ChessPositionStats {
     // The number of games that reached the position.
     int32 nr_games = 1;
     // The rating statistics of the position.
-    chesse_backend_api.v1alpha1.PositionRatingStats rating_stats = 2;
+    chesse.v1alpha1.ChessPositionRatingStats rating_stats = 2;
     // The result statistics of the position.
-    chesse_backend_api.v1alpha1.PositionResultStats result_stats = 3;
+    chesse.v1alpha1.ChessPositionResultStats result_stats = 3;
 }
 
 // Chess position.
-message Position {
+message ChessPosition {
     // Forsyth–Edwards Notation (FEN) encoding of the position. Example:
+    // the encoding for the starting position is 
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
     string fen_encoding = 1;
     // The statistics of the position.
-    chesse_backend_api.v1alpha1.PositionStats position_stats = 2;
+    chesse.v1alpha1.ChessPositionStats position_stats = 2;
 }

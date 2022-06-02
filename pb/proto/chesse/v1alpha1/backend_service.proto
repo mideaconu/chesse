@@ -1,0 +1,61 @@
+syntax = "proto3";
+package chesse.v1alpha1;
+
+import "chesse/v1alpha1/games.proto";
+import "chesse/v1alpha1/positions.proto";
+
+
+// Request to fetch a chess position.
+message GetChessPositionRequest {
+    // Forsyth–Edwards Notation (FEN) encoding of the position. Example:
+    // the encoding for the starting position is
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+    string fen_encoding = 1;
+}
+
+// Response to fetch a chess position.
+message GetChessPositionResponse {
+    // The chess position.
+    chesse.v1alpha1.ChessPosition position = 1;
+}
+
+// Request to fetch a list of chess positions.
+message GetChessPositionsRequest {
+    // Forsyth–Edwards Notation (FEN) encoding of the position to be compared 
+    // to. Example: the encoding for the starting position is 
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR. The positions that are most
+    // similar to this position are returned, in order of similarity.
+    string fen_encoding = 1;
+}
+
+// Response to fetch a list of chess positions.
+message GetChessPositionsResponse {
+    // The chess positions.
+    repeated chesse.v1alpha1.ChessPosition positions = 1;
+}
+
+// Request to fetch a chess game.
+message GetChessGameRequest {
+    // The chess game ID.
+    string game_id = 1;
+}
+
+// Response to fetch chess game.
+message GetChessGameResponse {
+    // The chess game.
+    chesse.v1alpha1.ChessGame game = 1;
+}
+
+// Request to fetch a list of chess games.
+message GetChessGamesRequest {
+    // Forsyth–Edwards Notation (FEN) encoding of the position. Example:
+    // the encoding for the starting position is
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+    string fen_encoding = 1;
+}
+
+// Response to fetch a list of chess games.
+message GetChessGamesResponse {
+    // The chess games.
+    repeated chesse.v1alpha1.ChessGame games = 1;
+}
