@@ -14,6 +14,7 @@ from backend_service.utils import meta
 class BackendServer(metaclass=meta.Singleton):
     def __init__(self, port: int = 50051, max_workers: int = 10) -> None:
         logger.info("Initialising CheSSE Backend Server...")
+        self.version = __version__
         self.port = port
         self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
 
@@ -27,18 +28,20 @@ class BackendServer(metaclass=meta.Singleton):
         )
         reflection.enable_server_reflection(service_names, self.server)
 
-    def _print_startup_logs(self) -> None:
+    def _print_startup_banner(self) -> None:
         """Generates a startup banner in the server logs."""
         figlet = pyfiglet.Figlet(font="slant", width=150)
-        startup_banner = figlet.renderText(f"CheSSE Backend Server v{__version__}")
+        startup_banner = figlet.renderText(f"CheSSE Backend Server v{self.version}")
         logger.info(f"\n\n{startup_banner}")
-        logger.info(f"Initialised CheSSE Backend Server on port {self.port}.")
 
     def start(self) -> None:
         """Starts the server and waits for its termination."""
         self.server.add_insecure_port(f"[::]:{self.port}")
         self.server.start()
-        self._print_startup_logs()
+
+        self._print_startup_banner()
+        logger.info(f"Initialised CheSSE Backend Server on port {self.port}.")
+
         self.server.wait_for_termination()
 
     def stop(self) -> None:
