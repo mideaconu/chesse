@@ -2,7 +2,8 @@ from abc import abstractmethod
 from typing import Any, List
 
 from chesse.v1alpha1 import games_pb2, positions_pb2
-from search_engine_service.utils import meta
+
+from backend_service.utils import meta
 
 
 class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):

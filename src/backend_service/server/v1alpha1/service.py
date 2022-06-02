@@ -31,7 +31,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
             chess_position_pb = self.search_engine_controller.get_chess_position_pb(
                 request.fen_encoding
             )
-            response.response = chess_position_pb
+            response = backend_service_pb2.GetChessPositionResponse(position=chess_position_pb)
         except exception.BackendServerError as e:
             exception.set_error_context(context, details=str(e), status_code=e.status_code)
 

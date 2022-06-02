@@ -145,7 +145,7 @@ def _es_response_to_chess_games_pb(response: Response) -> List[games_pb2.ChessGa
     try:
         for hit in response.hits:
             chess_game_pb = _es_hit_to_chess_game_pb(hit)
-            chess_games_pb.extend(chess_game_pb)
+            chess_games_pb.append(chess_game_pb)
     except AttributeError as e:
         exception.log_and_raise(
             logger,
@@ -156,8 +156,7 @@ def _es_response_to_chess_games_pb(response: Response) -> List[games_pb2.ChessGa
     return chess_games_pb
 
 
-def _check_query_is_successful(query, response: Response) -> None:
-    print(type(query))
+def _check_query_is_successful(query: es_dsl.Search, response: Response) -> None:
     if not response.success():
         exception.log_and_raise(
             logger,
