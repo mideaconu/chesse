@@ -12,7 +12,7 @@ class SearchEngineFactory(metaclass=meta.Singleton):
         configuration.
 
         Raises:
-            ValueError: If the configuration doesn't match any existing 
+            ValueError: If the configuration doesn't match any existing
             conrollers.
         """
         search_engine = os.getenv("SEARCH_ENGINE")

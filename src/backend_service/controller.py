@@ -1,9 +1,9 @@
 from loguru import logger
 
-from backend import factory
+from backend_service.search_engine import factory
+from backend_service.utils.typing import JSON
 from utils import encoding
 from utils import encoding as encoding_utils
-from utils.typing import JSON
 
 
 class CheSSEBackendController:
