@@ -1,12 +1,12 @@
-def is_int(element: str) -> bool:
+def is_int(elem: str) -> bool:
     """Checks if a string element is a valid int."""
-    return element.isdigit()
+    return elem.isdigit()
 
 
-def is_float(element: str) -> bool:
+def is_float(elem: str) -> bool:
     """Checks if a string element is a valid float."""
     try:
-        float(element)
+        float(elem)
         return True
     except ValueError:
         return False
