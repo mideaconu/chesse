@@ -2,8 +2,6 @@ from typing import List
 
 import chess
 
-from utils import exception as exc
-
 
 def _chebyshev_distance(from_square: chess.Square, to_square: chess.Square) -> float:
     """Returns the Chebyshev distance between two squares."""
@@ -34,17 +32,25 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
 
 
 def get_activity_encoding(fen: str) -> str:
-    """Returns a list of activity encodings in a given chess position.
+    """Returns the activity encoding of a given chess position.
 
     See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
+
+    Args:
+        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        position. Example: the encoding for the starting position is
+        rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+
+    Raises:
+        ValueError: If the FEN encoding is invalid.
+
+    Returns:
+        str: Activity encoding.
     """
     activity_encodings = []
 
-    try:
-        board = chess.Board(fen=fen)
-    except Exception as e:
-        raise exc.InvalidFENError(f"FEN {fen!r} is not valid: {e}")
+    board = chess.Board(fen=fen)
 
     pseudolegal_moves = _get_pseudolegal_moves(board)
 

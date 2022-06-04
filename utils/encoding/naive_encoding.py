@@ -1,19 +1,24 @@
 import chess
 
-from utils import exception as exc
-
 
 def get_naive_encoding(fen: str) -> str:
-    """Returns a set of naive encodings of the chess pieces in a given chess
-    position.
+    """Returns the naive encoding of a given chessposition.
 
     See Section 5.1. Naive Encoding in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
+
+    Args:
+        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        position. Example: the encoding for the starting position is
+        rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+
+    Raises:
+        ValueError: If the FEN encoding is invalid.
+
+    Returns:
+        str: Naive encoding.
     """
-    try:
-        board = chess.Board(fen=fen)
-    except Exception as e:
-        raise exc.InvalidFENError(f"FEN {fen!r} is not valid: {e}")
+    board = chess.Board(fen=fen)
 
     naive_encodings = []
 

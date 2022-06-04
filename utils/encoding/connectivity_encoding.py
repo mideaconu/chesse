@@ -4,8 +4,6 @@ from typing import List
 
 import chess
 
-from utils import exception as exc
-
 
 def _get_attack_encodings(
     piece: chess.Piece, square: chess.Square, board: chess.Board
@@ -73,16 +71,24 @@ def _get_ray_attack_encodings(
 
 
 def get_connectivity_encoding(fen: str) -> str:
-    """Returns a list of connectivity encodings of a given chess position.
+    """Returns the connectivity encoding of a given chess position.
 
     See Section 5.3. Connectivity between the pieces in Ganguly, D.,
     Leveling, J., & Jones, G. (2014). Retrieval of similar chess
     positions.
+
+    Args:
+        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        position. Example: the encoding for the starting position is
+        rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+
+    Raises:
+        ValueError: If the FEN encoding is invalid.
+
+    Returns:
+        str: Connectivity encoding.
     """
-    try:
-        board = chess.Board(fen=fen)
-    except Exception as e:
-        raise exc.InvalidFENError(f"FEN {fen!r} is not valid: {e}")
+    board = chess.Board(fen=fen)
 
     connectivity_encodings = []
     attack_encodings = []
