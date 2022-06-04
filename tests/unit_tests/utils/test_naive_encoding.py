@@ -26,7 +26,7 @@ from utils.encoding import get_naive_encoding
     ],
 )
 def test_get_naive_encoding(fen_encoding, expected_activity_encoding):
-    assert get_naive_encoding(fen=fen_encoding) == expected_activity_encoding
+    assert get_naive_encoding(fen_encoding) == expected_activity_encoding
 
 
 @pytest.mark.parametrize(
@@ -58,4 +58,4 @@ def test_get_naive_encoding(fen_encoding, expected_activity_encoding):
 )
 def test_get_naive_encoding_invalid_fen(fen_encoding):
     with pytest.raises(ValueError):
-        get_naive_encoding(fen=fen_encoding)
+        get_naive_encoding(fen_encoding)

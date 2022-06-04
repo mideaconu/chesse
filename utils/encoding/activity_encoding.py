@@ -31,14 +31,14 @@ def _get_pseudolegal_moves(board: chess.Board) -> List[chess.Move]:
     return pseudolegal_moves
 
 
-def get_activity_encoding(fen: str) -> str:
+def get_activity_encoding(fen_encoding: str) -> str:
     """Returns the activity encoding of a given chess position.
 
     See Section 5.2. Reachable Squares in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
 
     Args:
-        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        fen_encoding (str): Forsyth-Edwards Notation (FEN) encoding of a chess
         position. Example: the encoding for the starting position is
         rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
 
@@ -50,7 +50,7 @@ def get_activity_encoding(fen: str) -> str:
     """
     activity_encodings = []
 
-    board = chess.Board(fen=fen)
+    board = chess.Board(fen=fen_encoding)
 
     pseudolegal_moves = _get_pseudolegal_moves(board)
 

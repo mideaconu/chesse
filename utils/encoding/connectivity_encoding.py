@@ -70,7 +70,7 @@ def _get_ray_attack_encodings(
     return ray_attack_encodings
 
 
-def get_connectivity_encoding(fen: str) -> str:
+def get_connectivity_encoding(fen_encoding: str) -> str:
     """Returns the connectivity encoding of a given chess position.
 
     See Section 5.3. Connectivity between the pieces in Ganguly, D.,
@@ -78,7 +78,7 @@ def get_connectivity_encoding(fen: str) -> str:
     positions.
 
     Args:
-        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        fen_encoding (str): Forsyth-Edwards Notation (FEN) encoding of a chess
         position. Example: the encoding for the starting position is
         rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
 
@@ -88,7 +88,7 @@ def get_connectivity_encoding(fen: str) -> str:
     Returns:
         str: Connectivity encoding.
     """
-    board = chess.Board(fen=fen)
+    board = chess.Board(fen=fen_encoding)
 
     connectivity_encodings = []
     attack_encodings = []

@@ -32,7 +32,7 @@ from utils.encoding import get_connectivity_encoding
     ],
 )
 def test_get_connectivity_encoding(fen_encoding, expected_connectivity_encoding):
-    assert get_connectivity_encoding(fen=fen_encoding) == expected_connectivity_encoding
+    assert get_connectivity_encoding(fen_encoding) == expected_connectivity_encoding
 
 
 @pytest.mark.parametrize(
@@ -64,4 +64,4 @@ def test_get_connectivity_encoding(fen_encoding, expected_connectivity_encoding)
 )
 def test_get_connectivity_encoding_invalid_fen(fen_encoding):
     with pytest.raises(ValueError):
-        get_connectivity_encoding(fen=fen_encoding)
+        get_connectivity_encoding(fen_encoding)

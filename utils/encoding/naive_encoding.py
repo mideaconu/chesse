@@ -1,14 +1,14 @@
 import chess
 
 
-def get_naive_encoding(fen: str) -> str:
+def get_naive_encoding(fen_encoding: str) -> str:
     """Returns the naive encoding of a given chessposition.
 
     See Section 5.1. Naive Encoding in Ganguly, D., Leveling, J., &
     Jones, G. (2014). Retrieval of similar chess positions.
 
     Args:
-        fen (str): Forsyth-Edwards Notation (FEN) encoding of a chess
+        fen_encoding (str): Forsyth-Edwards Notation (FEN) encoding of a chess
         position. Example: the encoding for the starting position is
         rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
 
@@ -18,7 +18,7 @@ def get_naive_encoding(fen: str) -> str:
     Returns:
         str: Naive encoding.
     """
-    board = chess.Board(fen=fen)
+    board = chess.Board(fen=fen_encoding)
 
     naive_encodings = []
 
