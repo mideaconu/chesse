@@ -30,7 +30,7 @@ from utils.encoding import get_activity_encoding
             "bg4|0.67 ba4|0.67 qd8|0.89 qc8|0.89 qb7|0.89 qa7|0.78 qc6|0.89 qc5|0.78 bh8|0.78 "
             "bg7|0.89 be5|0.89 bd4|0.78 nc8|0.78 nd5|0.78 na4|0.78 pf4|0.89 pe6|0.89 ph5|0.89 "
             "pa4|0.89 pe5|0.78",
-            id="Middlegame",
+            id="Middle game",
         ),
         pytest.param(
             "1R1R4/p4pp1/4pk2/2pb1P2/r5Pp/2PK3P/2P5/8 w - - 0 1",
