@@ -4,7 +4,6 @@ import click
 
 from utils import click as click_utils
 from utils import encoding
-from utils import exception as exc
 
 
 def run_encoding(
@@ -25,7 +24,7 @@ def run_encoding(
 
     try:
         encoding = encoding_fct(fen, **kwargs)
-    except exc.InvalidFENError as e:
+    except ValueError as e:
         raise click.BadParameter(f"Encoding error: {e}")
 
     if output_file:
