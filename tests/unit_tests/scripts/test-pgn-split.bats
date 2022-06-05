@@ -5,11 +5,11 @@ setup_file() {
 
 setup() {
     DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
-    PATH="$DIR/../../../bin:$PATH"
+    PATH="$DIR/../../../../scripts:$PATH"
 }
 
 @test "pgn-split is executable" {
-    [ -x bin/pgn-split.sh ]
+    [ -x scripts/pgn-split.sh ]
 }
 
 @test "pgn-split splits games correctly to output directory" {

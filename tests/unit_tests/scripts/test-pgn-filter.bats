@@ -1,10 +1,10 @@
 setup() {
     DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
-    PATH="$DIR/../../../bin:$PATH"
+    PATH="$DIR/../../../../scripts:$PATH"
 }
 
 @test "pgn-filter is executable" {
-    [ -x bin/pgn-filter.sh ]
+    [ -x scripts/pgn-filter.sh ]
 }
 
 @test "pgn-filter fails when args file does not exist" {
