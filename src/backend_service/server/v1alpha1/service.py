@@ -8,7 +8,8 @@ from loguru import logger
 
 import encoding
 from backend_service.search_engine import factory
-from backend_service.utils import chess, exception, meta
+from backend_service.utils import chess as chess_utils
+from backend_service.utils import exception, meta
 
 
 class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Singleton):
@@ -27,7 +28,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         response = backend_service_pb2.GetChessPositionResponse()
 
         try:
-            chess.check_fen_encoding_is_valid(request.fen_encoding)
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
 
             chess_position_pb = self.search_engine_controller.get_chess_position_pb(
                 request.fen_encoding
@@ -48,7 +49,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         response = backend_service_pb2.GetChessPositionsResponse()
 
         try:
-            chess.check_fen_encoding_is_valid(request.fen_encoding)
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
 
             similarity_encoding = encoding.get_similarity_encoding(request.fen_encoding)
             logger.debug(
@@ -91,6 +92,8 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         response = backend_service_pb2.GetChessGamesRequest()
 
         try:
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+
             chess_games_pb = self.search_engine_controller.get_chess_games_pb(
                 fen_encoding=request.fen_encoding
             )
