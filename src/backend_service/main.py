@@ -12,6 +12,6 @@ if __name__ == "__main__":
 
     chesse_backend_server = server.BackendServer(port=port, max_workers=max_workers)
     try:
-        chesse_backend_server.start()
+        chesse_backend_server.run()
     except KeyboardInterrupt:
         chesse_backend_server.stop()
