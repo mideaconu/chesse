@@ -35,13 +35,16 @@ class BackendServer(metaclass=meta.Singleton):
         logger.info(f"\n\n{startup_banner}")
 
     def start(self) -> None:
-        """Starts the server and waits for its termination."""
+        """Starts the server."""
         self.server.add_insecure_port(f"[::]:{self.port}")
         self.server.start()
 
         self._print_startup_banner()
         logger.info(f"Initialised CheSSE Backend Server on port {self.port}.")
 
+    def run(self) -> None:
+        """Starts the server and waits for its termination."""
+        self.start()
         self.server.wait_for_termination()
 
     def stop(self) -> None:
