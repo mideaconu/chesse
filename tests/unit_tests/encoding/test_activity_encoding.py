@@ -1,6 +1,6 @@
 import pytest
 
-from utils.encoding import get_activity_encoding
+from encoding import get_activity_encoding
 
 
 @pytest.mark.parametrize(
