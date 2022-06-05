@@ -2,8 +2,28 @@ from typing import Callable, Optional, TextIO
 
 import click
 
-from utils import click as click_utils
-from utils import encoding
+import encoding
+
+
+class MutuallyExclusiveOption(click.Option):
+    def __init__(self, *args, **kwargs):
+        self.mutually_exclusive = set(kwargs.pop("mutually_exclusive", []))
+        help = kwargs.get("help", "")
+        if self.mutually_exclusive:
+            ex_str = ", ".join(self.mutually_exclusive)
+            kwargs["help"] = help + (
+                " NOTE: This argument is mutually exclusive with arguments: [" + ex_str + "]."
+            )
+        super(MutuallyExclusiveOption, self).__init__(*args, **kwargs)
+
+    def handle_parse_result(self, ctx, opts, args):
+        if self.mutually_exclusive.intersection(opts) and self.name in opts:
+            raise click.UsageError(
+                "Illegal usage: `{}` is mutually exclusive with "
+                "arguments `{}`.".format(self.name, ", ".join(self.mutually_exclusive))
+            )
+
+        return super(MutuallyExclusiveOption, self).handle_parse_result(ctx, opts, args)
 
 
 def run_encoding(
@@ -44,7 +64,7 @@ def cli() -> None:
 @cli.command("similarity")
 @click.option(
     "--fen",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["input_file"],
     type=str,
     default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
@@ -53,7 +73,7 @@ def cli() -> None:
 )
 @click.option(
     "--input-file",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["fen"],
     type=click.File("r"),
     help="File that contains the FEN representation of the chess board to encode. "
@@ -76,7 +96,7 @@ def similarity(
 @cli.command("naive")
 @click.option(
     "--fen",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["input_file"],
     type=str,
     default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
@@ -85,7 +105,7 @@ def similarity(
 )
 @click.option(
     "--input-file",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["fen"],
     type=click.File("r"),
     help="File that contains the FEN representation of the chess board to encode. "
@@ -106,7 +126,7 @@ def naive(
 @cli.command("activity")
 @click.option(
     "--fen",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     type=str,
     default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
     mutually_exclusive=["input_file"],
@@ -115,7 +135,7 @@ def naive(
 )
 @click.option(
     "--input-file",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["fen"],
     type=click.File("r"),
     help="File that contains the FEN representation of the chess board to encode. "
@@ -136,7 +156,7 @@ def activity(
 @cli.command("connectivity")
 @click.option(
     "--fen",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["input_file"],
     type=str,
     default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
@@ -145,7 +165,7 @@ def activity(
 )
 @click.option(
     "--input-file",
-    cls=click_utils.MutuallyExclusiveOption,
+    cls=MutuallyExclusiveOption,
     mutually_exclusive=["fen"],
     type=click.File("r"),
     help="File that contains the FEN representation of the chess board to encode. "

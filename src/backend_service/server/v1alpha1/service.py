@@ -6,8 +6,9 @@ from chesse.v1alpha1 import backend_service_pb2, services_pb2_grpc
 from google.protobuf import json_format
 from loguru import logger
 
+import encoding
 from backend_service.search_engine import factory
-from backend_service.utils import encoding, exception, meta
+from backend_service.utils import chess, exception, meta
 
 
 class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Singleton):
@@ -26,7 +27,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         response = backend_service_pb2.GetChessPositionResponse()
 
         try:
-            encoding.check_fen_encoding_is_valid(request.fen_encoding)
+            chess.check_fen_encoding_is_valid(request.fen_encoding)
 
             chess_position_pb = self.search_engine_controller.get_chess_position_pb(
                 request.fen_encoding
@@ -47,7 +48,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         response = backend_service_pb2.GetChessPositionsResponse()
 
         try:
-            encoding.check_fen_encoding_is_valid(request.fen_encoding)
+            chess.check_fen_encoding_is_valid(request.fen_encoding)
 
             similarity_encoding = encoding.get_similarity_encoding(request.fen_encoding)
             logger.debug(

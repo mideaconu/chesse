@@ -1,6 +1,6 @@
-from utils.encoding.activity_encoding import get_activity_encoding
-from utils.encoding.connectivity_encoding import get_connectivity_encoding
-from utils.encoding.naive_encoding import get_naive_encoding
+from encoding.activity_encoding import get_activity_encoding
+from encoding.connectivity_encoding import get_connectivity_encoding
+from encoding.naive_encoding import get_naive_encoding
 
 
 def get_similarity_encoding(fen_encoding: str) -> str:

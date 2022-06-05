@@ -1,4 +1,0 @@
-from utils.encoding.activity_encoding import get_activity_encoding
-from utils.encoding.connectivity_encoding import get_connectivity_encoding
-from utils.encoding.naive_encoding import get_naive_encoding
-from utils.encoding.similarity_encoding import get_similarity_encoding

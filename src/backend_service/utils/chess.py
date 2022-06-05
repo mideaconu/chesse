@@ -2,7 +2,6 @@ import chess
 from loguru import logger
 
 from backend_service.utils import exception
-from backend_service.utils import exception as exc_utils
 
 
 def check_fen_encoding_is_valid(fen_encoding: str) -> None:
@@ -21,7 +20,7 @@ def check_fen_encoding_is_valid(fen_encoding: str) -> None:
         chess.Board(fen=fen_encoding)
         logger.debug(f"FEN encoding {fen_encoding!r} is valid.")
     except ValueError as e:
-        exc_utils.log_and_raise(
+        exception.log_and_raise(
             logger,
             exception.InvalidFENEncodingError,
             {"fen_encoding": fen_encoding, "message": str(e)},
