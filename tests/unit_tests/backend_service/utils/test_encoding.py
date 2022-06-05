@@ -1,11 +1,11 @@
 import pytest
 
-from backend_service.utils import encoding, exception
+from backend_service.utils import chess, exception
 
 
 def test_check_fen_encoding_is_valid():
     fen_encoding = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    encoding.check_fen_encoding_is_valid(fen_encoding)
+    chess.check_fen_encoding_is_valid(fen_encoding)
 
 
 @pytest.mark.parametrize(
@@ -37,4 +37,4 @@ def test_check_fen_encoding_is_valid():
 )
 def test_check_fen_encoding_is_valid_fails(fen_encoding):
     with pytest.raises(exception.InvalidFENEncodingError):
-        encoding.check_fen_encoding_is_valid(fen_encoding)
+        chess.check_fen_encoding_is_valid(fen_encoding)
