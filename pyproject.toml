@@ -6,3 +6,11 @@ profile = "black"
 
 [tool.black]
 line-length = 100
+
+[tool.pytest.ini_options]
+addopts = "-s"
+filterwarnings = "ignore::DeprecationWarning"
+python_files = ["tests/**/test_*.py"]
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli = true
