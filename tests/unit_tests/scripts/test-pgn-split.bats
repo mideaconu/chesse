@@ -1,6 +1,6 @@
 setup_file() {
-    touch tests/data/no-games.pgn
-    mkdir tests/data/split
+    touch tests/data/scripts/no-games.pgn
+    mkdir tests/data/scripts/split
 }
 
 setup() {
@@ -13,22 +13,22 @@ setup() {
 }
 
 @test "pgn-split splits games correctly to output directory" {
-    run pgn-split.sh -o tests/data/split tests/data/games.pgn
+    run pgn-split.sh -o tests/data/scripts/split tests/data/scripts/games.pgn
 
     [ "$status" -eq 0 ]
-    [ -d tests/data/split ]
+    [ -d tests/data/scripts/split ]
 
     for i in {1..3}
     do
-        [ -f tests/data/split/$i.pgn ]
+        [ -f tests/data/scripts/split/$i.pgn ]
 
         # Test that the resulting file contents are correct
-        run pgn-extract tests/data/split/$i.pgn
+        run pgn-extract tests/data/scripts/split/$i.pgn
         [ "$status" -eq 0 ]
     done
 }
 
 teardown_file() {
-    rm tests/data/no-games.pgn
-    rm -rf tests/data/split
+    rm tests/data/scripts/no-games.pgn
+    rm -rf tests/data/scripts/split
 }

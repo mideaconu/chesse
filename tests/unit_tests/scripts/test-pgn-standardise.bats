@@ -8,31 +8,31 @@ setup() {
 }
 
 @test "pgn-standardise fails when input file does not exist" {
-    run pgn-standardise.sh tests/data/missing-games.pgn
+    run pgn-standardise.sh tests/data/scripts/missing-games.pgn
 
-    [ "$output" = "File tests/data/missing-games.pgn does not exist" ]
+    [ "$output" = "File tests/data/scripts/missing-games.pgn does not exist" ]
 }
 
 @test "pgn-standardise replaces UTCDate with Date to output directory" {
-    run pgn-standardise.sh -o tests/data/standardised-games.pgn tests/data/games.pgn
+    run pgn-standardise.sh -o tests/data/scripts/standardised-games.pgn tests/data/scripts/games.pgn
 
-    run grep -Rq "UTCDate" tests/data/standardised-games.pgn
+    run grep -Rq "UTCDate" tests/data/scripts/standardised-games.pgn
     [ "$status" -eq 1 ]
 
-    run grep -Rq "Date" tests/data/standardised-games.pgn
+    run grep -Rq "Date" tests/data/scripts/standardised-games.pgn
     [ "$status" -eq 0 ]
 }
 
 @test "pgn-standardise replaces UTCTime with Time to output directory" {
-    run pgn-standardise.sh -o tests/data/standardised-games.pgn tests/data/games.pgn
+    run pgn-standardise.sh -o tests/data/scripts/standardised-games.pgn tests/data/scripts/games.pgn
 
-    run grep -Rq "UTCTime" tests/data/standardised-games.pgn
+    run grep -Rq "UTCTime" tests/data/scripts/standardised-games.pgn
     [ "$status" -eq 1 ]
 
-    run grep -Rq "Time" tests/data/standardised-games.pgn
+    run grep -Rq "Time" tests/data/scripts/standardised-games.pgn
     [ "$status" -eq 0 ]
 }
 
 teardown_file() {
-    rm tests/data/standardised-games.pgn
+    rm tests/data/scripts/standardised-games.pgn
 }
