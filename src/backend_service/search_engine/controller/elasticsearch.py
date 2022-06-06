@@ -162,14 +162,20 @@ def _check_query_is_successful(query: es_dsl.Search, response: Response) -> None
 class ElasticsearchController(controller_if.AbstractSearchEngineController):
     def __init__(self) -> None:
         url = os.getenv("SEARCH_ENGINE_URL", "https://localhost:9200")
+
         username = os.getenv("SEARCH_ENGINE_USERNAME")
         password = os.getenv("SEARCH_ENGINE_PASSWORD")
-
         if not username or not password:
             raise exception.InvalidCredentialsError("Username or password not provided.")
 
-        context = ssl.create_default_context(cafile="/Users/mihaideaconu/Documents/http_ca.crt")
-        self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=context)
+        cert_path = os.getenv("SEARCH_ENGINE_CERT_PATH")
+        if not os.path.isfile(cert_path):
+            raise exception.InvalidCredentialsError(
+                f"Certificate file at location {cert_path} does not exist."
+            )
+
+        ssl_context = ssl.create_default_context(cafile=cert_path)
+        self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=ssl_context)
 
         logger.info(f"Initialised Search Engine Controller at {url}.")
 
