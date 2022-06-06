@@ -13,22 +13,28 @@ from backend_service.search_engine.controller import interface as controller_if
 from backend_service.utils import exception
 
 
+def _log_and_raise_pb_conversion_error(response: Response, pb_object: Any, error: str) -> None:
+    err_msg = f"Cannot convert response {response.to_dict()} to pb object {pb_object}: {error}."
+    logger.error(err_msg)
+    raise exception.SearchEnginePbConversionError(err_msg)
+
+
 def _es_bucket_to_chess_position_rating_stats_pb(
     bucket: FieldBucket,
 ) -> positions_pb2.ChessPositionRatingStats:
-    position_rating_stats_pb = positions_pb2.ChessPositionRatingStats(
+    position_rtg_stats_pb = positions_pb2.ChessPositionRatingStats(
         min=int(min(bucket.white.min_elo.value, bucket.black.min_elo.value)),
         avg=int((bucket.white.avg_elo.value + bucket.black.avg_elo.value) / 2),
         max=int(max(bucket.white.max_elo.value, bucket.black.max_elo.value)),
     )
 
-    return position_rating_stats_pb
+    return position_rtg_stats_pb
 
 
 def _es_bucket_to_chess_position_result_stats_pb(
     bucket: FieldBucket,
 ) -> positions_pb2.ChessPositionStats:
-    position_result_stats_pb = positions_pb2.ChessPositionResultStats(
+    position_res_stats_pb = positions_pb2.ChessPositionResultStats(
         white_win_pct=0, draw_pct=0, black_win_pct=0
     )
 
@@ -36,34 +42,32 @@ def _es_bucket_to_chess_position_result_stats_pb(
         win_rate_pct = side.doc_count / bucket.doc_count * 100
         match side.key:
             case 1:
-                position_result_stats_pb.white_win_pct = win_rate_pct
+                position_res_stats_pb.white_win_pct = win_rate_pct
             case 0.5:
-                position_result_stats_pb.draw_pct = win_rate_pct
+                position_res_stats_pb.draw_pct = win_rate_pct
             case 0:
-                position_result_stats_pb.black_win_pct = win_rate_pct
+                position_res_stats_pb.black_win_pct = win_rate_pct
             case _:
-                exception.log_and_raise(
-                    logger,
-                    exception.SearchEnginePbConversionError,
-                    f"Illegal winning side: {side['key']}",
-                )
+                err_msg = f"Illegal winning side: {side['key']}"
+                logger.error(err_msg)
+                raise exception.SearchEnginePbConversionError(err_msg)
 
-    return position_result_stats_pb
+    return position_res_stats_pb
 
 
 def _es_bucket_to_chess_position_pb(
     bucket: FieldBucket, fen_encoding
 ) -> positions_pb2.ChessPositionStats:
     nr_games = bucket.doc_count
-    position_rating_stats_pb = _es_bucket_to_chess_position_rating_stats_pb(bucket)
-    position_result_stats_pb = _es_bucket_to_chess_position_result_stats_pb(bucket)
+    position_rtg_stats_pb = _es_bucket_to_chess_position_rating_stats_pb(bucket)
+    position_res_stats_pb = _es_bucket_to_chess_position_result_stats_pb(bucket)
 
     position_pb = positions_pb2.ChessPosition(
         fen_encoding=fen_encoding,
         position_stats=positions_pb2.ChessPositionStats(
             nr_games=nr_games,
-            rating_stats=position_rating_stats_pb,
-            result_stats=position_result_stats_pb,
+            rating_stats=position_rtg_stats_pb,
+            result_stats=position_res_stats_pb,
         ),
     )
 
@@ -71,7 +75,7 @@ def _es_bucket_to_chess_position_pb(
 
 
 def _es_hit_to_chess_game_pb(hit) -> games_pb2.ChessGame:
-    chess_game_context_pb = games_pb2.ChessGameContext(
+    chess_game_ctx_pb = games_pb2.ChessGameContext(
         event=hit.context.event,
         date=hit.context.date,
         site=hit.context.site,
@@ -83,7 +87,7 @@ def _es_hit_to_chess_game_pb(hit) -> games_pb2.ChessGame:
 
     chess_game_pb = games_pb2.ChessGame(
         id=hit.id,
-        context=chess_game_context_pb,
+        context=chess_game_ctx_pb,
         white=white_pb,
         black=black_pb,
         moves=moves_pb,
@@ -100,10 +104,8 @@ def _es_response_to_chess_position_pb(
         bucket = response.aggregations.category_fen.fen.buckets[0]
         position_pb = _es_bucket_to_chess_position_pb(bucket, fen_encoding=fen_encoding)
     except AttributeError as e:
-        exception.log_and_raise(
-            logger,
-            exception.SearchEnginePbConversionError,
-            {"response": response.to_dict(), "message": str(e)},
+        _log_and_raise_pb_conversion_error(
+            response=response, pb_object=List[games_pb2.ChessGame], error=e
         )
 
     return position_pb
@@ -118,10 +120,8 @@ def _es_response_to_chess_positions_pb(response: Response) -> List[positions_pb2
             )
             chess_positions_pb.append(chess_position_pb)
     except AttributeError as e:
-        exception.log_and_raise(
-            logger,
-            exception.SearchEnginePbConversionError,
-            {"response": response.to_dict(), "message": str(e)},
+        _log_and_raise_pb_conversion_error(
+            response=response, pb_object=List[games_pb2.ChessGame], error=e
         )
 
     return chess_positions_pb
@@ -131,10 +131,8 @@ def _es_response_to_chess_game_pb(response: Response) -> games_pb2.ChessGame:
     try:
         chess_game_pb = _es_hit_to_chess_game_pb(response.hits[0])
     except AttributeError as e:
-        exception.log_and_raise(
-            logger,
-            exception.SearchEnginePbConversionError,
-            {"response": response.to_dict(), "message": str(e)},
+        _log_and_raise_pb_conversion_error(
+            response=response, pb_object=List[games_pb2.ChessGame], error=e
         )
 
     return chess_game_pb
@@ -147,10 +145,8 @@ def _es_response_to_chess_games_pb(response: Response) -> List[games_pb2.ChessGa
             chess_game_pb = _es_hit_to_chess_game_pb(hit)
             chess_games_pb.append(chess_game_pb)
     except AttributeError as e:
-        exception.log_and_raise(
-            logger,
-            exception.SearchEnginePbConversionError,
-            {"response": response.to_dict(), "message": str(e)},
+        _log_and_raise_pb_conversion_error(
+            response=response, pb_object=List[games_pb2.ChessGame], error=e
         )
 
     return chess_games_pb
@@ -158,11 +154,9 @@ def _es_response_to_chess_games_pb(response: Response) -> List[games_pb2.ChessGa
 
 def _check_query_is_successful(query: es_dsl.Search, response: Response) -> None:
     if not response.success():
-        exception.log_and_raise(
-            logger,
-            exception.SearchEngineQueryError,
-            {"query": query.to_dict(), "message": "Query unsuccessful."},
-        )
+        error_message = f"Query unsuccessful: {query.to_dict()}."
+        logger.error(error_message)
+        raise exception.SearchEngineQueryError(error_message)
 
 
 class ElasticsearchController(controller_if.AbstractSearchEngineController):
@@ -172,9 +166,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         password = os.getenv("SEARCH_ENGINE_PASSWORD")
 
         if not username or not password:
-            raise exception.InvalidCredentialsError(
-                service="Elasticsearch", message="Username or password not provided."
-            )
+            raise exception.InvalidCredentialsError("Username or password not provided.")
 
         context = ssl.create_default_context(cafile="/Users/mihaideaconu/Documents/http_ca.crt")
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=context)
@@ -305,8 +297,6 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             case ["fen_encoding"]:
                 return self._get_chess_games_by_fen_encoding(fen_encoding=kwargs["fen_encoding"])
             case _:
-                exception.log_and_raise(
-                    logger,
-                    exception.IllegalArgumentError,
-                    f"Invalid arguments to function get_chess_positions: {kwargs}.",
-                )
+                err_msg = f"Invalid arguments to function get_chess_positions: {kwargs}."
+                logger.error(err_msg)
+                raise exception.IllegalArgumentError(err_msg)
