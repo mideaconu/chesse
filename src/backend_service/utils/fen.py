@@ -18,10 +18,6 @@ def check_fen_encoding_is_valid(fen_encoding: str) -> None:
     """
     try:
         chess.Board(fen=fen_encoding)
-        logger.debug(f"FEN encoding {fen_encoding!r} is valid.")
     except ValueError as e:
-        exception.log_and_raise(
-            logger,
-            exception.InvalidFENEncodingError,
-            {"fen_encoding": fen_encoding, "message": str(e)},
-        )
+        logger.error(e)
+        raise exception.InvalidFENEncodingError(f"Invalid FEN encoding {fen_encoding}: {e}.")
