@@ -9,7 +9,7 @@ checkmark := "  \xE2\x9C\x94\n"
 
 .PHONY: help
 help :  ## Show a list of available commands
-	@grep -E '^[a-zA-Z]+(\/[a-zA-Z]*){0,1} :.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z\-]+(\/[a-zA-Z\-]*){0,1} :.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: clean/py
 clean/py :  ## Clean up the Python caches
@@ -33,8 +33,17 @@ index :  ## Run the indexing pipeline
 	@$(MAKE) -C $(index_dir) index
 
 
+.PHONY: test/unit
+test/unit :  ## Run unit tests
+	@pytest --cov=src --cov=scripts --cov=encoding tests/unit_tests
+	@bats -r tests/unit_tests
+
+.PHONY: test
+test : test/unit clean  ## Run whole test suite
+
+
 .PHONY: start/backend-api
-start/backend-api : ### Start backend API
+start/backend-api :  ## Start backend API
 	@python src/backend/api/main.py
 
 .PHONY: start/frontend-server
