@@ -1,4 +1,5 @@
 # Project
+/config/http_ca.crt
 /data 
 /.vscode
 
