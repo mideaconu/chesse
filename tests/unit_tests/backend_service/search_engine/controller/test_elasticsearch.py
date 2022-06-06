@@ -18,7 +18,11 @@ def elasticsearch_controller():
         "backend_service.search_engine.controller.elasticsearch.es.Elasticsearch"
     ) as mock_elasticsearch, mock.patch.dict(
         os.environ,
-        {"SEARCH_ENGINE_USERNAME": "username", "SEARCH_ENGINE_PASSWORD": "password"},
+        {
+            "SEARCH_ENGINE_USERNAME": "username",
+            "SEARCH_ENGINE_PASSWORD": "password",
+            "SEARCH_ENGINE_CERT_PATH": "tests/data/backend_service/elasticsearch/fake.crt",
+        },
         clear=True,
     ):
         global MockElasticsearch
