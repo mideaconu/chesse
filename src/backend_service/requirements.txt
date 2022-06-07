@@ -1,6 +1,5 @@
 chess==1.8.0
 elasticsearch==8.2.2
-elasticsearch-dsl==7.4.0
 google-api-python-client==2.39.0
 grpc-interceptor==0.14.1
 grpcio==1.44.0

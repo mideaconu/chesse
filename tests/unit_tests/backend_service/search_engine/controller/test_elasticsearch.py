@@ -2,17 +2,17 @@ import os
 from unittest import mock
 
 import pytest
-from elasticsearch_dsl import Search
-from elasticsearch_dsl.response import Response
 
 from backend_service.search_engine.controller import elasticsearch
 from backend_service.utils import exception
 from tests import data as test_data
 
-MockElasticsearch: mock.Mock()
+MockElasticsearch: mock.Mock
+
+failed_query = {"_shards": {"total": 1, "successful": 0, "unsuccessful": 1}}
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def elasticsearch_controller():
     with mock.patch(
         "backend_service.search_engine.controller.elasticsearch.es.Elasticsearch"
@@ -34,12 +34,10 @@ def elasticsearch_controller():
 
 
 class TestElasticsearchController:
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_position_pb(self, mock_es_dsl, elasticsearch_controller):
+    def test_get_chess_position_pb(self, elasticsearch_controller):
         # GIVEN
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=test_data.chess_position_response_json
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(return_value=test_data.chess_position_response_json)
 
         # WHEN
         chess_position = elasticsearch_controller.get_chess_position_pb(
@@ -49,15 +47,10 @@ class TestElasticsearchController:
         # THEN
         assert chess_position == test_data.chess_position_pb
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_position_pb_query_unsuccessful(self, mock_es_dsl, elasticsearch_controller):
+    def test_get_chess_position_pb_query_unsuccessful(self, elasticsearch_controller):
         # GIVEN
-        response = test_data.chess_position_response_json
-        response["_shards"]["successful"] = 0
-        response["_shards"]["failed"] = 1
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=response
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(return_value=failed_query)
 
         # THEN
         with pytest.raises(exception.SearchEngineQueryError):
@@ -65,14 +58,14 @@ class TestElasticsearchController:
                 fen_encoding=test_data.chess_position_json["fen_encoding"]
             )
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_positions_pb_by_similarity_encoding(
-        self, mock_es_dsl, elasticsearch_controller
-    ):
+    def test_get_chess_positions_pb_by_similarity_encoding(self, elasticsearch_controller):
         # GIVEN
-        mock_es_dsl.Search.return_value.query.return_value.execute.side_effect = (
-            Response(search=Search(), response=test_data.similar_positions_response_json),
-            Response(search=Search(), response=test_data.positions_stats_response_json),
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(
+            side_effect=[
+                test_data.similar_positions_response_json,
+                test_data.positions_stats_response_json,
+            ]
         )
 
         # WHEN
@@ -84,24 +77,24 @@ class TestElasticsearchController:
         assert chess_positions == test_data.chess_positions_pb
 
     @pytest.mark.parametrize(
-        "response",
+        "responses",
         [
             pytest.param(
-                test_data.similar_positions_response_json, id="Similar positions response"
+                [failed_query, test_data.positions_stats_response_json],
+                id="Failed similar positions query",
             ),
-            pytest.param(test_data.positions_stats_response_json, id="Positions stats response"),
+            pytest.param(
+                [test_data.similar_positions_response_json, failed_query],
+                id="Failed positions stats query",
+            ),
         ],
     )
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
     def test_get_chess_positions_pb_by_similarity_encoding_query_unsuccessful(
-        self, mock_es_dsl, elasticsearch_controller, response
+        self, elasticsearch_controller, responses
     ):
         # GIVEN
-        response["_shards"]["successful"] = 0
-        response["_shards"]["failed"] = 1
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=response
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(side_effect=responses)
 
         # THEN
         with pytest.raises(exception.SearchEngineQueryError):
@@ -109,12 +102,10 @@ class TestElasticsearchController:
                 similarity_encoding=test_data.chess_position_json["similarity_encoding"]
             )
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_game_pb(self, mock_es_dsl, elasticsearch_controller):
+    def test_get_chess_game_pb(self, elasticsearch_controller):
         # GIVEN
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=test_data.chess_game_response_json
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(side_effect=[test_data.chess_game_response_json])
 
         # WHEN
         chess_game = elasticsearch_controller.get_chess_game_pb(test_data.chess_game_json["id"])
@@ -122,26 +113,19 @@ class TestElasticsearchController:
         # THEN
         assert chess_game == test_data.chess_game_pb
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_game_pb_query_unsuccessful(self, mock_es_dsl, elasticsearch_controller):
+    def test_get_chess_game_pb_query_unsuccessful(self, elasticsearch_controller):
         # GIVEN
-        response = test_data.chess_game_response_json
-        response["_shards"]["successful"] = 0
-        response["_shards"]["failed"] = 1
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=response
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(return_value=failed_query)
 
         # THEN
         with pytest.raises(exception.SearchEngineQueryError):
             elasticsearch_controller.get_chess_game_pb(test_data.chess_game_json["id"])
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_games_pb_by_fen_encoding(self, mock_es_dsl, elasticsearch_controller):
+    def test_get_chess_games_pb_by_fen_encoding(self, elasticsearch_controller):
         # GIVEN
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=test_data.chess_games_response_json
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(return_value=test_data.chess_games_response_json)
 
         # WHEN
         chess_games = elasticsearch_controller.get_chess_games_pb(
@@ -151,17 +135,10 @@ class TestElasticsearchController:
         # THEN
         assert chess_games == test_data.chess_games_pb
 
-    @mock.patch("backend_service.search_engine.controller.elasticsearch.es_dsl")
-    def test_get_chess_games_pb_by_fen_encoding_query_unsuccessful(
-        self, mock_es_dsl, elasticsearch_controller
-    ):
+    def test_get_chess_games_pb_by_fen_encoding_query_unsuccessful(self, elasticsearch_controller):
         # GIVEN
-        response = test_data.chess_games_response_json
-        response["_shards"]["successful"] = 0
-        response["_shards"]["failed"] = 1
-        mock_es_dsl.Search.return_value.query.return_value.execute.return_value = Response(
-            search=Search(), response=response
-        )
+        global MockElasticsearch
+        MockElasticsearch.search = mock.Mock(return_value=failed_query)
 
         # THEN
         with pytest.raises(exception.SearchEngineQueryError):

@@ -2292,7 +2292,7 @@
         ]
     },
     "aggregations": {
-        "category_fen": {
+        "by_fen": {
             "doc_count": 435,
             "fen": {
                 "doc_count_error_upper_bound": 0,
