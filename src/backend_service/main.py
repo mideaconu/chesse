@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from backend_service import server
+from backend_service import server, tracing
 
 if __name__ == "__main__":
     port = int(os.getenv("BACKEND_SERVER_PORT"))

@@ -1,4 +1,3 @@
-import sys
 from concurrent import futures
 from typing import Any, Callable
 
@@ -33,7 +32,7 @@ class ExceptionToStatusInterceptor(grpc_interceptor.ServerInterceptor):
             request: The RPC request, as a protobuf message.
             context: The ServicerContext pass by gRPC to the service.
             method_name: A string of the form
-                "/protobuf.package.Service/Method"
+            "/protobuf.package.Service/Method"
 
         Returns:
             This should generally return the result of

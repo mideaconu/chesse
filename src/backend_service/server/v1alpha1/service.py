@@ -3,7 +3,6 @@ import sys
 
 import grpc
 from chesse.v1alpha1 import backend_service_pb2, services_pb2_grpc
-from google.protobuf import json_format
 from loguru import logger
 
 import encoding
