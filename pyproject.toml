@@ -1,8 +1,29 @@
 [tool.isort]
 line_length = 100
 include_trailing_comma = true
-known_third_party = ["chess"]
+known_third_party = [
+    "chess"
+]
 profile = "black"
 
 [tool.black]
 line-length = 100
+
+[tool.pytest.ini_options]
+addopts = "-s"
+filterwarnings = "ignore::DeprecationWarning"
+python_files = [
+    "tests/**/test_*.py"
+]
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli = true
+
+[tool.coverage.run]
+branch = true
+omit = [
+  "/*/**/__init__.py", 
+  "src/**/interface.py", 
+  "src/**/factory.py*", 
+  "src/**/main.py",
+]

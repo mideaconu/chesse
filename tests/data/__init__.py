@@ -1,29 +1,54 @@
 import json
 
-from chesse_backend_api.v1alpha1 import games_pb2, positions_pb2
+from chesse.v1alpha1 import games_pb2, positions_pb2
 
-with open("tests/data/chess_position.json") as chess_position:
+with open(
+    "tests/data/backend_service/elasticsearch/chess_position_response.json"
+) as chess_position_response:
+    chess_position_response_json = json.load(chess_position_response)
+
+with open(
+    "tests/data/backend_service/elasticsearch/similar_positions_response.json"
+) as similar_positions_response:
+    similar_positions_response_json = json.load(similar_positions_response)
+
+with open(
+    "tests/data/backend_service/elasticsearch/positions_stats_response.json"
+) as positions_stats_response:
+    positions_stats_response_json = json.load(positions_stats_response)
+
+with open(
+    "tests/data/backend_service/elasticsearch/chess_game_response.json"
+) as chess_game_response:
+    chess_game_response_json = json.load(chess_game_response)
+
+with open(
+    "tests/data/backend_service/elasticsearch/chess_games_response.json"
+) as chess_games_response:
+    chess_games_response_json = json.load(chess_games_response)
+
+with open("tests/data/backend_service/chess_position.json") as chess_position:
     chess_position_json = json.load(chess_position)
 
-with open("tests/data/chess_positions.json") as chess_positions:
+with open("tests/data/backend_service/chess_positions.json") as chess_positions:
     chess_positions_json = json.load(chess_positions)
 
-with open("tests/data/chess_game.json") as chess_game:
+with open("tests/data/backend_service/chess_game.json") as chess_game:
     chess_game_json = json.load(chess_game)
 
-with open("tests/data/chess_games.json") as chess_games:
+with open("tests/data/backend_service/chess_games.json") as chess_games:
     chess_games_json = json.load(chess_games)
 
-chess_position_pb2 = positions_pb2.Position(
+chess_position_pb = positions_pb2.ChessPosition(
     fen_encoding=chess_position_json["fen_encoding"],
-    position_stats=positions_pb2.PositionStats(
+    position_stats=positions_pb2.ChessPositionStats(
         nr_games=chess_position_json["stats"]["nr_games"],
-        rating_stats=positions_pb2.PositionRatingStats(
+        rating_stats=positions_pb2.ChessPositionRatingStats(
             min=chess_position_json["stats"]["rating"]["min"],
             avg=chess_position_json["stats"]["rating"]["avg"],
             max=chess_position_json["stats"]["rating"]["max"],
         ),
-        result_stats=positions_pb2.PositionResultStats(
+        result_stats=positions_pb2.ChessPositionResultStats(
             white_win_pct=chess_position_json["stats"]["results"]["white"],
             draw_pct=chess_position_json["stats"]["results"]["draw"],
             black_win_pct=chess_position_json["stats"]["results"]["black"],
@@ -31,17 +56,17 @@ chess_position_pb2 = positions_pb2.Position(
     ),
 )
 
-chess_positions_pb2 = [
-    positions_pb2.Position(
+chess_positions_pb = [
+    positions_pb2.ChessPosition(
         fen_encoding=position["fen_encoding"],
-        position_stats=positions_pb2.PositionStats(
+        position_stats=positions_pb2.ChessPositionStats(
             nr_games=position["stats"]["nr_games"],
-            rating_stats=positions_pb2.PositionRatingStats(
+            rating_stats=positions_pb2.ChessPositionRatingStats(
                 min=position["stats"]["rating"]["min"],
                 avg=position["stats"]["rating"]["avg"],
                 max=position["stats"]["rating"]["max"],
             ),
-            result_stats=positions_pb2.PositionResultStats(
+            result_stats=positions_pb2.ChessPositionResultStats(
                 white_win_pct=position["stats"]["results"]["white"],
                 draw_pct=position["stats"]["results"]["draw"],
                 black_win_pct=position["stats"]["results"]["black"],
@@ -51,9 +76,9 @@ chess_positions_pb2 = [
     for position in chess_positions_json
 ]
 
-chess_game_pb2 = games_pb2.Game(
+chess_game_pb = games_pb2.ChessGame(
     id=chess_game_json["id"],
-    context=games_pb2.GameContext(
+    context=games_pb2.ChessGameContext(
         event=chess_game_json["context"]["event"],
         date=chess_game_json["context"]["date"],
         site=chess_game_json["context"]["site"],
@@ -76,10 +101,10 @@ chess_game_pb2 = games_pb2.Game(
     ],
 )
 
-chess_games_pb2 = [
-    games_pb2.Game(
+chess_games_pb = [
+    games_pb2.ChessGame(
         id=chess_game_json["id"],
-        context=games_pb2.GameContext(
+        context=games_pb2.ChessGameContext(
             event=chess_game_json["context"]["event"],
             date=chess_game_json["context"]["date"],
             site=chess_game_json["context"]["site"],

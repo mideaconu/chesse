@@ -1,8 +1,0 @@
-version: v1
-name: buf.build/chesse/chesse_backend_api
-lint:
-  use:
-    - DEFAULT
-breaking:
-  use:
-    - FILE
