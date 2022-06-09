@@ -1,10 +1,10 @@
 version: v1
 plugins:
   - name: js
-    out: gen/js
+    out: ../src/frontend
     opt: import_style=commonjs,binary
   - name: js-grpc
-    out: gen/js
+    out: ../src/frontend
     opt:
       - import_style=commonjs,binary
       - grpc_js
