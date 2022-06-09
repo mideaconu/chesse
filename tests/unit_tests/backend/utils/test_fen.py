@@ -1,6 +1,6 @@
 import pytest
 
-from backend_service.utils import exception, fen
+from backend.utils import exception, fen
 
 
 def test_check_fen_encoding_is_valid():

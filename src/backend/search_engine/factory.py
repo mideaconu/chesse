@@ -1,8 +1,8 @@
 import os
 
-from backend_service.search_engine.controller import elasticsearch
-from backend_service.search_engine.controller import interface as controller_if
-from backend_service.utils import meta
+from backend.search_engine.controller import elasticsearch
+from backend.search_engine.controller import interface as controller_if
+from backend.utils import meta
 
 
 class SearchEngineFactory(metaclass=meta.Singleton):

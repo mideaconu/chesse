@@ -8,7 +8,6 @@ grpcio-tools==1.44.0
 loguru==0.6.0
 opentelemetry-api==1.11.1
 opentelemetry-exporter-otlp-proto-grpc==1.11.1
-opentelemetry-instrumentation-elasticsearch==0.31b0
 opentelemetry-instrumentation-grpc==0.30b1
 opentelemetry-sdk==1.11.1
 pyfiglet==0.8.post1

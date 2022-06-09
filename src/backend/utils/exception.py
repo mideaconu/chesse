@@ -11,7 +11,7 @@ def set_error_context(
 
 
 class BackendServerError(Exception):
-    ...
+    status_code = grpc.StatusCode.UNKNOWN
 
 
 class InvalidFENEncodingError(BackendServerError):
@@ -22,12 +22,16 @@ class InvalidCredentialsError(BackendServerError):
     status_code = grpc.StatusCode.FAILED_PRECONDITION
 
 
-class SearchEngineQueryError(BackendServerError):
+class SearchEngineError(BackendServerError):
     status_code = grpc.StatusCode.INTERNAL
 
 
-class SearchEnginePbConversionError(BackendServerError):
-    status_code = grpc.StatusCode.INTERNAL
+class SearchEngineQueryError(SearchEngineError):
+    pass
+
+
+class SearchEnginePbConversionError(SearchEngineError):
+    pass
 
 
 class NotFoundError(BackendServerError):
@@ -39,4 +43,4 @@ class InternalServerError(BackendServerError):
 
 
 class IllegalArgumentError(InternalServerError):
-    ...
+    pass

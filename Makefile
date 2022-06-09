@@ -1,6 +1,9 @@
 protobufs_dir := pb
 index_dir := src/backend/search_engine/index
 
+backend_version := 0.0.1
+frontend_version := 0.0.1
+
 # Coloured text
 gprint := printf '\033[32m%s\033[0m'  # green
 bprint := printf '\033[36m%s\033[0m'  # blue
@@ -42,10 +45,28 @@ test/unit :  ## Run unit tests
 test : test/unit clean  ## Run whole test suite
 
 
-.PHONY: start/backend-api
-start/backend-api :  ## Start backend API
-	@python src/backend/api/main.py
+.PHONY: build/backend
+build/backend :  ## Build the backend service Docker image
+	@docker build \
+		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+		--build-arg BUILD_VERSION=$(backend_version) \
+		-t chesse/backend:$(backend_version) \
+		-f src/backend/Dockerfile \
+		.
 
-.PHONY: start/frontend-server
-start/frontend-server :  ## Start frontend server
-	@DEBUG=server:* npm start --prefix src/frontend
+.PHONY: build/frontend
+build/frontend :  ## Build the frontend service Docker image
+	@docker build \
+		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+		--build-arg BUILD_VERSION=$(frontend_version) \
+		-t chesse/frontend:$(frontend_version) \
+		-f src/frontend/Dockerfile \
+		.
+
+.PHONY: build
+build : build/backend build/frontend  ## Build the Docker images
+
+
+.PHONY: run
+run : build  # Run the application
+	@docker compose -f src/docker-compose.yml up

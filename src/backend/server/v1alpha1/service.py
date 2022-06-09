@@ -6,10 +6,10 @@ from chesse.v1alpha1 import backend_service_pb2, services_pb2_grpc
 from loguru import logger
 
 import encoding
-from backend_service.search_engine import factory
-from backend_service.utils import exception
-from backend_service.utils import fen as chess_utils
-from backend_service.utils import meta
+from backend.search_engine import factory
+from backend.utils import exception
+from backend.utils import fen as chess_utils
+from backend.utils import meta
 
 
 class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Singleton):
