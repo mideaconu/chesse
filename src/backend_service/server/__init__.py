@@ -4,7 +4,7 @@ from typing import Any, Callable
 import grpc
 import grpc_interceptor
 import pyfiglet
-from chesse.v1alpha1 import services_pb2, services_pb2_grpc
+from chesse.v1alpha1 import backend_service_pb2, services_pb2, services_pb2_grpc
 from grpc_reflection.v1alpha import reflection
 from loguru import logger
 
@@ -45,6 +45,7 @@ class ExceptionToStatusInterceptor(grpc_interceptor.ServerInterceptor):
         except exception.BackendServerError as e:
             context.set_details(str(e))
             context.set_code(e.status_code)
+            return getattr(backend_service_pb2, f"{method_name.split('/')[-1]}Response")()
 
 
 class BackendServer(metaclass=meta.Singleton):
