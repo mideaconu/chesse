@@ -21,9 +21,9 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
-var chesse_v1alpha1_games_pb = require('../../chesse/v1alpha1/games_pb.js');
+var chesse_v1alpha1_games_pb = require('./games_pb.js');
 goog.object.extend(proto, chesse_v1alpha1_games_pb);
-var chesse_v1alpha1_positions_pb = require('../../chesse/v1alpha1/positions_pb.js');
+var chesse_v1alpha1_positions_pb = require('./positions_pb.js');
 goog.object.extend(proto, chesse_v1alpha1_positions_pb);
 goog.exportSymbol('proto.chesse.v1alpha1.GetChessGameRequest', null, global);
 goog.exportSymbol('proto.chesse.v1alpha1.GetChessGameResponse', null, global);
