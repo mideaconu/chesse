@@ -4,8 +4,8 @@ import grpc
 import pytest
 from chesse.v1alpha1 import backend_service_pb2, services_pb2_grpc
 
-from backend_service import server
-from backend_service.utils import exception
+from backend import server
+from backend.utils import exception
 from tests import data as test_data
 
 port = 1234
@@ -29,7 +29,7 @@ MockElasticsearchController: mock.Mock() = None
 @pytest.fixture(scope="session", autouse=True)
 def mock_chesse_backend_server():
     with mock.patch(
-        "backend_service.server.v1alpha1.service.factory.SearchEngineFactory.get_controller"
+        "backend.server.v1alpha1.service.factory.SearchEngineFactory.get_controller"
     ) as mock_get_controller:
         global MockElasticsearchController
 
@@ -43,7 +43,7 @@ def mock_chesse_backend_server():
 
 
 class TestCheSSEBackendService:
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPosition(self, mock_check_fen_encoding_is_valid):
         # GIVEN
         fen_encoding = "3R2k1/pp3p2/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5"
@@ -60,7 +60,7 @@ class TestCheSSEBackendService:
         assert isinstance(chess_position, backend_service_pb2.GetChessPositionResponse)
         assert chess_position.position == test_data.chess_position_pb
 
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPosition_invalid_arg_error(self, mock_check_fen_encoding_is_valid):
         # GIVEN
         fen_encoding = "3R2k1/pp3p2/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5"
@@ -85,7 +85,7 @@ class TestCheSSEBackendService:
             pytest.param(exception.SearchEnginePbConversionError, id="Pb conversion error"),
         ],
     )
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPosition_internal_server_error(
         self, mock_check_fen_encoding_is_valid, error_type
     ):
@@ -104,8 +104,8 @@ class TestCheSSEBackendService:
         # THEN
         assert e.value.code() == grpc.StatusCode.INTERNAL
 
-    @mock.patch("backend_service.server.v1alpha1.service.encoding.get_similarity_encoding")
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.encoding.get_similarity_encoding")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPositions(
         self, mock_check_fen_encoding_is_valid, mock_get_similarity_encoding
     ):
@@ -129,8 +129,8 @@ class TestCheSSEBackendService:
             position in test_data.chess_positions_pb for position in chess_positions.positions
         )
 
-    @mock.patch("backend_service.server.v1alpha1.service.encoding.get_similarity_encoding")
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.encoding.get_similarity_encoding")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPositions_invalid_arg_error(
         self, mock_check_fen_encoding_is_valid, mock_get_similarity_encoding
     ):
@@ -160,8 +160,8 @@ class TestCheSSEBackendService:
             pytest.param(exception.SearchEnginePbConversionError, id="Pb conversion error"),
         ],
     )
-    @mock.patch("backend_service.server.v1alpha1.service.encoding.get_similarity_encoding")
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.encoding.get_similarity_encoding")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessPositions_internal_server_error(
         self, mock_check_fen_encoding_is_valid, mock_get_similarity_encoding, error_type
     ):
@@ -220,7 +220,7 @@ class TestCheSSEBackendService:
         # THEN
         assert e.value.code() == grpc.StatusCode.INTERNAL
 
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessGames(self, mock_check_fen_encoding_is_valid):
         # GIVEN
         fen_encoding = "3R2k1/pp3p2/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5"
@@ -237,7 +237,7 @@ class TestCheSSEBackendService:
         assert isinstance(chess_games, backend_service_pb2.GetChessGamesResponse)
         assert all(game in test_data.chess_games_pb for game in chess_games.games)
 
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessGames_invalid_arg_error(self, mock_check_fen_encoding_is_valid):
         # GIVEN
         fen_encoding = "3R2k1/pp3p2/2q3pp/8/1P2Q3/P3P1P1/5PKP/2r5"
@@ -262,7 +262,7 @@ class TestCheSSEBackendService:
             pytest.param(exception.SearchEnginePbConversionError, id="Pb conversion error"),
         ],
     )
-    @mock.patch("backend_service.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
+    @mock.patch("backend.server.v1alpha1.service.chess_utils.check_fen_encoding_is_valid")
     def test_GetChessGames_internal_server_error(
         self, mock_check_fen_encoding_is_valid, error_type
     ):

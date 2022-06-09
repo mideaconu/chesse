@@ -1,7 +1,7 @@
 import chess
 from loguru import logger
 
-from backend_service.utils import exception
+from backend.utils import exception
 
 
 def check_fen_encoding_is_valid(fen_encoding: str) -> None:

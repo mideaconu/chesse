@@ -8,9 +8,9 @@ from chesse.v1alpha1 import backend_service_pb2, services_pb2, services_pb2_grpc
 from grpc_reflection.v1alpha import reflection
 from loguru import logger
 
-from backend_service import __version__
-from backend_service.server.v1alpha1 import service as v1alpha1_service
-from backend_service.utils import exception, meta
+from backend import __version__
+from backend.server.v1alpha1 import service as v1alpha1_service
+from backend.utils import exception, meta
 
 
 class ExceptionToStatusInterceptor(grpc_interceptor.ServerInterceptor):

@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from backend_service.search_engine.controller import elasticsearch
-from backend_service.utils import exception
+from backend.search_engine.controller import elasticsearch
+from backend.utils import exception
 from tests import data as test_data
 
 MockElasticsearch: mock.Mock
@@ -15,13 +15,13 @@ failed_query = {"_shards": {"total": 1, "successful": 0, "unsuccessful": 1}}
 @pytest.fixture(scope="class")
 def elasticsearch_controller():
     with mock.patch(
-        "backend_service.search_engine.controller.elasticsearch.es.Elasticsearch"
+        "backend.search_engine.controller.elasticsearch.es.Elasticsearch"
     ) as mock_elasticsearch, mock.patch.dict(
         os.environ,
         {
-            "SEARCH_ENGINE_USERNAME": "username",
-            "SEARCH_ENGINE_PASSWORD": "password",
-            "SEARCH_ENGINE_CERT_PATH": "tests/data/backend_service/elasticsearch/fake.crt",
+            "ELASTICSEARCH_USERNAME": "username",
+            "ELASTICSEARCH_PASSWORD": "password",
+            "ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES": "tests/data/backend/elasticsearch/fake.crt",
         },
         clear=True,
     ):

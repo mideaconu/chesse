@@ -2,41 +2,34 @@ import json
 
 from chesse.v1alpha1 import games_pb2, positions_pb2
 
-with open(
-    "tests/data/backend_service/elasticsearch/chess_position_response.json"
-) as chess_position_response:
+backend_test_data_dir = "tests/data/backend"
+es_test_data_dir = f"{backend_test_data_dir}/elasticsearch/responses"
+
+with open(f"{es_test_data_dir}/chess_position_response.json") as chess_position_response:
     chess_position_response_json = json.load(chess_position_response)
 
-with open(
-    "tests/data/backend_service/elasticsearch/similar_positions_response.json"
-) as similar_positions_response:
+with open(f"{es_test_data_dir}/similar_positions_response.json") as similar_positions_response:
     similar_positions_response_json = json.load(similar_positions_response)
 
-with open(
-    "tests/data/backend_service/elasticsearch/positions_stats_response.json"
-) as positions_stats_response:
+with open(f"{es_test_data_dir}/positions_stats_response.json") as positions_stats_response:
     positions_stats_response_json = json.load(positions_stats_response)
 
-with open(
-    "tests/data/backend_service/elasticsearch/chess_game_response.json"
-) as chess_game_response:
+with open(f"{es_test_data_dir}/chess_game_response.json") as chess_game_response:
     chess_game_response_json = json.load(chess_game_response)
 
-with open(
-    "tests/data/backend_service/elasticsearch/chess_games_response.json"
-) as chess_games_response:
+with open(f"{es_test_data_dir}/chess_games_response.json") as chess_games_response:
     chess_games_response_json = json.load(chess_games_response)
 
-with open("tests/data/backend_service/chess_position.json") as chess_position:
+with open(f"{backend_test_data_dir}/chess_position.json") as chess_position:
     chess_position_json = json.load(chess_position)
 
-with open("tests/data/backend_service/chess_positions.json") as chess_positions:
+with open(f"{backend_test_data_dir}/chess_positions.json") as chess_positions:
     chess_positions_json = json.load(chess_positions)
 
-with open("tests/data/backend_service/chess_game.json") as chess_game:
+with open(f"{backend_test_data_dir}/chess_game.json") as chess_game:
     chess_game_json = json.load(chess_game)
 
-with open("tests/data/backend_service/chess_games.json") as chess_games:
+with open(f"{backend_test_data_dir}/chess_games.json") as chess_games:
     chess_games_json = json.load(chess_games)
 
 chess_position_pb = positions_pb2.ChessPosition(

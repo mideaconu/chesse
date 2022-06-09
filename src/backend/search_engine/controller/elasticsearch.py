@@ -1,14 +1,33 @@
 import os
 import ssl
-from typing import Any
+from typing import Any, Callable
 
+import elastic_transport
 import elasticsearch as es
 from chesse.v1alpha1 import games_pb2, positions_pb2
 from loguru import logger
 
-from backend_service.search_engine.controller import interface as controller_if
-from backend_service.search_engine.query import elasticsearch as es_query
-from backend_service.utils import exception
+from backend.search_engine.controller import interface as controller_if
+from backend.search_engine.query import elasticsearch as es_query
+from backend.tracing import tracer
+from backend.utils import exception
+
+
+def _parse_es_instance_env_vars() -> tuple[str, str, str, str]:
+    url = os.getenv("ELASTICSEARCH_HOSTS")
+
+    username = os.getenv("ELASTICSEARCH_USERNAME")
+    password = os.getenv("ELASTICSEARCH_PASSWORD")
+    if not username or not password:
+        raise exception.InvalidCredentialsError("Username or password not provided.")
+
+    cert_path = os.getenv("ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES")
+    if not os.path.isfile(cert_path):
+        raise exception.InvalidCredentialsError(
+            f"Certificate file at location {cert_path} does not exist."
+        )
+
+    return (url, username, password, cert_path)
 
 
 def _es_bucket_to_chess_position_rating_stats_pb(
@@ -99,11 +118,8 @@ def _es_hit_to_chess_game_pb(hit) -> games_pb2.ChessGame:
 def _es_response_to_chess_position_pb(
     response: dict[str, Any], fen_encoding: str
 ) -> positions_pb2.ChessPositionStats:
-    try:
-        bucket = response["aggregations"]["by_fen"]["fen"]["buckets"][0]
-        position_pb = _es_bucket_to_chess_position_pb(bucket, fen_encoding=fen_encoding)
-    except AttributeError as e:
-        raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
+    bucket = response["aggregations"]["by_fen"]["fen"]["buckets"][0]
+    position_pb = _es_bucket_to_chess_position_pb(bucket, fen_encoding=fen_encoding)
 
     return position_pb
 
@@ -112,62 +128,57 @@ def _es_response_to_chess_positions_pb(
     response: dict[str, Any]
 ) -> list[positions_pb2.ChessPosition]:
     chess_positions_pb = []
-    try:
-        for bucket in response["aggregations"]["by_fen"]["fen"]["buckets"]:
-            chess_position_pb = _es_bucket_to_chess_position_pb(
-                bucket, fen_encoding=bucket["key"].partition(" ")[0]
-            )
-            chess_positions_pb.append(chess_position_pb)
-    except AttributeError as e:
-        raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
+    for bucket in response["aggregations"]["by_fen"]["fen"]["buckets"]:
+        chess_position_pb = _es_bucket_to_chess_position_pb(
+            bucket, fen_encoding=bucket["key"].partition(" ")[0]
+        )
+        chess_positions_pb.append(chess_position_pb)
 
     return chess_positions_pb
 
 
 def _es_response_to_chess_game_pb(response: dict[str, Any]) -> games_pb2.ChessGame:
-    try:
-        chess_game_pb = _es_hit_to_chess_game_pb(response["hits"]["hits"][0])
-    except AttributeError as e:
-        raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
+    chess_game_pb = _es_hit_to_chess_game_pb(response["hits"]["hits"][0])
 
     return chess_game_pb
 
 
 def _es_response_to_chess_games_pb(response: dict[str, Any]) -> list[games_pb2.ChessGame]:
     chess_games_pb = []
-    try:
-        for hit in response["hits"]["hits"]:
-            chess_game_pb = _es_hit_to_chess_game_pb(hit)
-            chess_games_pb.append(chess_game_pb)
-    except AttributeError as e:
-        raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
+    for hit in response["hits"]["hits"]:
+        chess_game_pb = _es_hit_to_chess_game_pb(hit)
+        chess_games_pb.append(chess_game_pb)
 
     return chess_games_pb
 
 
+def _exception_handler(func: Callable):
+    def handler(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except (elastic_transport.ApiError, elastic_transport.TransportError) as e:
+            raise exception.SearchEngineError(f"Elasticsearch call failed: {e}")
+        except AttributeError as e:
+            raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
+
+    return handler
+
+
 class ElasticsearchController(controller_if.AbstractSearchEngineController):
+    @_exception_handler
     def __init__(self) -> None:
-        url = os.getenv("SEARCH_ENGINE_URL", "https://localhost:9200")
-
-        username = os.getenv("SEARCH_ENGINE_USERNAME")
-        password = os.getenv("SEARCH_ENGINE_PASSWORD")
-        if not username or not password:
-            raise exception.InvalidCredentialsError("Username or password not provided.")
-
-        cert_path = os.getenv("SEARCH_ENGINE_CERT_PATH")
-        if not os.path.isfile(cert_path):
-            raise exception.InvalidCredentialsError(
-                f"Certificate file at location {cert_path} does not exist."
-            )
+        (url, username, password, cert_path) = _parse_es_instance_env_vars()
 
         ssl_context = ssl.create_default_context(cafile=cert_path)
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=ssl_context)
 
         logger.info(f"Initialised Search Engine Controller at {url}.")
 
+    @_exception_handler
     def get_chess_position_pb(self, fen_encoding: str) -> positions_pb2.ChessPosition:
         query = es_query.get_chess_position_query(fen_encoding)
-        response = self.client.search(index="games", body=query)
+        with tracer.start_as_current_span("Elasticsearch/games/_search"):
+            response = self.client.search(index="games", body=query)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -182,7 +193,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         self, similarity_encoding: str
     ) -> list[positions_pb2.ChessPosition]:
         query_sim_pos = es_query.get_similar_positions_query(similarity_encoding)
-        response_sim_pos = self.client.search(index="positions", body=query_sim_pos)
+        with tracer.start_as_current_span("Elasticsearch/positions/_search"):
+            response_sim_pos = self.client.search(index="positions", body=query_sim_pos)
 
         if response_sim_pos["_shards"]["total"] != response_sim_pos["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -196,7 +208,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         ]
 
         query_position_stats = es_query.get_chess_positions_stats_query(fen_encodings)
-        response_positions_stats = self.client.search(index="games", body=query_position_stats)
+        with tracer.start_as_current_span("Elasticsearch/games/_search"):
+            response_positions_stats = self.client.search(index="games", body=query_position_stats)
 
         if (
             response_positions_stats["_shards"]["total"]
@@ -210,6 +223,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         return chess_positions_pb
 
+    @_exception_handler
     def get_chess_positions_pb(self, **kwargs: Any) -> list[positions_pb2.ChessPosition]:
         match list(kwargs.keys()):
             case ["similarity_encoding"]:
@@ -221,9 +235,11 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
                     f"Invalid arguments to function get_chess_positions: {kwargs}."
                 )
 
+    @_exception_handler
     def get_chess_game_pb(self, id: str) -> games_pb2.ChessGame:
         query = es_query.get_game_query(id)
-        response = self.client.search(index="games", body=query)
+        with tracer.start_as_current_span("Elasticsearch/games/_search"):
+            response = self.client.search(index="games", body=query)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(f"Query unsuccessful: get game by id {id!r}.")
@@ -236,7 +252,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
     def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
         query = es_query.get_games_query(fen_encoding)
-        response = self.client.search(index="games", body=query)
+        with tracer.start_as_current_span("Elasticsearch/games/_search"):
+            response = self.client.search(index="games", body=query)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -247,6 +264,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         return chess_games_pb
 
+    @_exception_handler
     def get_chess_games_pb(self, **kwargs: Any) -> list[games_pb2.ChessGame]:
         match list(kwargs.keys()):
             case ["fen_encoding"]:
