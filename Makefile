@@ -46,26 +46,22 @@ test : test/unit clean  ## Run whole test suite
 
 
 .PHONY: build/backend
-build/backend :  ## Build the backend service Docker iamge
-	@$(bprint) "- Building the backend service image"
+build/backend :  ## Build the backend service Docker image
 	@docker build \
 		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
 		--build-arg BUILD_VERSION=$(backend_version) \
 		-t chesse/backend:$(backend_version) \
 		-f src/backend/Dockerfile \
 		.
-	@printf $(checkmark)
 
 .PHONY: build/frontend
-build/frontend :  ## Build the frontend service Docker iamge
-	@$(bprint) "- Building the frontend service image"
+build/frontend :  ## Build the frontend service Docker image
 	@docker build \
 		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
 		--build-arg BUILD_VERSION=$(frontend_version) \
 		-t chesse/frontend:$(frontend_version) \
 		-f src/frontend/Dockerfile \
 		.
-	@printf $(checkmark)
 
 .PHONY: build
 build : build/backend build/frontend  ## Build the Docker images
