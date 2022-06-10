@@ -158,7 +158,7 @@ def _exception_handler(func: Callable):
             return func(*args, **kwargs)
         except (elastic_transport.ApiError, elastic_transport.TransportError) as e:
             raise exception.SearchEngineError(f"Elasticsearch call failed: {e}")
-        except AttributeError as e:
+        except (KeyError, AttributeError) as e:
             raise exception.SearchEnginePbConversionError(f"Cannot convert to pb object: {e}.")
 
     return handler
