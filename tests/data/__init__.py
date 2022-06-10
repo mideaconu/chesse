@@ -2,7 +2,10 @@ import json
 
 from chesse.v1alpha1 import games_pb2, positions_pb2
 
+tmp_dir = "tmp"
+
 backend_test_data_dir = "tests/data/backend"
+encoding_test_data_dir = "tests/data/encoding"
 es_test_data_dir = f"{backend_test_data_dir}/elasticsearch/responses"
 
 with open(f"{es_test_data_dir}/chess_position_response.json") as chess_position_response:
