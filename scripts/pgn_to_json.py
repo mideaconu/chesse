@@ -1,11 +1,33 @@
+import base64
 import collections
 import json
+import zlib
 from typing import Optional, TextIO
 
 import chess.pgn
 import click
 
-from utils import compress, numeric
+
+def is_int(elem: str) -> bool:
+    """Checks if a string element is a valid int."""
+    return elem.isdigit()
+
+
+def is_float(elem: str) -> bool:
+    """Checks if a string element is a valid float."""
+    try:
+        float(elem)
+        return True
+    except ValueError:
+        return False
+
+
+def gzip_compress(value: str) -> str:
+    """Compress a string using gzip."""
+    gzip_bytes = zlib.compress(bytes(value, encoding="utf-8"))
+    gzip_str = base64.b64encode(gzip_bytes).decode(encoding="utf-8")
+
+    return gzip_str
 
 
 class GameJSONBuilder:
@@ -19,7 +41,7 @@ class GameJSONBuilder:
         """Set ID generated from identity fields using data compression
         (gzip)."""
         id_fields = [self.game.headers[header] for header in self.identity_headers]
-        id_ = compress.gzip_compress("|".join(id_fields))
+        id_ = gzip_compress("|".join(id_fields))
 
         self.game_dict["id"] = id_
 
@@ -35,9 +57,7 @@ class GameJSONBuilder:
                 context[header.lower()] = self.game.headers[header]
 
         context["round"] = (
-            float(self.game.headers["Round"])
-            if numeric.is_float(self.game.headers["Round"])
-            else None
+            float(self.game.headers["Round"]) if is_float(self.game.headers["Round"]) else None
         )
 
         self.game_dict["context"] = context
@@ -51,9 +71,7 @@ class GameJSONBuilder:
         white = {}
         white["name"] = self.game.headers["White"]
         white["elo"] = (
-            int(self.game.headers["WhiteElo"])
-            if numeric.is_int(self.game.headers["WhiteElo"])
-            else None
+            int(self.game.headers["WhiteElo"]) if is_int(self.game.headers["WhiteElo"]) else None
         )
 
         self.game_dict["white"] = white
@@ -67,9 +85,7 @@ class GameJSONBuilder:
         black = {}
         black["name"] = self.game.headers["Black"]
         black["elo"] = (
-            int(self.game.headers["BlackElo"])
-            if numeric.is_int(self.game.headers["BlackElo"])
-            else None
+            int(self.game.headers["BlackElo"]) if is_int(self.game.headers["BlackElo"]) else None
         )
 
         self.game_dict["black"] = black

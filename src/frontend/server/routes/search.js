@@ -1,34 +1,34 @@
 const express = require('express');
+const grpc = require('@grpc/grpc-js');
 
 var router = express.Router();
 
-const services = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_grpc_pb');
-const messages = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_pb');
-const pos = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/positions_pb');
-const grpc = require('@grpc/grpc-js');
-
 require('dotenv').config()
 
-const client = new services.CheSSEBackendServiceClient(`localhost:${process.env.BACKEND_API_PORT}`, grpc.ChannelCredentials.createInsecure());
+const services = require("../../chesse/v1alpha1/services_grpc_pb");
+const messages = require("../../chesse/v1alpha1/backend_service_pb");
+const pos = require("../../chesse/v1alpha1/positions_pb");
+
+const client = new services.BackendServiceClient(
+	`${process.env.BACKEND_API_HOST}:${process.env.BACKEND_API_PORT}`, 
+	grpc.ChannelCredentials.createInsecure()
+);
+
 
 /* GET /search. */
 router.get('/', function(req, res, next) {
-	console.log(req.query.fen);
-
-	var position = new pos.Position();
-	position.setFen(req.query.fen);
-	var request = new messages.GetSimilarPositionsRequest();
-	request.setPosition(position);
+	var request = new messages.GetChessPositionsRequest();
+	request.setFenEncoding(req.query.fen);
 
 	var positions;
 
-	client.getSimilarPositions(request, function(err, response) {
-		var similar_positions_pb = response.getSimilarPositionsList();
+	client.getChessPositions(request, function(err, response) {
+		var positions_pb = response.getPositionsList();
+
 		positions = [];
-		for (let position_pb of similar_positions_pb) {
+		for (let position_pb of positions_pb) {
 			positions.push({
-				fen: position_pb.getPosition().getFen(),
-				similarity_score: position_pb.getSimilarityScore(),
+				fen_encoding: position_pb.getFenEncoding(),
 				stats: {
 					nr_games: position_pb.getPositionStats().getNrGames(),
 					rating: {
@@ -37,15 +37,13 @@ router.get('/', function(req, res, next) {
 						max: position_pb.getPositionStats().getRatingStats().getMax(),
 					},
 					result: {
-						white: position_pb.getPositionStats().getResultStats().getWhite(),
-						draw: position_pb.getPositionStats().getResultStats().getDraw(),
-						black: position_pb.getPositionStats().getResultStats().getBlack(),
+						white_win_pct: position_pb.getPositionStats().getResultStats().getWhiteWinPct(),
+						draw_pct: position_pb.getPositionStats().getResultStats().getDrawPct(),
+						black_win_pct: position_pb.getPositionStats().getResultStats().getBlackWinPct(),
 					}
 				}
 			});
 		}
-
-		console.log(positions);
 
 		res.render('search', { title: 'CheSSE', fen: req.query.fen, positions: positions });
   	});

@@ -1,7 +1,0 @@
-syntax = "proto3";
-package chesse_backend_api.v1alpha1;
-
-
-message Game {
-    string id = 1;
-}
