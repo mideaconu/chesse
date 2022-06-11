@@ -171,6 +171,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         ssl_context = ssl.create_default_context(cafile=cert_path)
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=ssl_context)
+        self.max_result_size = int(os.getenv("ELASTICSEARCH_RESULT_MAX_SIZE", "10"))
 
         logger.info(f"Initialised Search Engine Controller at {url}.")
 
@@ -196,7 +197,9 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
     def _get_similar_chess_position_fen_encodings(self, similarity_encoding: str) -> list[str]:
         query = es_query.get_similar_positions_query(similarity_encoding)
         with tracer.start_as_current_span("Elasticsearch/positions/_search"):
-            response_sim_pos = self.client.search(index="positions", query=query, size=100)
+            response_sim_pos = self.client.search(
+                index="positions", query=query, size=self.max_result_size
+            )
 
         if response_sim_pos["_shards"]["total"] != response_sim_pos["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -220,7 +223,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         aggs = es_query.get_chess_position_aggs(fen_encodings)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
             response_positions_stats = self.client.search(
-                index="games", query=query, aggs=aggs, size=100
+                index="games", query=query, aggs=aggs, size=self.max_result_size
             )
 
         if (
@@ -267,7 +270,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
     def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
         query = es_query.get_chess_games_query(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", body=query, size=1_000)
+            response = self.client.search(index="games", body=query, size=self.max_result_size)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(

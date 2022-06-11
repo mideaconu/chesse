@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 
@@ -19,6 +20,8 @@ def get_similar_positions_query(similarity_encoding: str) -> dict[str, Any]:
 
 
 def get_chess_positions_query(fen_encodings: list[str]) -> dict[str, Any]:
+    """Returns the Elasticsearch query to request a list of chess positions
+    given the FEN encodings."""
     return {
         "nested": {
             "path": "moves",
@@ -50,7 +53,11 @@ def _get_chess_position_aggs(include: str) -> dict[str, Any]:
             "nested": {"path": "moves"},
             "aggs": {
                 "fen": {
-                    "terms": {"field": "moves.fen", "size": 1_000, "include": include},
+                    "terms": {
+                        "field": "moves.fen",
+                        "size": int(os.getenv("ELASTICSEARCH_RESULT_MAX_SIZE", "10")),
+                        "include": include,
+                    },
                     "aggs": {
                         "white": {
                             "reverse_nested": {},
