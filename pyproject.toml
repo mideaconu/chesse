@@ -22,8 +22,8 @@ log_cli = true
 [tool.coverage.run]
 branch = true
 omit = [
-  "/*/**/__init__.py", 
-  "src/**/interface.py", 
-  "src/**/factory.py*", 
-  "src/**/main.py",
+    "/*/**/__init__.py", 
+    "src/**/interface.py", 
+    "src/**/factory.py", 
+    "src/**/main.py",
 ]

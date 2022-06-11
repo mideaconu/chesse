@@ -1,29 +1,32 @@
 const express = require('express');
+const grpc = require('@grpc/grpc-js');
 
 var router = express.Router();
 
-const services = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_grpc_pb');
-const messages = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_pb');
-const pos = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/positions_pb');
-const grpc = require('@grpc/grpc-js');
-
 require('dotenv').config()
 
-const client = new services.CheSSEBackendServiceClient(`localhost:${process.env.BACKEND_API_PORT}`, grpc.ChannelCredentials.createInsecure());
+const services = require("../../chesse/v1alpha1/services_grpc_pb");
+const messages = require("../../chesse/v1alpha1/backend_service_pb");
+const pos = require("../../chesse/v1alpha1/positions_pb");
+
+const client = new services.BackendServiceClient(
+    `${process.env.BACKEND_API_HOST}:${process.env.BACKEND_API_PORT}`, 
+    grpc.ChannelCredentials.createInsecure()
+);
+
 
 /* GET /games. */
 router.get('/', function(req, res, next) {
-	console.log(req.query.fen);
-
-	var position = new pos.Position();
+	var position = new pos.ChessPosition();
 	position.setFen(req.query.fen);
-	var request = new messages.GetGamesRequest();
+
+	var request = new messages.GetChessGamesRequest();
 	request.setPosition(position);
 
 	var games;
     var stats;
 
-	client.getGames(request, function(err, response) {
+	client.getChessGames(request, function(err, response) {
 		var games_pb = response.getGamesList();
         var stats_pb = response.getStats();
         stats = {

@@ -1,0 +1,16 @@
+{
+    "mappings": {
+        "properties": {
+            "position": {
+                "properties": {
+                    "fen_encoding": {
+                        "type": "keyword"
+                    },
+                    "similarity_encoding": {
+                        "type": "text"
+                    }
+                }
+            }
+        }
+    }
+}
