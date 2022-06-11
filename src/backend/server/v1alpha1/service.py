@@ -7,6 +7,7 @@ from loguru import logger
 
 import encoding
 from backend.search_engine import factory
+from backend.tracing import tracer
 from backend.utils import exception
 from backend.utils import fen as chess_utils
 from backend.utils import meta
@@ -23,7 +24,8 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
     def GetChessPosition(
         self, request: backend_service_pb2.GetChessPositionRequest, context: grpc.ServicerContext
     ) -> backend_service_pb2.GetChessPositionResponse:
-        chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+        with tracer.start_as_current_span("input: validation"):
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
 
         chess_position_pb = self.search_engine_ctrl.get_chess_position_pb(request.fen_encoding)
         response = backend_service_pb2.GetChessPositionResponse(position=chess_position_pb)
@@ -33,7 +35,8 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
     def GetChessPositions(
         self, request: backend_service_pb2.GetChessPositionsRequest, context: grpc.ServicerContext
     ) -> backend_service_pb2.GetChessPositionsResponse:
-        chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+        with tracer.start_as_current_span("input: validation"):
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
 
         similarity_encoding = encoding.get_similarity_encoding(request.fen_encoding)
         chess_positions_pb = self.search_engine_ctrl.get_chess_positions_pb(
@@ -54,7 +57,8 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
     def GetChessGames(
         self, request: backend_service_pb2.GetChessGamesRequest, context: grpc.ServicerContext
     ) -> backend_service_pb2.GetChessGamesResponse:
-        chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+        with tracer.start_as_current_span("input: validation"):
+            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
 
         chess_games_pb = self.search_engine_ctrl.get_chess_games_pb(
             fen_encoding=request.fen_encoding
