@@ -237,7 +237,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
     @_exception_handler
     def get_chess_game_pb(self, id: str) -> games_pb2.ChessGame:
-        query = es_query.get_game_query(id)
+        query = es_query.get_chess_game_query(id)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
             response = self.client.search(index="games", body=query)
 
@@ -251,7 +251,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         return chess_game_pb
 
     def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
-        query = es_query.get_games_query(fen_encoding)
+        query = es_query.get_chess_games_query(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
             response = self.client.search(index="games", body=query)
 

@@ -109,12 +109,12 @@ def get_chess_positions_stats_query(fen_encodings: list[str]) -> dict[str, Any]:
     }
 
 
-def get_game_query(id: str) -> dict[str, Any]:
+def get_chess_game_query(id: str) -> dict[str, Any]:
     """Returns the Elasticsearch query that requests a game given its ID."""
     return {"query": {"match": {"id": id}}}
 
 
-def get_games_query(fen_encoding: str) -> dict[str, Any]:
+def get_chess_games_query(fen_encoding: str) -> dict[str, Any]:
     """Returns the Elasticsearch query that requests the games where the
     position given by the FEN encoding occured."""
     return {
