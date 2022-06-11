@@ -177,24 +177,26 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
     @_exception_handler
     def get_chess_position_pb(self, fen_encoding: str) -> positions_pb2.ChessPosition:
         query = es_query.get_chess_position_query(fen_encoding)
+        aggs = es_query.get_chess_position_aggs(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", body=query)
+            response = self.client.search(index="games", query=query, aggs=aggs)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
                 f"Query unsuccessful: get position by FEN encoding {fen_encoding!r}."
             )
 
-        chess_position_pb = _es_response_to_chess_position_pb(response, fen_encoding=fen_encoding)
+        with tracer.start_as_current_span("output: pb conversion"):
+            chess_position_pb = _es_response_to_chess_position_pb(
+                response, fen_encoding=fen_encoding
+            )
 
         return chess_position_pb
 
-    def _get_chess_positions_by_similarity_encoding(
-        self, similarity_encoding: str
-    ) -> list[positions_pb2.ChessPosition]:
-        query_sim_pos = es_query.get_similar_positions_query(similarity_encoding)
+    def _get_similar_chess_position_fen_encodings(self, similarity_encoding: str) -> list[str]:
+        query = es_query.get_similar_positions_query(similarity_encoding)
         with tracer.start_as_current_span("Elasticsearch/positions/_search"):
-            response_sim_pos = self.client.search(index="positions", body=query_sim_pos)
+            response_sim_pos = self.client.search(index="positions", query=query, size=100)
 
         if response_sim_pos["_shards"]["total"] != response_sim_pos["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -207,9 +209,19 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             for chess_position in response_sim_pos["hits"]["hits"]
         ]
 
-        query_position_stats = es_query.get_chess_positions_stats_query(fen_encodings)
+        return fen_encodings
+
+    def _get_chess_positions_by_similarity_encoding(
+        self, similarity_encoding: str
+    ) -> list[positions_pb2.ChessPosition]:
+        fen_encodings = self._get_similar_chess_position_fen_encodings(similarity_encoding)
+
+        query = es_query.get_chess_positions_query(fen_encodings)
+        aggs = es_query.get_chess_position_aggs(fen_encodings)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response_positions_stats = self.client.search(index="games", body=query_position_stats)
+            response_positions_stats = self.client.search(
+                index="games", query=query, aggs=aggs, size=100
+            )
 
         if (
             response_positions_stats["_shards"]["total"]
@@ -219,7 +231,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
                 f"Query unsuccessful: get positions stats by FEN encodings {fen_encodings!r}."
             )
 
-        chess_positions_pb = _es_response_to_chess_positions_pb(response_positions_stats)
+        with tracer.start_as_current_span("output: pb conversion"):
+            chess_positions_pb = _es_response_to_chess_positions_pb(response_positions_stats)
 
         return chess_positions_pb
 
@@ -246,21 +259,23 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         if not response["hits"]["hits"]:
             raise exception.NotFoundError(f"Game not found: {id!r}.")
 
-        chess_game_pb = _es_response_to_chess_game_pb(response)
+        with tracer.start_as_current_span("output: pb conversion"):
+            chess_game_pb = _es_response_to_chess_game_pb(response)
 
         return chess_game_pb
 
     def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
         query = es_query.get_chess_games_query(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", body=query)
+            response = self.client.search(index="games", body=query, size=1_000)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
                 f"Query unsuccessful: get games by FEN encoding {fen_encoding!r}."
             )
 
-        chess_games_pb = _es_response_to_chess_games_pb(response)
+        with tracer.start_as_current_span("output: pb conversion"):
+            chess_games_pb = _es_response_to_chess_games_pb(response)
 
         return chess_games_pb
 
