@@ -10,6 +10,10 @@ bprint := printf '\033[36m%s\033[0m'  # blue
 
 checkmark := "  \xE2\x9C\x94\n"
 
+# Execute command with colour highlight
+cexec = $(bprint) "> $(1)" && echo && $(1)
+
+
 .PHONY: help
 help :  ## Show a list of available commands
 	@grep -E '^[a-zA-Z\-]+(\/[a-zA-Z\-]*){0,1} :.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -19,6 +23,12 @@ help :  ## Show a list of available commands
 init/scripts :  ## Make repository scripts executable
 	@$(bprint) "- Making scripts executable"
 	@chmod +x tests/integration_tests/backend/load-search-engine-test-data.sh
+	@printf $(checkmark)
+
+.PHONY: init/envvar
+init/envvar :  ## Initialise environment variables
+	@$(bprint) "- Initialising environment variables"
+	@export PYTHONPATH="$PYTHONPATH:$(pwd)/pb/gen/python:$(pwd)/src"
 	@printf $(checkmark)
 
 .PHONY: init
@@ -51,24 +61,35 @@ index :  ## Run the indexing pipeline
 
 .PHONY: test/unit
 test/unit :  ## Run unit tests
-	pytest --cov=src --cov=scripts --cov=encoding --cov-report term-missing tests/unit_tests
-	bats -r tests/unit_tests
+	@$(call cexec,pytest --cov=src --cov=scripts --cov=encoding --cov-report term-missing tests/unit_tests)
+	@$(call cexec,bats -r tests/unit_tests)
+	@$(gprint) "Unit testing"
+	@printf $(checkmark)
+
+.PHONY: setup/integration
+setup/integration :
+	@mkdir tmp
+	@$(call cexec,docker pull docker.elastic.co/elasticsearch/elasticsearch:8.2.2)
+	@$(call cexec,docker run --name es -e ELASTIC_PASSWORD=elastic -p 9201:9200 -p 9301:9300 -itd docker.elastic.co/elasticsearch/elasticsearch:8.2.2)
+	@sleep 30
+	@$(call cexec,docker cp es:/usr/share/elasticsearch/config/certs/http_ca.crt config/ca.crt)
+	@$(call cexec,./tests/integration_tests/backend/load-search-engine-test-data.sh)
+
+
+.PHONY: teardown/integration
+teardown/integration :
+	@$(call cexec,docker stop es)
+	@$(call cexec,docker rm es)
+	@rm -rf tmp
+
 
 .PHONY: test/integration
-test/integration : init/scripts  ## Run integration tests
-	@$(bprint) "> docker pull docker.elastic.co/elasticsearch/elasticsearch:8.2.2"
-	@echo
-	@docker pull docker.elastic.co/elasticsearch/elasticsearch:8.2.2
-	@$(bprint) "> docker run --name es -e ELASTIC_PASSWORD=elastic -p 9201:9200 -p 9301:9300 -itd docker.elastic.co/elasticsearch/elasticsearch:8.2.2"
-	@echo
-	@docker run --name es -e ELASTIC_PASSWORD=elastic -p 9201:9200 -p 9301:9300 -itd docker.elastic.co/elasticsearch/elasticsearch:8.2.2
-	@sleep 30
-	@$(bprint) "> docker cp es:/usr/share/elasticsearch/config/certs/http_ca.crt config/ca.crt"
-	@echo
-	@docker cp es:/usr/share/elasticsearch/config/certs/http_ca.crt config/ca.crt
-	@$(bprint) "> ./tests/integration_tests/backend/load-search-engine-test-data.sh"
-	@echo
-	@./tests/integration_tests/backend/load-search-engine-test-data.sh
+test/integration :  ## Run integration tests
+	@$(MAKE) setup/integration
+	@$(call cexec,pytest tests/integration_tests)
+	@$(MAKE) teardown/integration
+	@$(gprint) "Integration testing"
+	@printf $(checkmark)
 
 
 .PHONY: test
