@@ -1,10 +1,12 @@
+from concurrent import futures
 from unittest import mock
 
 import grpc
 import pytest
 from chesse.v1alpha1 import backend_service_pb2, services_pb2_grpc
 
-from backend import server
+from backend.server.v1alpha1 import interceptor
+from backend.server.v1alpha1 import service as v1a1_service
 from backend.utils import exception
 from tests import data as test_data
 
@@ -36,10 +38,18 @@ def mock_chesse_backend_server():
         MockElasticsearchController = mock.Mock()
         mock_get_controller.return_value = MockElasticsearchController
 
-        chesse_backend_server = server.BackendServer(port=port)
-        chesse_backend_server.start()
+        backend_server = grpc.server(
+            futures.ThreadPoolExecutor(),
+            interceptors=[interceptor.ExceptionToStatusInterceptor()],
+        )
+        services_pb2_grpc.add_BackendServiceServicer_to_server(
+            v1a1_service.BackendService(), backend_server
+        )
+        backend_server.add_insecure_port(f"[::]:{port}")
+
+        backend_server.start()
         yield
-        chesse_backend_server.stop()
+        backend_server.stop(grace=None)
 
 
 class TestCheSSEBackendService:
