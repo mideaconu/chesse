@@ -22,29 +22,29 @@ router.get('/', function(req, res, next) {
 	var positions;
 
 	client.getChessPositions(request, function(err, response) {
-		var positions_pb = response.getPositionsList();
+		var positionsPb = response.getPositionsList();
 
 		positions = [];
-		for (let position_pb of positions_pb) {
+		for (let positionPb of positionsPb) {
 			positions.push({
-				fen_encoding: position_pb.getFenEncoding(),
+				fenEncoding: positionPb.getFenEncoding(),
 				stats: {
-					nr_games: position_pb.getPositionStats().getNrGames(),
+					nrGames: positionPb.getPositionStats().getNrGames(),
 					rating: {
-						min: position_pb.getPositionStats().getRatingStats().getMin(),
-						avg: position_pb.getPositionStats().getRatingStats().getAvg(),
-						max: position_pb.getPositionStats().getRatingStats().getMax(),
+						min: positionPb.getPositionStats().getRatingStats().getMin(),
+						avg: positionPb.getPositionStats().getRatingStats().getAvg(),
+						max: positionPb.getPositionStats().getRatingStats().getMax(),
 					},
 					result: {
-						white_win_pct: position_pb.getPositionStats().getResultStats().getWhiteWinPct(),
-						draw_pct: position_pb.getPositionStats().getResultStats().getDrawPct(),
-						black_win_pct: position_pb.getPositionStats().getResultStats().getBlackWinPct(),
+						whiteWinPct: positionPb.getPositionStats().getResultStats().getWhiteWinPct(),
+						drawPct: positionPb.getPositionStats().getResultStats().getDrawPct(),
+						blackWinPct: positionPb.getPositionStats().getResultStats().getBlackWinPct(),
 					}
 				}
 			});
 		}
 
-		res.render('search', { title: 'CheSSE', query_fen_encoding: req.query.fen, positions: positions });
+		res.render('search', { title: 'CheSSE', queryFenEncoding: req.query.fen, positions: positions });
   	});
 });
 
