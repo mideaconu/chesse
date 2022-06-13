@@ -7,10 +7,9 @@ require('dotenv').config()
 
 const services = require("../../chesse/v1alpha1/services_grpc_pb");
 const messages = require("../../chesse/v1alpha1/backend_service_pb");
-const pos = require("../../chesse/v1alpha1/positions_pb");
 
 const client = new services.BackendServiceClient(
-	`${process.env.BACKEND_API_HOST}:${process.env.BACKEND_API_PORT}`, 
+	`${process.env.BACKEND_SERVER_HOST}:${process.env.BACKEND_SERVER_PORT}`, 
 	grpc.ChannelCredentials.createInsecure()
 );
 
@@ -45,7 +44,7 @@ router.get('/', function(req, res, next) {
 			});
 		}
 
-		res.render('search', { title: 'CheSSE', fen: req.query.fen, positions: positions });
+		res.render('search', { title: 'CheSSE', query_fen_encoding: req.query.fen, positions: positions });
   	});
 });
 
