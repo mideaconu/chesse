@@ -1,0 +1,63 @@
+{
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "keyword"
+            },
+            "context": {
+                "properties": {
+                    "event": {
+                        "type": "text"
+                    },
+                    "date": {
+                        "type": "date",
+                        "format": "yyyy.MM.dd"
+                    },
+                    "site": {
+                        "type": "text"
+                    },
+                    "round": {
+                        "type": "half_float"
+                    }
+                }
+            },
+            "white": {
+                "properties": {
+                    "name": {
+                        "type": "text"
+                    },
+                    "elo": {
+                        "type": "short"
+                    }
+                }
+            },
+            "black": {
+                "properties": {
+                    "name": {
+                        "type": "text"
+                    },
+                    "elo": {
+                        "type": "short"
+                    }
+                }
+            },
+            "result": {
+                "type": "half_float"
+            },
+            "moves": {
+                "type": "nested",
+                "properties": {
+                    "uci": {
+                        "type": "keyword"
+                    },
+                    "san": {
+                        "type": "keyword"
+                    },
+                    "fen": {
+                        "type": "keyword"
+                    }
+                }
+            }
+        }
+    }
+}

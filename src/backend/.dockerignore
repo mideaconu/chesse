@@ -1,0 +1,6 @@
+.dockerignore
+Dockerfile
+
+__pycache__
+
+search_engine/index

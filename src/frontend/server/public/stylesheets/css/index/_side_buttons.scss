@@ -1,0 +1,32 @@
+@import "../common/variables";
+
+.side-buttons-item {
+    grid-area: side-buttons;
+    justify-self: left;
+}
+
+.side-button.fa::before {
+    font-family: 'FontAwesome';
+}
+
+.side-button.fa {
+    font-family: $font-family;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+
+    width: 85%;
+    margin: 7px;
+    padding: 13px;
+
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: $dark-squares-colour;
+}
+
+.side-button:hover {
+    box-shadow: $border-shadow;
+}

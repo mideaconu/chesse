@@ -1,13 +1,18 @@
+@import "../common/variables";
+
 .title-item {
     grid-area: title;
-    place-self: center;
 
+    place-self: center;
     padding: 40px 20px;
 }
 
 #title {
+    color: $dark-colour;
+
     font-size: 80px;
     letter-spacing: 3px;
+
     padding-bottom: 5px;
 }
 

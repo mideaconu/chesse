@@ -1,10 +1,12 @@
+@import "../common/variables";
+
 .search-button-item {
     grid-area: search-button;
     place-self: center;
 }
 
 #search-button {
-    font-family: 'Raleway', sans-serif;
+    font-family: $font-family;
     font-size: 25px;
     font-weight: 600;
     text-align: center;
@@ -16,9 +18,9 @@
 
     border-radius: 20px;
     border-width: 1px;
-    border-color: #b58863;
+    border-color: $dark-squares-colour;
 }
 
 #search-button:hover {
-    box-shadow: 2px 8px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: $border-shadow;
 }

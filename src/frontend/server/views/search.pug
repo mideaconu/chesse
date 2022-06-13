@@ -16,44 +16,35 @@ block scripts
     script(type="module", src="/javascripts/search.js")
 
 block content
-    header
-        a.sitename(href="/") CheSSE
-            span.domain(href="/") .io
     .search-results-container
         .title-item
             #title CheSSE
             #subtitle Chess Similarity Search Engine
         .search-board-item
             #query-board
+            script.
+                var side_board_config = {
+                    pieceTheme: 'images/chesspieces/default/{piece}.png',
+                    position: "#{queryFenEncoding}",
+                    showNotation: false
+                };
+                Chessboard("query-board", side_board_config);
         .search-results-item
             - var i = 0
             each position in positions
                 - i++
-                - var k = "board" + i
+                - var resultBoardId = "result-board-" + i
                 .search-result
-                    a(href=`/games?fen=${position.fen}`)
-                        div(id=k).result-board
+                    a(href=`/games?fen=${position.fen_encoding}`)
+                        div(id=resultBoardId).result-board
                     .result-stats
-                        p #{position.stats.nr_games} games found
+                        p #{position.stats.nrGames} games found
                         p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} average, #{position.stats.rating.max} max
-                        p Win rate: #{position.stats.result.white}% white, #{position.stats.result.draw}% draw, #{position.stats.result.black}% black
+                        p Win rate: #{position.stats.result.whiteWinPct}% white, #{position.stats.result.drawPct}% draw, #{position.stats.result.blackWinPct}% black
                 script.
                     var board_config = {
                         pieceTheme: 'images/chesspieces/default/{piece}.png',
-                        position: "#{position.fen}",
+                        position: "#{position.fenEncoding}",
                         showNotation: false
                     };
-                    Chessboard("board#{i}", board_config);
-                    console.log("board#{i}");
-                    console.log("#{position.fen}");
-    footer
-        .credits &copy; Mihai Ionut Deaconu 
-            script.
-                document.write(/\d{4}/.exec(Date())[0])
-    script.
-        var board_config = {
-            pieceTheme: 'images/chesspieces/default/{piece}.png',
-            position: "#{fen}",
-            showNotation: false
-        };
-        Chessboard("query-board", board_config);
+                    Chessboard("#{resultBoardId}", board_config);

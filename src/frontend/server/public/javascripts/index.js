@@ -1,12 +1,11 @@
 var board = null;
 
-var board_config = {
+board = Chessboard("search-board", {
     pieceTheme: 'images/chesspieces/default/{piece}.png',
     draggable: true,
     sparePieces: true,
     dropOffBoard: "trash"
-};
-board = Chessboard("search-board", board_config);
+});
 
 function searchPosition() {
     console.log(`${board.fen()}`);

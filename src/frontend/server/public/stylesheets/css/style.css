@@ -1,4 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap");
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 header {
   background-color: #444;
   height: 60px;
@@ -23,6 +31,10 @@ header {
   letter-spacing: 1px;
 }
 
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 footer {
   background-color: #444;
   height: 60px;
@@ -43,6 +55,7 @@ footer {
 }
 
 #title {
+  color: #444;
   font-size: 80px;
   letter-spacing: 3px;
   padding-bottom: 5px;
@@ -53,46 +66,25 @@ footer {
   font-weight: 300;
 }
 
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 .search-board-item {
   grid-area: search-board;
   place-self: center;
 }
 
 #search-board {
-  width: 600px;
+  width: 580px;
   padding-top: 40px;
   margin: 0 auto;
 }
 
-.util-buttons-item {
-  grid-area: util-buttons;
-  justify-self: left;
-  margin-top: 160px;
-}
-
-.util-button.fa::before {
-  font-family: "FontAwesome";
-}
-
-.util-button.fa {
-  font-family: "Raleway", sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  text-align: left;
-  letter-spacing: 1px;
-  transition: 0.3s;
-  width: 85%;
-  margin: 7px;
-  padding: 13px;
-  border-radius: 20px;
-  border-width: 1px;
-  border-color: #b58863;
-}
-
-.util-button:hover {
-  box-shadow: 2px 8px 15px rgba(0, 0, 0, 0.3);
-}
-
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 .search-button-item {
   grid-area: search-button;
   place-self: center;
@@ -113,15 +105,47 @@ footer {
 }
 
 #search-button:hover {
-  box-shadow: 2px 8px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.3);
+}
+
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+.side-buttons-item {
+  grid-area: side-buttons;
+  justify-self: left;
+}
+
+.side-button.fa::before {
+  font-family: "FontAwesome";
+}
+
+.side-button.fa {
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  width: 85%;
+  margin: 7px;
+  padding: 13px;
+  border-radius: 20px;
+  border-width: 1px;
+  border-color: #b58863;
+}
+
+.side-button:hover {
+  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.3);
 }
 
 .search-container {
-  background-color: white;
+  background-color: #fff;
   display: grid;
   grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
   grid-template-rows: 300px 600px 100px auto;
-  grid-template-areas: "title search-board util-buttons ." ". search-board . ." ". search-button . ." ". . . .";
+  grid-template-areas: "title search-board . ." ". search-board side-buttons ." ". search-button . ." ". . . .";
 }
 
 /* ----------- iPhone 6, 6S, 7 and 8 ----------- */
