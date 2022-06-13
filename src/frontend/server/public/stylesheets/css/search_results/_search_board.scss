@@ -1,10 +1,12 @@
+@import "../common/variables";
+
 .query-board-item {
     grid-area: query-board;
     place-self: center;
 }
 
 #query-board {
-    width: 300px;
+    width: $side-board-size;
     padding-top: 40px;
     margin: 0 auto;
 }

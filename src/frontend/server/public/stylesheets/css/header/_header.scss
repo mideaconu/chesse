@@ -1,5 +1,8 @@
+@import "../common/variables";
+
+
 header {
-    background-color: #444;
+    background-color: $dark-colour;
     height: 60px;
     display: flex;
     padding: 5px;

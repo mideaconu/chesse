@@ -1,10 +1,13 @@
+@import "../common/variables";
+
+
 .search-board-item {
     grid-area: search-board;
     place-self: center;
 }
 
 #search-board {
-    width: 600px;
+    width: $search-board-size;
     padding-top: 40px;
     margin: 0 auto;
 }

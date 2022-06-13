@@ -1,11 +1,14 @@
+@import "../common/variables";
+
+
 footer {
-    background-color: #444;
+    background-color: $dark-colour;
     height: 60px;
     align-items: center;
 }
 
 .credits {
-    color: #f0d9b5;
+    color: $light-squares-colour;
     font-size: 20px;
     text-align: center;
     margin-top: 18px;

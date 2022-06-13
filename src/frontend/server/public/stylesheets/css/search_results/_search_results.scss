@@ -1,3 +1,5 @@
+@import "../common/variables";
+
 .search-results-item {
     grid-area: search-results;
     place-self: left;
@@ -17,6 +19,7 @@
 .result-board {
     grid-area: board;
     place-self: left;
+    width: $result-board-size;
 }
 
 .result-stats {
