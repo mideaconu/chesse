@@ -98,21 +98,12 @@ test : test/unit test/integration clean  ## Run whole test suite
 
 .PHONY: build/backend
 build/backend :  ## Build the backend service Docker image
-	@docker build \
-		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-		--build-arg BUILD_VERSION=$(backend_version) \
-		-t chesse/backend:$(backend_version) \
-		-f src/backend/Dockerfile \
-		.
+	@$(call cexec,docker build --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg BUILD_VERSION=$(backend_version) -t chesse/backend:$(backend_version) -f src/backend/Dockerfile .)
 
 .PHONY: build/frontend
 build/frontend :  ## Build the frontend service Docker image
-	@docker build \
-		--build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-		--build-arg BUILD_VERSION=$(frontend_version) \
-		-t chesse/frontend:$(frontend_version) \
-		-f src/frontend/Dockerfile \
-		.
+	@$(call cexec,sass src/frontend/server/public/stylesheets/css/style.scss src/frontend/server/public/stylesheets/css/style.css)
+	@$(call cexec,docker build --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg BUILD_VERSION=$(frontend_version) -t chesse/frontend:$(frontend_version) -f src/frontend/Dockerfile .)
 
 .PHONY: build
 build : build/backend build/frontend  ## Build the Docker images
@@ -121,3 +112,8 @@ build : build/backend build/frontend  ## Build the Docker images
 .PHONY: run
 run : build  # Run the application
 	@docker compose -f src/docker-compose.yml up
+
+
+.PHONY: stop
+stop :  # Run the application
+	@docker compose -f src/docker-compose.yml down

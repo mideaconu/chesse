@@ -18,22 +18,15 @@ block scripts
 	script(defer, type="module", src="/javascripts/index.js")
 
 block content
-	header
-		a.sitename(href="/") CheSSE
-			span.domain(href="/") .io
 	.search-container
 		.title-item
 			#title CheSSE
 			#subtitle Chess Similarity Search Engine
 		.search-board-item 
 			#search-board
-		.util-buttons-item
-			button#start-button.util-button.fa.fa-backward &nbsp; STARTING POSITION
-			button#clear-button.util-button.fa.fa-trash &nbsp; CLEAR BOARD
-			button#flip-button.util-button.fa.fa-refresh &nbsp; FLIP BOARD
+		.side-buttons-item
+			button#start-button.side-button.fa.fa-backward &nbsp; STARTING POSITION
+			button#clear-button.side-button.fa.fa-trash &nbsp; CLEAR BOARD
+			button#flip-button.side-button.fa.fa-refresh &nbsp; FLIP BOARD
 		.search-button-item
 			button#search-button SEARCH
-	footer
-		.credits &copy; Mihai Ionut Deaconu 
-			script.
-				document.write(/\d{4}/.exec(Date())[0])

@@ -1,0 +1,32 @@
+@import "../common/variables";
+
+.search-results-item {
+    grid-area: search-results;
+    place-self: left;
+
+    margin: 50px;
+}
+
+.search-result {
+    display: grid;
+    grid-template-columns: 350px 1fr auto;
+    grid-template-areas: "board stats .";
+
+    margin: 30px;
+    font-size: 20px;
+}
+
+.result-board {
+    grid-area: board;
+    place-self: left;
+    width: $result-board-size;
+}
+
+.result-stats {
+    grid-area: stats;
+    place-self: left
+}
+
+.result-stats p {
+    padding: 5px 0;
+}
