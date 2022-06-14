@@ -13,12 +13,8 @@ block scripts
         src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
         crossorigin="anonymous")
-    script(type="module", src="/javascripts/search.js")
 
 block content
-    header
-        a.sitename(href="/") CheSSE
-            span.domain(href="/") .io
     .games-container
         .title-item
             #title CheSSE
@@ -26,21 +22,34 @@ block content
         .position-board-item
             #position-board
         .games-item
-            p #{stats.nr_games} games found
-            p Rating: #{stats.rating.min} min, #{stats.rating.avg} average, #{stats.rating.max} max
-            p Win rate: #{stats.result.white}% white, #{stats.result.draw}% draw, #{stats.result.black}% black
-            each game in games
-                script
-                a(href="/games/" + encodeURIComponent(game.id))
-                    p #{game.id}
-    footer
-        .credits &copy; Mihai Ionut Deaconu 
-            script.
-                document.write(/\d{4}/.exec(Date())[0])
+            p #{position.stats.nrGames} games found
+            p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} average, #{position.stats.rating.max} max
+            p Win rate: #{position.stats.result.whiteWinPct}% white, #{position.stats.result.drawPct}% draw, #{position.stats.result.blackWinPct}% black
+            table#games
+                tr 
+                    th
+                    th White
+                    th Black
+                    th Event
+                    th Round
+                    th Date 
+                    th Result
+                    th # moves
+                each game in games
+                    tr.game-item
+                        td
+                            a(href="/games/" + encodeURIComponent(game.id)) X
+                        td #{game.white.name} (#{game.white.elo})
+                        td #{game.black.name} (#{game.black.elo})
+                        td #{game.context.event}
+                        td #{game.context.round}
+                        td #{game.context.date}
+                        td #{game.result}
+                        td #{Math.round(game.moves.length/2)}
     script.
         var board_config = {
             pieceTheme: 'images/chesspieces/default/{piece}.png',
-            position: "#{fen}",
+            position: "#{position.fenEncoding}",
             showNotation: false
         };
         Chessboard("position-board", board_config);

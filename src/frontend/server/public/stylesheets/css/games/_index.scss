@@ -1,6 +1,6 @@
+@import "../common/variables";
 @import "../header/header";
 @import "../header/title";
-
 @import "../footer/footer";
 
 @import "title";
@@ -9,7 +9,7 @@
 
 
 .games-container {
-    background-color: white;
+    background-color: $light-colour;
 
     display: grid;
     grid-template-columns: 1fr 1.5fr 0.5fr;
