@@ -1,6 +1,55 @@
 extends layout
 
 block scripts
+    link(rel="stylesheet",
+        href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css",
+        integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU",
+        crossorigin="anonymous")
+    script(
+        src="https://code.jquery.com/jquery-3.5.1.min.js",
+        integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2",
+        crossorigin="anonymous")
+    script(
+        src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
+        integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
+        crossorigin="anonymous")
 
 block content
-    p #{id}
+    .games-container
+        .title-item
+            #title CheSSE
+            #subtitle Chess Similarity Search Engine
+        .position-board-item
+            #position-board
+        .games-item
+            p #{position.stats.nrGames} games found
+            p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} average, #{position.stats.rating.max} max
+            p Win rate: #{position.stats.result.whiteWinPct}% white, #{position.stats.result.drawPct}% draw, #{position.stats.result.blackWinPct}% black
+            table#games
+                tr 
+                    th
+                    th White
+                    th Black
+                    th Event
+                    th Round
+                    th Date 
+                    th Result
+                    th # moves
+                each game in games
+                    tr.game-item
+                        td
+                            a(href="/games/" + encodeURIComponent(game.id)) X
+                        td #{game.white.name} (#{game.white.elo})
+                        td #{game.black.name} (#{game.black.elo})
+                        td #{game.context.event}
+                        td #{game.context.round}
+                        td #{game.context.date}
+                        td #{game.result}
+                        td #{Math.round(game.moves.length/2)}
+    script.
+        var board_config = {
+            pieceTheme: 'images/chesspieces/default/{piece}.png',
+            position: "#{position.fenEncoding}",
+            showNotation: false
+        };
+        Chessboard("position-board", board_config);

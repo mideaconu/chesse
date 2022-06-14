@@ -255,7 +255,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
     def get_chess_game_pb(self, id: str) -> games_pb2.ChessGame:
         query = es_query.get_chess_game_query(id)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", body=query)
+            response = self.client.search(index="games", query=query)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(f"Query unsuccessful: get game by id {id!r}.")
@@ -270,7 +270,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
     def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
         query = es_query.get_chess_games_query(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", body=query, size=self.max_result_size)
+            response = self.client.search(index="games", query=query, size=self.max_result_size)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(

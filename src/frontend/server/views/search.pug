@@ -35,7 +35,7 @@ block content
                 - i++
                 - var resultBoardId = "result-board-" + i
                 .search-result
-                    a(href=`/games?position.fen=${position.fen_encoding}`)
+                    a(href=`/games?fen=${position.fenEncoding}`)
                         div(id=resultBoardId).result-board
                     .result-stats
                         p #{position.stats.nrGames} games found

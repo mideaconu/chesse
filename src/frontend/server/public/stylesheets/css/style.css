@@ -48,6 +48,10 @@ footer {
   margin-top: 18px;
 }
 
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 .title-item {
   grid-area: title;
   place-self: center;
@@ -257,6 +261,10 @@ footer {
   margin-top: 18px;
 }
 
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 .title-item {
   grid-area: title;
   place-self: center;
@@ -290,6 +298,10 @@ footer {
   margin: 0 auto;
 }
 
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
 .search-results-item {
   grid-area: search-results;
   place-self: left;
@@ -325,6 +337,111 @@ footer {
   grid-template-columns: 1fr 1.5fr 0.5fr;
   grid-template-rows: 300px 300px auto;
   grid-template-areas: "title search-results ." "search-board search-results ." ". search-results .";
+}
+
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+header {
+  background-color: #444;
+  height: 60px;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+}
+
+.sitename {
+  color: #b58863;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 15px 20px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.domain {
+  color: #f0d9b5;
+  font-size: 18px;
+  font-weight: 550;
+  letter-spacing: 1px;
+}
+
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+footer {
+  background-color: #444;
+  height: 60px;
+  align-items: center;
+}
+
+.credits {
+  color: #f0d9b5;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 18px;
+}
+
+.title-item {
+  grid-area: title;
+  place-self: center;
+  padding: 40px 20px;
+}
+
+#title {
+  font-size: 80px;
+  letter-spacing: 3px;
+  padding-bottom: 5px;
+}
+
+#subtitle {
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.position-board-item {
+  grid-area: position-board;
+  place-self: center;
+}
+
+#position-board {
+  width: 350px;
+  padding-top: 40px;
+  margin: 0 auto;
+}
+
+.games-item {
+  grid-area: games;
+  place-self: left;
+  margin: 50px;
+}
+
+#games {
+  width: 100%;
+}
+
+.game-item {
+  padding: 10px;
+  margin: 20px;
+  font-family: "Raleway", sans-serif;
+}
+
+.game-item:hover {
+  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.3);
+}
+
+.games-container {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  grid-template-rows: 300px 300px auto;
+  grid-template-areas: "title games ." "position-board games ." ". games .";
 }
 
 html {
