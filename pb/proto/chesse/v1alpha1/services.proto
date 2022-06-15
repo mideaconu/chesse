@@ -1,0 +1,18 @@
+syntax = "proto3";
+package chesse.v1alpha1;
+
+import "chesse/v1alpha1/backend_service.proto";
+
+
+// CheSSE Backend Service.
+service BackendService {
+    // Fetch a chess position.
+    rpc GetChessPosition(chesse.v1alpha1.GetChessPositionRequest) returns (chesse.v1alpha1.GetChessPositionResponse);
+    // Fetch a list of chess positions.
+    rpc GetChessPositions(chesse.v1alpha1.GetChessPositionsRequest) returns (chesse.v1alpha1.GetChessPositionsResponse);
+
+    // Fetch a chess game.
+    rpc GetChessGame(chesse.v1alpha1.GetChessGameRequest) returns (chesse.v1alpha1.GetChessGameResponse);
+    // Fetch a list of chess games.
+    rpc GetChessGames(chesse.v1alpha1.GetChessGamesRequest) returns (chesse.v1alpha1.GetChessGamesResponse);
+}

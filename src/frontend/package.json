@@ -1,20 +1,22 @@
 {
-    "name": "chesse-frontend-server",
+    "name": "chesse-frontend-service",
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "node ./server/bin/www"
+        "start": "node -r ./server/tracing.js ./server/bin/www"
     },
     "dependencies": {
-        "@grpc/grpc-js": "^1.5.9",
-        "cookie-parser": "~1.4.4",
-        "debug": "~2.6.9",
-        "express": "~4.16.1",
-        "google-protobuf": "^3.20.0-rc.2",
-        "grpc": "^1.24.11",
-        "grpc-tools": "^1.11.2",
-        "http-errors": "~1.6.3",
-        "morgan": "~1.9.1",
+        "@grpc/grpc-js": "^1.6.7",
+        "@grpc/proto-loader": "^0.6.13",
+        "@opentelemetry/auto-instrumentations-node": "^0.28.0",
+        "@opentelemetry/exporter-trace-otlp-proto": "^0.27.0",
+        "@opentelemetry/sdk-node": "^0.27.0",
+        "cookie-parser": "^1.4.6",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "google-protobuf": "^3.20.1",
+        "http-errors": "^2.0.0",
+        "morgan": "^1.10.0",
         "pug": "^3.0.2"
     }
 }

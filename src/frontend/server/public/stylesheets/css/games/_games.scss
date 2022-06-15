@@ -4,3 +4,17 @@
 
     margin: 50px;
 }
+
+#games {
+    width: 100%;
+}
+
+.game-item {
+    padding: 10px;
+
+    font-family: $font-family;
+}
+
+.game-item:hover {
+    box-shadow: $border-shadow;
+}

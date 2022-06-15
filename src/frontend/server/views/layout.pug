@@ -7,4 +7,11 @@ html
 		title #{title}
 		block scripts
 	body
+		header
+			a.sitename(href="/") CheSSE
+				span.domain(href="/") .io
 		block content
+		footer
+			.credits &copy; Mihai Ionut Deaconu 
+				script.
+					document.write(/\d{4}/.exec(Date())[0])

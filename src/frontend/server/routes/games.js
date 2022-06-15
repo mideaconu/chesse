@@ -1,72 +1,90 @@
 const express = require('express');
+const grpc = require('@grpc/grpc-js');
 
 var router = express.Router();
 
-const services = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_grpc_pb');
-const messages = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/chesse_pb');
-const pos = require('../../../protobufs/gen/js/chesse_backend_api/v1alpha1/positions_pb');
-const grpc = require('@grpc/grpc-js');
-
 require('dotenv').config()
 
-const client = new services.CheSSEBackendServiceClient(`localhost:${process.env.BACKEND_API_PORT}`, grpc.ChannelCredentials.createInsecure());
+const services = require("../../chesse/v1alpha1/services_grpc_pb");
+const messages = require("../../chesse/v1alpha1/backend_service_pb");
+const pos = require("../../chesse/v1alpha1/positions_pb");
+
+const client = new services.BackendServiceClient(
+    `${process.env.BACKEND_SERVER_HOST}:${process.env.BACKEND_SERVER_PORT}`, 
+    grpc.ChannelCredentials.createInsecure()
+);
+
 
 /* GET /games. */
 router.get('/', function(req, res, next) {
-	console.log(req.query.fen);
+	var request = new messages.GetChessGamesRequest();
+	request.setFenEncoding(req.query.fen);
 
-	var position = new pos.Position();
-	position.setFen(req.query.fen);
-	var request = new messages.GetGamesRequest();
-	request.setPosition(position);
-
-	var games;
-    var stats;
-
-	client.getGames(request, function(err, response) {
-		var games_pb = response.getGamesList();
-        var stats_pb = response.getStats();
-        stats = {
-            nr_games: stats_pb.getNrGames(),
-            rating: {
-                min: stats_pb.getRatingStats().getMin(),
-                avg: stats_pb.getRatingStats().getAvg(),
-                max: stats_pb.getRatingStats().getMax(),
-            },
-            result: {
-                white: stats_pb.getResultStats().getWhite(),
-                draw: stats_pb.getResultStats().getDraw(),
-                black: stats_pb.getResultStats().getBlack(),
+	var games = [];
+    client.getChessGames(request, function(err, response) {
+        if (err) {
+            // TODO
+        } else {
+            var gamesPb = response.getGamesList();
+            for (let gamePb of gamesPb) {
+                games.push({
+                    id: gamePb.getId(),
+                    context: {
+                        event: gamePb.getContext().getEvent(),
+                        date: gamePb.getContext().getDate(),
+                        site: gamePb.getContext().getSite(),
+                        round: gamePb.getContext().getRound(),
+                    },
+                    white: {
+                        name: gamePb.getWhite().getName(),
+                        elo: gamePb.getWhite().getElo(),
+                    },
+                    black: {
+                        name: gamePb.getBlack().getName(),
+                        elo: gamePb.getBlack().getElo(),
+                    },
+                    moves: gamePb.getMovesList().map(
+                        move => { 
+                            return { uci: move.getUci(), san: move.getSan(), fen: move.getFen() };
+                        }
+                    ),
+                    result: gamePb.getResult(),
+                });
             }
-        };
-		games = [];
-		for (let game_pb of games_pb) {
-			games.push({
-				id: game_pb.getId(),
-                context: {
-                    event: game_pb.getContext().getEvent(),
-                    date: game_pb.getContext().getDate(),
-                    site: game_pb.getContext().getSite(),
-                    round: game_pb.getContext().getRound(),
-                },
-                white: {
-                    name: game_pb.getWhite().getName(),
-                    elo: game_pb.getWhite().getElo(),
-                },
-                black: {
-                    name: game_pb.getBlack().getName(),
-                    elo: game_pb.getBlack().getElo(),
-                },
-                result: game_pb.getResult(),
-                nr_moves: game_pb.getNrMoves()
-			});
+            res.locals.games = games
+            next();
 		}
-
-        console.log(stats);
-		console.log(games);
-
-		res.render('games', { title: 'CheSSE', fen: req.query.fen, stats: stats, games: games });
   	});
+}, (req, res) => {
+    var request = new messages.GetChessPositionRequest();
+    request.setFenEncoding(req.query.fen);
+
+    var position;
+    client.getChessPosition(request, function(err, response) {
+        if (err) {
+            // TODO
+        } else {
+            var positionPb = response.getPosition();
+            console.log(positionPb.getFenEncoding());
+            position = {
+                fenEncoding: positionPb.getFenEncoding(),
+                stats: {
+                    nrGames: positionPb.getPositionStats().getNrGames(),
+                    rating: {
+                        min: positionPb.getPositionStats().getRatingStats().getMin(),
+                        avg: positionPb.getPositionStats().getRatingStats().getAvg(),
+                        max: positionPb.getPositionStats().getRatingStats().getMax(),
+                    },
+                    result: {
+                        whiteWinPct: positionPb.getPositionStats().getResultStats().getWhiteWinPct(),
+                        drawPct: positionPb.getPositionStats().getResultStats().getDrawPct(),
+                        blackWinPct: positionPb.getPositionStats().getResultStats().getBlackWinPct(),
+                    }
+                }
+            };
+        }
+        res.render('games', { title: 'CheSSE', position: position, games: res.locals.games });
+    });
 });
 
 /* GET /games/{gameId}. */
@@ -101,7 +119,7 @@ router.get('/:gameId', function(req, res, next) {
 		console.log(game);
 
         res.render('game', { title: 'CheSSE', game: game });
-  	});
+    }
 });
 
 module.exports = router;
