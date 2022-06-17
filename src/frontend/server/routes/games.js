@@ -88,8 +88,39 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET /games/{gameId}. */
-router.get('/:gameId', function(req, res, next) {
-    console.log(req.params.gameId);
+router.get('/:gameId', function(req, res) {
+	var request = new messages.GetChessGameRequest();
+	request.setGameId(req.params.gameId);
+
+    var game;
+	client.getChessGame(request, function(err, response) {
+		var gamePb = response.getGame();
+        game = {
+            id: gamePb.getId(),
+            context: {
+                event: gamePb.getContext().getEvent(),
+                date: gamePb.getContext().getDate(),
+                site: gamePb.getContext().getSite(),
+                round: gamePb.getContext().getRound(),
+            },
+            white: {
+                name: gamePb.getWhite().getName(),
+                elo: gamePb.getWhite().getElo(),
+            },
+            black: {
+                name: gamePb.getBlack().getName(),
+                elo: gamePb.getBlack().getElo(),
+            },
+            moves: gamePb.getMovesList().map(
+                move => { 
+                    return { uci: move.getUci(), san: move.getSan(), fen: move.getFen() };
+                }
+            ),
+            result: gamePb.getResult()
+        };
+
+        res.render('game', { title: 'CheSSE', game: game });
+    });
 });
 
 module.exports = router;

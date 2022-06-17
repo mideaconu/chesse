@@ -428,7 +428,6 @@ footer {
 
 .game-item {
   padding: 10px;
-  margin: 20px;
   font-family: "Raleway", sans-serif;
 }
 
@@ -442,6 +441,92 @@ footer {
   grid-template-columns: 1fr 1.5fr 0.5fr;
   grid-template-rows: 300px 300px auto;
   grid-template-areas: "title games ." "position-board games ." ". games .";
+}
+
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+header {
+  background-color: #444;
+  height: 60px;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+}
+
+.sitename {
+  color: #b58863;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 15px 20px;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.domain {
+  color: #f0d9b5;
+  font-size: 18px;
+  font-weight: 550;
+  letter-spacing: 1px;
+}
+
+/* Colour scheme */
+/* Shadow */
+/* Chess board sizes */
+/* Font */
+footer {
+  background-color: #444;
+  height: 60px;
+  align-items: center;
+}
+
+.credits {
+  color: #f0d9b5;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 18px;
+}
+
+.title-item {
+  grid-area: title;
+  place-self: center;
+  padding: 40px 20px;
+}
+
+#title {
+  font-size: 80px;
+  letter-spacing: 3px;
+  padding-bottom: 5px;
+}
+
+#subtitle {
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.board {
+  grid-area: board;
+  place-self: center;
+  margin: 50px;
+}
+
+.panel {
+  grid-area: panel;
+  place-self: left;
+  margin: 50px;
+}
+
+#abc {
+  width: 600px;
+}
+
+.game-container {
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 300px 300px auto;
+  grid-template-areas: "title . ." ". board panel" ". . .";
 }
 
 html {

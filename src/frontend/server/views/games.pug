@@ -38,7 +38,7 @@ block content
                 each game in games
                     tr.game-item
                         td
-                            a(href="/games/" + encodeURIComponent(game.id)) X
+                            a(href=`/games/${encodeURIComponent(game.id)}`) X
                         td #{game.white.name} (#{game.white.elo})
                         td #{game.black.name} (#{game.black.elo})
                         td #{game.context.event}
