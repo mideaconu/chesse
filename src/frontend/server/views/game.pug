@@ -13,21 +13,47 @@ block scripts
         src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
         crossorigin="anonymous")
-    script(type="module", src="/javascripts/search.js")
 
 block content
-    header
-        a.sitename(href="/") CheSSE
-            span.domain(href="/") .io
     .game-container
         .title-item
             #title CheSSE
             #subtitle Chess Similarity Search Engine
-        .game-item
-            p #{game.id}
-            p #{game.white.name}
-            p #{game.black.name}
-    footer
-        .credits &copy; Mihai Ionut Deaconu 
-            script.
-                document.write(/\d{4}/.exec(Date())[0])
+        .board
+            #abc
+        .panel
+            p #{game.white.name}(#{game.white.elo}) - #{game.black.name}(#{game.black.elo})
+            p #{game.context.event}, Round #{game.context.round}
+            p #{game.context.date}
+            button(onclick='updatePosition(' + 0 + ')') First
+            button(onclick='updateToPrev()') Prev
+            button(onclick='updateToNext()') Next
+            button(onclick='updateToLast()') Last
+            p
+                - for (var i = 0; i < game.moves.length; i++)
+                    div(onclick='updatePosition(' + i + ')') #{game.moves[i].uci}
+    script.
+        var moves = !{JSON.stringify(game.moves)};
+        var currentMove = 0;
+        var board = Chessboard("abc", {pieceTheme: 'images/chesspieces/default/{piece}.png', position: moves[currentMove].fen});
+        function updatePosition(i) {
+            board.position(moves[i].fen);
+            currentMove = i;
+            console.log(currentMove);
+        }
+        function updateToPrev() {
+            if (currentMove > 0) {
+                currentMove = currentMove - 1;
+                board.position(moves[currentMove].fen);
+            }
+        }
+        function updateToNext() {
+            if (currentMove < moves.length - 1) {
+                currentMove = currentMove + 1;
+                board.position(moves[currentMove].fen);
+            }
+        }
+        function updateToLast() {
+            currentMove = moves.length - 1;
+            board.position(moves[currentMove].fen);
+        }

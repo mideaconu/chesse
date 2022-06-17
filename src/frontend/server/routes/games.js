@@ -88,38 +88,39 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET /games/{gameId}. */
-router.get('/:gameId', function(req, res, next) {
-	var request = new messages.GetGameRequest();
+router.get('/:gameId', function(req, res) {
+	var request = new messages.GetChessGameRequest();
 	request.setGameId(req.params.gameId);
 
     var game;
-
-	client.getGame(request, function(err, response) {
-		var game_pb = response.getGame();
+	client.getChessGame(request, function(err, response) {
+		var gamePb = response.getGame();
         game = {
-            id: game_pb.getId(),
+            id: gamePb.getId(),
             context: {
-                event: game_pb.getContext().getEvent(),
-                date: game_pb.getContext().getDate(),
-                site: game_pb.getContext().getSite(),
-                round: game_pb.getContext().getRound(),
+                event: gamePb.getContext().getEvent(),
+                date: gamePb.getContext().getDate(),
+                site: gamePb.getContext().getSite(),
+                round: gamePb.getContext().getRound(),
             },
             white: {
-                name: game_pb.getWhite().getName(),
-                elo: game_pb.getWhite().getElo(),
+                name: gamePb.getWhite().getName(),
+                elo: gamePb.getWhite().getElo(),
             },
             black: {
-                name: game_pb.getBlack().getName(),
-                elo: game_pb.getBlack().getElo(),
+                name: gamePb.getBlack().getName(),
+                elo: gamePb.getBlack().getElo(),
             },
-            result: game_pb.getResult(),
-            nr_moves: game_pb.getNrMoves()
+            moves: gamePb.getMovesList().map(
+                move => { 
+                    return { uci: move.getUci(), san: move.getSan(), fen: move.getFen() };
+                }
+            ),
+            result: gamePb.getResult()
         };
 
-		console.log(game);
-
         res.render('game', { title: 'CheSSE', game: game });
-    }
+    });
 });
 
 module.exports = router;

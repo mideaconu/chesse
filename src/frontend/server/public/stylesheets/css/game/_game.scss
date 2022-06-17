@@ -1,6 +1,17 @@
-.game-item {
-    grid-area: game;
+.board {
+    grid-area: board;
+    place-self: center;
+
+    margin: 50px;
+}
+
+.panel {
+    grid-area: panel;
     place-self: left;
 
     margin: 50px;
+}
+
+#abc {
+    width: 600px;
 }

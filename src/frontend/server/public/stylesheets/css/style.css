@@ -505,18 +505,28 @@ footer {
   font-weight: 300;
 }
 
-.game-item {
-  grid-area: game;
+.board {
+  grid-area: board;
+  place-self: center;
+  margin: 50px;
+}
+
+.panel {
+  grid-area: panel;
   place-self: left;
   margin: 50px;
+}
+
+#abc {
+  width: 600px;
 }
 
 .game-container {
   background-color: white;
   display: grid;
-  grid-template-columns: 1fr 1.5fr 0.5fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 300px 300px auto;
-  grid-template-areas: "title . ." ". game ." ". game .";
+  grid-template-areas: "title . ." ". board panel" ". . .";
 }
 
 html {
