@@ -15,41 +15,51 @@ block scripts
         crossorigin="anonymous")
 
 block content
-    .games-container
-        .title-item
+    #games-container
+        #games-container-title-area
             #title CheSSE
+            hr
             #subtitle Chess Similarity Search Engine
-        .position-board-item
+        #games-container-board-area
             #position-board
-        .games-item
+        #games-container-position-stats-area 
             p #{position.stats.nrGames} games found
-            p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} average, #{position.stats.rating.max} max
-            p Win rate: #{position.stats.result.whiteWinPct}% white, #{position.stats.result.drawPct}% draw, #{position.stats.result.blackWinPct}% black
-            table#games
+            p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} avg, #{position.stats.rating.max} max
+            p Win rate: #{Math.round(position.stats.result.whiteWinPct * 100) / 100}% white, #{Math.round(position.stats.result.drawPct * 100) / 100}% draw, #{Math.round(position.stats.result.blackWinPct * 100) / 100}% black
+        #games-container-games-list-area
+            table(cellspacing="0")#games-table
                 tr 
-                    th
-                    th White
-                    th Black
-                    th Event
-                    th Round
-                    th Date 
-                    th Result
-                    th # moves
+                    th WHITE
+                    th BLACK
+                    th EVENT
+                    th DATE 
+                    th RD
+                    th RES
+                    th # MVS
                 each game in games
-                    tr.game-item
-                        td
-                            a(href=`/games/${encodeURIComponent(game.id)}`) X
+                    tr(data-href=`/games/${encodeURIComponent(game.id)}`).clickable-row.game-item
                         td #{game.white.name} (#{game.white.elo})
                         td #{game.black.name} (#{game.black.elo})
                         td #{game.context.event}
-                        td #{game.context.round}
                         td #{game.context.date}
-                        td #{game.result}
+                        td #{game.context.round}
+                        if game.result == 1
+                            td 1-0
+                        else if game.result == 0.5
+                            td 1/2
+                        else if game.result == 0
+                            td 0-1
+                        else 
+                            td N/A
                         td #{Math.round(game.moves.length/2)}
     script.
         var board_config = {
             pieceTheme: 'images/chesspieces/default/{piece}.png',
-            position: "#{position.fenEncoding}",
-            showNotation: false
+            position: "#{position.fenEncoding}"
         };
         Chessboard("position-board", board_config);
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                window.location = $(this).data("href");
+            });
+        });
