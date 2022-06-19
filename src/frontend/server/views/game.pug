@@ -5,6 +5,8 @@ block scripts
         href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css",
         integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU",
         crossorigin="anonymous")
+    link(rel="stylesheet", 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
     script(
         src="https://code.jquery.com/jquery-3.5.1.min.js",
         integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2",
@@ -15,45 +17,118 @@ block scripts
         crossorigin="anonymous")
 
 block content
-    .game-container
-        .title-item
+    #game-container
+        #game-container-title-area
             #title CheSSE
+            hr
             #subtitle Chess Similarity Search Engine
-        .board
-            #abc
-        .panel
-            p #{game.white.name}(#{game.white.elo}) - #{game.black.name}(#{game.black.elo})
-            p #{game.context.event}, Round #{game.context.round}
-            p #{game.context.date}
-            button(onclick='updatePosition(' + 0 + ')') First
-            button(onclick='updateToPrev()') Prev
-            button(onclick='updateToNext()') Next
-            button(onclick='updateToLast()') Last
-            p
+        #game-container-board-area
+            #game-board
+        #game-container-buttons-area
+            button(onclick="updateToFirst()").inline.button.fa.fa-angle-double-left
+            button(onclick="updateToPrev()").inline.button.fa.fa-angle-left
+            button(onclick="updateToNext()").inline.button.fa.fa-angle-right
+            button(onclick="updateToLast()").inline.button.fa.fa-angle-double-right
+        #game-container-panel-area
+            #game-context
+                p.players #{game.white.name} (#{game.white.elo}) - #{game.black.name} (#{game.black.elo})
+                hr
+                p #[strong DATE:] &#09; #{game.context.date}
+                p #[strong EVENT:] &#09; #{game.context.event}
+                p #[strong ROUND:] &#09; #{game.context.round}
+                if game.result == 1
+                    p #[strong RESULT:] 1-0
+                else if game.result == 0.5
+                    p #[strong RESULT:] 1/2
+                else if game.result == 0
+                    p #[strong RESULT:] 0-1
+                else 
+                    p #[strong RESULT:] N/A
+            #game-moves
                 - for (var i = 0; i < game.moves.length; i++)
-                    div(onclick='updatePosition(' + i + ')') #{game.moves[i].uci}
+                    if i % 2 == 0
+                        div(onclick="updatePosition(" + i + ")") #{i/2 + 1}.&nbsp;
+                            div(id=i) #{game.moves[i].san}&nbsp;
+                    else
+                        div(onclick="updatePosition(" + i + ")") -&nbsp;
+                            div(id=i) #{game.moves[i].san}&nbsp;
     script.
-        var moves = !{JSON.stringify(game.moves)};
         var currentMove = 0;
-        var board = Chessboard("abc", {pieceTheme: 'images/chesspieces/default/{piece}.png', position: moves[currentMove].fen});
-        function updatePosition(i) {
-            board.position(moves[i].fen);
-            currentMove = i;
-            console.log(currentMove);
+
+        var moves = !{JSON.stringify(game.moves)};
+        var board = Chessboard("game-board", {pieceTheme: "images/chesspieces/default/{piece}.png", position: moves[currentMove].fen});
+
+        function setMoveFocus(move) {
+            document.getElementById(move).style.fontWeight = "800";
+            document.getElementById(move).style.color = "#b58863";
         }
+
+        function resetMoveFocus(move) {
+            document.getElementById(move).style.fontWeight = "500";
+            document.getElementById(move).style.color = "#444";
+        }
+
+        function updatePosition(i) {
+            resetMoveFocus(currentMove);
+            currentMove = i;
+            setMoveFocus(currentMove);
+            board.position(moves[currentMove].fen);
+        }
+
+        function updateToFirst() {
+            resetMoveFocus(currentMove);
+            currentMove = 0;
+            setMoveFocus(currentMove);
+            board.position(moves[currentMove].fen);
+        }
+
         function updateToPrev() {
             if (currentMove > 0) {
+                resetMoveFocus(currentMove);
                 currentMove = currentMove - 1;
+                setMoveFocus(currentMove);
                 board.position(moves[currentMove].fen);
+            } else {
+                // TODO
             }
         }
+
         function updateToNext() {
             if (currentMove < moves.length - 1) {
+                resetMoveFocus(currentMove);
                 currentMove = currentMove + 1;
+                setMoveFocus(currentMove);
                 board.position(moves[currentMove].fen);
+            } else {
+                // TODO
             }
         }
+
         function updateToLast() {
+            resetMoveFocus(currentMove);
             currentMove = moves.length - 1;
+            setMoveFocus(currentMove);
             board.position(moves[currentMove].fen);
+        }
+
+        document.onkeydown = checkKey;
+
+        function checkKey(e) {
+            e = e || window.event;
+            if (e.keyCode == "38") {
+                // Up arrow
+                updateToFirst();
+            }
+            else if (e.keyCode == "40") {
+                // Down arrow
+                updateToLast();
+            }
+            else if (e.keyCode == "37") {
+                // Left arrow
+                updateToPrev();
+            }
+            else if (e.keyCode == "39") {
+                // Right arrow
+                updateToNext();
+            }
         }

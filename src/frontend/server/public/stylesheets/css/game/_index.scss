@@ -1,20 +1,111 @@
-@import "../header/header";
-@import "../header/title";
+@import "../common/variables";
 
+@import "../header/header";
 @import "../footer/footer";
 
-@import "title";
-@import "game";
 
-
-.game-container {
-    background-color: white;
+#game-container {
+    background-color: $light-colour;
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 300px 300px auto;
+    grid-template-columns: 1fr 1fr 0.6fr 0.4fr;
+    grid-template-rows: 180px 120px 550px 100px auto;
     grid-template-areas:
-        "title . ."
-        ". board panel"
-        ". . .";
+        "title . . ."
+        "title board panel ."
+        ". board panel ."
+        ". buttons . ."
+        ". . . .";
+}
+
+#game-container-title-area {
+    grid-area: title;
+    place-self: center;
+}
+
+#game-container-buttons-area {
+    grid-area: buttons;
+    align-self: center; 
+
+    width: 100%;
+    text-align: center;
+
+    .inline {
+        display: inline-block;
+    }
+
+    .button.fa::before {
+        font-family: $font-family-icons;
+    }
+    
+    .button.fa {
+        font-family: $font-family;
+        font-size: 50px;
+        font-weight: $font-weight-regular;
+    
+        margin: 7px;
+        padding: 5px 15px;
+        justify-content: center;
+
+        width: 65px;
+        height: 65px;
+    }
+}
+
+#game-container-board-area {
+    grid-area: board;
+    justify-self: center;
+
+    #game-board {
+        width: $center-board-size;
+    }
+}
+
+#game-container-panel-area {
+    grid-area: panel;
+    place-self: left;
+
+    #game-context {
+        background-color: $light-squares-colour;
+        padding: 10px;
+        margin: 0 10px;
+
+        border-color: $dark-colour;
+        border-radius: $border-radius;
+        border-style: solid;
+        border-width: 1px;
+
+        overflow: auto;
+        height: 165px;
+
+        p {
+            font-size: 17px;
+            margin: 5px;
+        }
+
+        p.players {
+            font-size: 22px;
+            font-weight: $font-weight-medium;
+            text-align: center;
+        }
+    }
+
+    #game-moves {
+        padding: 10px;
+        margin: 10px 10px;
+
+        border-color: $dark-colour;
+        border-radius: $border-radius;
+        border-style: solid;
+        border-width: 1px;
+
+        overflow: auto;
+        height: 477px;
+
+        div {
+            display: inline-block;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    }
 }
