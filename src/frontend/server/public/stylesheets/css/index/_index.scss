@@ -1,22 +1,71 @@
 @import "../common/variables";
+
 @import "../header/header";
-@import "../header/title";
 @import "../footer/footer";
 
-@import "title";
-@import "search_board";
-@import "search_button";
-@import "side_buttons";
 
-.search-container {
+#index-container {
     background-color: $light-colour;
 
     display: grid;
     grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
-    grid-template-rows: 300px 600px 100px auto;
+    grid-template-rows: 95px 78px 127px 650px 100px auto;
     grid-template-areas:
+        "title . . ."
         "title search-board . ."
+        "title search-board side-buttons ."
         ". search-board side-buttons ."
         ". search-button . ."
         ". . . .";
+}
+
+#index-container-title-area {
+    grid-area: title;
+    place-self: center;
+}
+
+#index-container-search-board-area  {
+    grid-area: search-board;
+    justify-self: center;
+    margin: 0 auto;
+
+    #search-board {
+        width: $center-board-size;
+    }
+}
+
+#index-container-search-button-area {
+    grid-area: search-button;
+    place-self: center;
+
+    #search-button {
+        text-align: center;
+        font-size: 25px;
+        font-weight: $font-weight-light;
+    
+        height: 65px;
+        width: 200px;
+        padding: 12px;
+    }
+}
+
+#index-container-side-buttons-area {
+    grid-area: side-buttons;
+    justify-self: left;
+    margin: 0 auto;
+
+    .side-button.fa::before {
+        font-family: $font-family-icons;
+    }
+    
+    .side-button.fa {
+        font-family: $font-family;
+        font-size: 20px;
+        font-weight: $font-weight-medium;
+        text-align: left;
+    
+        width: 85%;
+        margin: 7px;
+        padding: 13px;
+    }
 }

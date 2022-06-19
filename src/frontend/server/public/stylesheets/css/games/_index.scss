@@ -1,21 +1,77 @@
 @import "../common/variables";
+
 @import "../header/header";
-@import "../header/title";
 @import "../footer/footer";
 
-@import "title";
-@import "position_board";
-@import "games";
 
-
-.games-container {
+#games-container {
     background-color: $light-colour;
 
     display: grid;
     grid-template-columns: 1fr 1.5fr 0.5fr;
-    grid-template-rows: 300px 300px auto;
+    grid-template-rows: 180px 120px 450px auto;
     grid-template-areas:
+        "title . ."
         "title games ."
         "position-board games ."
-        ". games .";
+        "position-stats games .";
+}
+
+#games-container-title-area {
+    grid-area: title;
+    place-self: center;
+}
+
+#games-container-board-area {
+    grid-area: position-board;
+    place-self: center;
+
+    #position-board {
+        width: $side-board-size;
+        margin: 0 auto;
+    }
+}
+
+#games-container-position-stats-area {
+    grid-area: position-stats;
+    align-self: left;
+
+    p {
+        font-size: 20px;
+        margin: 5px 175px;
+    }
+}
+
+#games-container-games-list-area {
+    grid-area: games;
+    place-self: left;
+
+    #games-table {
+        width: 100%;
+    
+        tr.clickable-row {
+            cursor: pointer;
+        }
+    
+        th, td {
+            text-align: left;
+            padding: 10px;
+        }
+    
+        th {
+            font-size: 18px;
+            background-color: $light-squares-colour;
+        }
+    
+        .game-item {
+            padding: 10px;
+            border-radius: 5px;
+            font-family: $font-family;
+            font-size: 18px;
+        }
+    
+        .game-item:hover {
+            box-shadow: $border-shadow;
+        }
+    }
 }

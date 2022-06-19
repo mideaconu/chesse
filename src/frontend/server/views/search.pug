@@ -15,31 +15,24 @@ block scripts
         crossorigin="anonymous")
 
 block content
-    .search-results-container
-        .title-item
+    #search-container
+        #search-container-title-area
             #title CheSSE
+            hr
             #subtitle Chess Similarity Search Engine
-        .search-board-item
-            #query-board
-            script.
-                var side_board_config = {
-                    pieceTheme: 'images/chesspieces/default/{piece}.png',
-                    position: "#{queryFenEncoding}",
-                    showNotation: false
-                };
-                Chessboard("query-board", side_board_config);
-        .search-results-item
+        #search-container-search-board-area
+            #search-board
+        #search-container-search-results-area
             - var i = 0
             each position in positions
                 - i++
                 - var resultBoardId = "result-board-" + i
-                .search-result
-                    a(href=`/games?fen=${position.fenEncoding}`)
-                        div(id=resultBoardId).result-board
+                a(href=`/games?fen=${position.fenEncoding}`).search-result
+                    div(id=resultBoardId).result-board
                     .result-stats
-                        p #{position.stats.nrGames} games found
-                        p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} average, #{position.stats.rating.max} max
-                        p Win rate: #{position.stats.result.whiteWinPct}% white, #{position.stats.result.drawPct}% draw, #{position.stats.result.blackWinPct}% black
+                        p #[strong #{position.stats.nrGames}] games found
+                        p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} avg, #{position.stats.rating.max} max
+                        p Win rate: #{Math.round(position.stats.result.whiteWinPct * 100) / 100}% white, #{Math.round(position.stats.result.drawPct * 100) / 100}% draw, #{Math.round(position.stats.result.blackWinPct * 100) / 100}% black
                 script.
                     var board_config = {
                         pieceTheme: 'images/chesspieces/default/{piece}.png',
@@ -47,3 +40,9 @@ block content
                         showNotation: false
                     };
                     Chessboard("#{resultBoardId}", board_config);
+    script.
+        var side_board_config = {
+            pieceTheme: 'images/chesspieces/default/{piece}.png',
+            position: "#{queryFenEncoding}"
+        };
+        Chessboard("search-board", side_board_config);

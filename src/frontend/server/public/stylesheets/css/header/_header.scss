@@ -1,10 +1,13 @@
 @import "../common/variables";
 
+@import "title";
+@import "element";
+
 
 header {
-    background-color: $dark-colour;
-    height: 60px;
     display: flex;
-    padding: 5px;
     align-items: center;
+    padding: 5px 20px;
+    background-color: $dark-colour;
+    height: $header-height;
 }

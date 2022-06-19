@@ -1,15 +1,13 @@
-.sitename {
-    color: #b58863;
-    font-size: 20px;
-    font-weight: 700;
-    padding: 15px 20px;
+#sitename {
+    color: $dark-squares-colour;
+    font-size: 27px;
+    font-weight: $font-weight-medium;
+    padding: $header-elements-padding;
     text-decoration: none;
-    letter-spacing: 1px;
 }
-  
-.domain {
-    color: #f0d9b5;
-    font-size: 18px;
-    font-weight: 550;
-    letter-spacing: 1px;
-}
+
+// #domain {
+//     color: $light-squares-colour;
+//     font-size: 18px;
+//     font-weight: 550;
+// }
