@@ -1,17 +1,44 @@
 /* Colour scheme */
-$dark-colour: #444;
 $light-colour: #fff;
+$dark-colour: #444;
 
-$dark-squares-colour: #b58863;
 $light-squares-colour: #f0d9b5;
+$dark-squares-colour: #b58863;
 
 /* Shadow */
-$border-shadow: 2px 8px 15px rgba($dark-colour, 0.3);
+$border-shadow: 2px 8px 15px rgba($dark-colour, 0.5);
 
 /* Chess board sizes */
-$search-board-size: 580px;
-$side-board-size: 350px;
-$result-board-size: 300px;
+$center-board-size: 650px;
+$side-board-size: 400px;
+$result-board-size: 275px;
 
 /* Font */
-$font-family: 'Raleway', sans-serif;
+$font-family: "Raleway", sans-serif;
+$font-family-icons: "FontAwesome";
+
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+
+$letter-spacing: 1px;
+
+/* Title */
+$title-font-size: 100px;
+$title-letter-spacing: 8px;
+
+$subtitle-font-size: 29px;
+
+/* Header */
+$header-height: 60px;
+$header-elements-padding: 15px 30px;
+
+/* Footer */
+$footer-height: 60px;
+$footer-font-size: 23px;
+
+/* Buttons */
+$border-radius: 10px;
