@@ -3,13 +3,13 @@
 
 footer {
     background-color: $dark-colour;
-    height: 60px;
+    height: $footer-height;
     align-items: center;
 }
 
 .credits {
     color: $light-squares-colour;
-    font-size: 20px;
+    font-size: 22px;
     text-align: center;
     margin-top: 18px;
 }
