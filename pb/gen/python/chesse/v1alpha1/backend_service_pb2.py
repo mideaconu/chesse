@@ -17,7 +17,7 @@ from chesse.v1alpha1 import games_pb2 as chesse_dot_v1alpha1_dot_games__pb2
 from chesse.v1alpha1 import positions_pb2 as chesse_dot_v1alpha1_dot_positions__pb2
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n%chesse/v1alpha1/backend_service.proto\x12\x0f\x63hesse.v1alpha1\x1a\x1b\x63hesse/v1alpha1/games.proto\x1a\x1f\x63hesse/v1alpha1/positions.proto"<\n\x17GetChessPositionRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"V\n\x18GetChessPositionResponse\x12:\n\x08position\x18\x01 \x01(\x0b\x32\x1e.chesse.v1alpha1.ChessPositionR\x08position"=\n\x18GetChessPositionsRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"Y\n\x19GetChessPositionsResponse\x12<\n\tpositions\x18\x01 \x03(\x0b\x32\x1e.chesse.v1alpha1.ChessPositionR\tpositions".\n\x13GetChessGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"F\n\x14GetChessGameResponse\x12.\n\x04game\x18\x01 \x01(\x0b\x32\x1a.chesse.v1alpha1.ChessGameR\x04game"9\n\x14GetChessGamesRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"I\n\x15GetChessGamesResponse\x12\x30\n\x05games\x18\x01 \x03(\x0b\x32\x1a.chesse.v1alpha1.ChessGameR\x05gamesb\x06proto3'
+    b'\n%chesse/v1alpha1/backend_service.proto\x12\x0f\x63hesse.v1alpha1\x1a\x1b\x63hesse/v1alpha1/games.proto\x1a\x1f\x63hesse/v1alpha1/positions.proto"<\n\x17GetChessPositionRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"V\n\x18GetChessPositionResponse\x12:\n\x08position\x18\x01 \x01(\x0b\x32\x1e.chesse.v1alpha1.ChessPositionR\x08position"y\n\x18GetChessPositionsRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding\x12\x1b\n\tpage_size\x18\x02 \x01(\x05R\x08pageSize\x12\x1d\n\npage_token\x18\x03 \x01(\tR\tpageToken"\xa0\x01\n\x19GetChessPositionsResponse\x12<\n\tpositions\x18\x01 \x03(\x0b\x32\x1e.chesse.v1alpha1.ChessPositionR\tpositions\x12\x1d\n\ntotal_size\x18\x02 \x01(\x05R\ttotalSize\x12&\n\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken".\n\x13GetChessGameRequest\x12\x17\n\x07game_id\x18\x01 \x01(\tR\x06gameId"F\n\x14GetChessGameResponse\x12.\n\x04game\x18\x01 \x01(\x0b\x32\x1a.chesse.v1alpha1.ChessGameR\x04game"9\n\x14GetChessGamesRequest\x12!\n\x0c\x66\x65n_encoding\x18\x01 \x01(\tR\x0b\x66\x65nEncoding"I\n\x15GetChessGamesResponse\x12\x30\n\x05games\x18\x01 \x03(\x0b\x32\x1a.chesse.v1alpha1.ChessGameR\x05gamesb\x06proto3'
 )
 
 
@@ -125,15 +125,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
     _GETCHESSPOSITIONRESPONSE._serialized_start = 182
     _GETCHESSPOSITIONRESPONSE._serialized_end = 268
     _GETCHESSPOSITIONSREQUEST._serialized_start = 270
-    _GETCHESSPOSITIONSREQUEST._serialized_end = 331
-    _GETCHESSPOSITIONSRESPONSE._serialized_start = 333
-    _GETCHESSPOSITIONSRESPONSE._serialized_end = 422
-    _GETCHESSGAMEREQUEST._serialized_start = 424
-    _GETCHESSGAMEREQUEST._serialized_end = 470
-    _GETCHESSGAMERESPONSE._serialized_start = 472
-    _GETCHESSGAMERESPONSE._serialized_end = 542
-    _GETCHESSGAMESREQUEST._serialized_start = 544
-    _GETCHESSGAMESREQUEST._serialized_end = 601
-    _GETCHESSGAMESRESPONSE._serialized_start = 603
-    _GETCHESSGAMESRESPONSE._serialized_end = 676
+    _GETCHESSPOSITIONSREQUEST._serialized_end = 391
+    _GETCHESSPOSITIONSRESPONSE._serialized_start = 394
+    _GETCHESSPOSITIONSRESPONSE._serialized_end = 554
+    _GETCHESSGAMEREQUEST._serialized_start = 556
+    _GETCHESSGAMEREQUEST._serialized_end = 602
+    _GETCHESSGAMERESPONSE._serialized_start = 604
+    _GETCHESSGAMERESPONSE._serialized_end = 674
+    _GETCHESSGAMESREQUEST._serialized_start = 676
+    _GETCHESSGAMESREQUEST._serialized_end = 733
+    _GETCHESSGAMESRESPONSE._serialized_start = 735
+    _GETCHESSGAMESRESPONSE._serialized_end = 808
 # @@protoc_insertion_point(module_scope)

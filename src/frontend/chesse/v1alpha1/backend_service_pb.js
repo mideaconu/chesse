@@ -514,7 +514,9 @@ proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.toObject = function(opt
  */
 proto.chesse.v1alpha1.GetChessPositionsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fenEncoding: jspb.Message.getFieldWithDefault(msg, 1, "")
+    fenEncoding: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    pageSize: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    pageToken: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -555,6 +557,14 @@ proto.chesse.v1alpha1.GetChessPositionsRequest.deserializeBinaryFromReader = fun
       var value = /** @type {string} */ (reader.readString());
       msg.setFenEncoding(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setPageSize(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPageToken(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -591,6 +601,20 @@ proto.chesse.v1alpha1.GetChessPositionsRequest.serializeBinaryToWriter = functio
       f
     );
   }
+  f = message.getPageSize();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
+  f = message.getPageToken();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
 };
 
 
@@ -609,6 +633,42 @@ proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.getFenEncoding = functi
  */
 proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.setFenEncoding = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int32 page_size = 2;
+ * @return {number}
+ */
+proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.getPageSize = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.chesse.v1alpha1.GetChessPositionsRequest} returns this
+ */
+proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.setPageSize = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional string page_token = 3;
+ * @return {string}
+ */
+proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.getPageToken = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.chesse.v1alpha1.GetChessPositionsRequest} returns this
+ */
+proto.chesse.v1alpha1.GetChessPositionsRequest.prototype.setPageToken = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -652,7 +712,9 @@ proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.toObject = function(op
 proto.chesse.v1alpha1.GetChessPositionsResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     positionsList: jspb.Message.toObjectList(msg.getPositionsList(),
-    chesse_v1alpha1_positions_pb.ChessPosition.toObject, includeInstance)
+    chesse_v1alpha1_positions_pb.ChessPosition.toObject, includeInstance),
+    totalSize: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    nextPageToken: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -694,6 +756,14 @@ proto.chesse.v1alpha1.GetChessPositionsResponse.deserializeBinaryFromReader = fu
       reader.readMessage(value,chesse_v1alpha1_positions_pb.ChessPosition.deserializeBinaryFromReader);
       msg.addPositions(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setTotalSize(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setNextPageToken(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -729,6 +799,20 @@ proto.chesse.v1alpha1.GetChessPositionsResponse.serializeBinaryToWriter = functi
       1,
       f,
       chesse_v1alpha1_positions_pb.ChessPosition.serializeBinaryToWriter
+    );
+  }
+  f = message.getTotalSize();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
+  f = message.getNextPageToken();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
     );
   }
 };
@@ -769,6 +853,42 @@ proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.addPositions = functio
  */
 proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.clearPositionsList = function() {
   return this.setPositionsList([]);
+};
+
+
+/**
+ * optional int32 total_size = 2;
+ * @return {number}
+ */
+proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.getTotalSize = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.chesse.v1alpha1.GetChessPositionsResponse} returns this
+ */
+proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.setTotalSize = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional string next_page_token = 3;
+ * @return {string}
+ */
+proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.getNextPageToken = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.chesse.v1alpha1.GetChessPositionsResponse} returns this
+ */
+proto.chesse.v1alpha1.GetChessPositionsResponse.prototype.setNextPageToken = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
