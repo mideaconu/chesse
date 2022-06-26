@@ -14,24 +14,20 @@ class BackendServerError(Exception):
     status_code = grpc.StatusCode.UNKNOWN
 
 
-class InvalidFENEncodingError(BackendServerError):
+class InvalidArgumentError(BackendServerError):
     status_code = grpc.StatusCode.INVALID_ARGUMENT
+
+
+class InvalidFENEncodingError(InvalidArgumentError):
+    pass
+
+
+class InvalidPaginationParamError(InvalidArgumentError):
+    pass
 
 
 class InvalidCredentialsError(BackendServerError):
     status_code = grpc.StatusCode.FAILED_PRECONDITION
-
-
-class SearchEngineError(BackendServerError):
-    status_code = grpc.StatusCode.INTERNAL
-
-
-class SearchEngineQueryError(SearchEngineError):
-    pass
-
-
-class SearchEnginePbConversionError(SearchEngineError):
-    pass
 
 
 class NotFoundError(BackendServerError):
@@ -43,4 +39,16 @@ class InternalServerError(BackendServerError):
 
 
 class IllegalArgumentError(InternalServerError):
+    pass
+
+
+class SearchEngineError(InternalServerError):
+    pass
+
+
+class SearchEngineQueryError(SearchEngineError):
+    pass
+
+
+class SearchEnginePbConversionError(SearchEngineError):
     pass
