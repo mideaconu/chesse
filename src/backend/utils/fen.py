@@ -1,7 +1,10 @@
 import chess
-from loguru import logger
+import structlog
 
+from backend.tracing import trace
 from backend.utils import exception
+
+logger = structlog.get_logger()
 
 
 def check_fen_encoding_is_valid(fen_encoding: str) -> None:
@@ -16,8 +19,9 @@ def check_fen_encoding_is_valid(fen_encoding: str) -> None:
         InvalidFENError: If the FEN encoding is invalid, i.e. a position could
         not be established from the encoding.
     """
+    span = trace.get_current_span()
     try:
         chess.Board(fen=fen_encoding)
+        span.add_event("validation successful: fen encoding", {"fen_encoding": fen_encoding})
     except ValueError as e:
-        logger.error(e)
-        raise exception.InvalidFENEncodingError(f"Invalid FEN encoding {fen_encoding}: {e}.")
+        raise exception.InvalidFENEncodingError(f"validation failed: {e}")
