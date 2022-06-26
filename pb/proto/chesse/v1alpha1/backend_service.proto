@@ -26,12 +26,23 @@ message GetChessPositionsRequest {
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR. The positions that are most
     // similar to this position are returned, in order of similarity.
     string fen_encoding = 1;
+    // Size requested for the results list. The value must be between 1 and 
+    // 1,000. The response page size is not guaranteed as the server may 
+    // further constrain the maximum number of results. Used for pagination.
+    int32 page_size = 2;
+    // Identifier for requesting a specific page of the results list. Used for
+    // pagination.
+    string page_token = 3;
 }
 
 // Response to fetch a list of chess positions.
 message GetChessPositionsResponse {
     // The chess positions.
     repeated chesse.v1alpha1.ChessPosition positions = 1;
+    // Size of the results list. Used for pagination.
+    int32 total_size = 2;
+    // Identifier for the next page of the results list. Used for pagination.
+    string next_page_token = 3;
 }
 
 // Request to fetch a chess game.
