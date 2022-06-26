@@ -4,17 +4,25 @@ from typing import Any, Callable
 
 import elastic_transport
 import elasticsearch as es
+import structlog
 from chesse.v1alpha1 import games_pb2, positions_pb2
-from loguru import logger
 
 from backend.search_engine.controller import interface as controller_if
 from backend.search_engine.query import elasticsearch as es_query
-from backend.tracing import tracer
+from backend.tracing import trace, tracer
 from backend.utils import exception
+
+logger = structlog.get_logger()
 
 
 def _parse_es_instance_env_vars() -> tuple[str, str, str, str]:
-    url = os.getenv("ELASTICSEARCH_HOSTS")
+    scheme = os.getenv("ELASTICSEARCH_SCHEME", "http")
+    host = os.getenv("ELASTICSEARCH_HOST", "localhost")
+    port = os.getenv("ELASTICSEARCH_PORT", "9200")
+    url = f"{scheme}://{host}:{port}"
+    structlog.contextvars.bind_contextvars(
+        search_engine_scheme=scheme, search_engine_host=host, search_engine_port=port
+    )
 
     username = os.getenv("ELASTICSEARCH_USERNAME")
     password = os.getenv("ELASTICSEARCH_PASSWORD")
@@ -34,9 +42,9 @@ def _es_bucket_to_chess_position_rating_stats_pb(
     bucket: dict[str, Any],
 ) -> positions_pb2.ChessPositionRatingStats:
     position_rtg_stats_pb = positions_pb2.ChessPositionRatingStats(
-        min=int(min(bucket["white"]["min_elo"]["value"], bucket["black"]["min_elo"]["value"])),
-        avg=int((bucket["white"]["avg_elo"]["value"] + bucket["black"]["avg_elo"]["value"]) / 2),
-        max=int(max(bucket["white"]["max_elo"]["value"], bucket["black"]["max_elo"]["value"])),
+        min=int(min(bucket["white_elo"]["min"], bucket["black_elo"]["min"])),
+        avg=int((bucket["white_elo"]["avg"] + bucket["black_elo"]["avg"]) / 2),
+        max=int(max(bucket["white_elo"]["max"], bucket["black_elo"]["max"])),
     )
 
     return position_rtg_stats_pb
@@ -49,7 +57,7 @@ def _es_bucket_to_chess_position_result_stats_pb(
         white_win_pct=0, draw_pct=0, black_win_pct=0
     )
 
-    for side in bucket["results"]["side_won"]["buckets"]:
+    for side in bucket["results"]["buckets"]:
         win_rate_pct = side["doc_count"] / bucket["doc_count"] * 100
         match side["key"]:
             case 1:
@@ -66,17 +74,14 @@ def _es_bucket_to_chess_position_result_stats_pb(
     return position_res_stats_pb
 
 
-def _es_bucket_to_chess_position_pb(
-    bucket: dict[str, Any], fen_encoding
-) -> positions_pb2.ChessPositionStats:
-    nr_games = bucket["doc_count"]
+def _es_bucket_to_chess_position_pb(bucket: dict[str, Any]) -> positions_pb2.ChessPositionStats:
     position_rtg_stats_pb = _es_bucket_to_chess_position_rating_stats_pb(bucket)
     position_res_stats_pb = _es_bucket_to_chess_position_result_stats_pb(bucket)
 
     position_pb = positions_pb2.ChessPosition(
-        fen_encoding=fen_encoding,
+        fen_encoding=bucket["key"],
         position_stats=positions_pb2.ChessPositionStats(
-            nr_games=nr_games,
+            nr_games=bucket["doc_count"],
             rating_stats=position_rtg_stats_pb,
             result_stats=position_res_stats_pb,
         ),
@@ -115,11 +120,9 @@ def _es_hit_to_chess_game_pb(hit) -> games_pb2.ChessGame:
     return chess_game_pb
 
 
-def _es_response_to_chess_position_pb(
-    response: dict[str, Any], fen_encoding: str
-) -> positions_pb2.ChessPositionStats:
-    bucket = response["aggregations"]["by_fen"]["fen"]["buckets"][0]
-    position_pb = _es_bucket_to_chess_position_pb(bucket, fen_encoding=fen_encoding)
+def _es_response_to_chess_position_pb(response: dict[str, Any]) -> positions_pb2.ChessPositionStats:
+    bucket = response["aggregations"]["positions"]["buckets"][0]
+    position_pb = _es_bucket_to_chess_position_pb(bucket)
 
     return position_pb
 
@@ -128,10 +131,8 @@ def _es_response_to_chess_positions_pb(
     response: dict[str, Any]
 ) -> list[positions_pb2.ChessPosition]:
     chess_positions_pb = []
-    for bucket in response["aggregations"]["by_fen"]["fen"]["buckets"]:
-        chess_position_pb = _es_bucket_to_chess_position_pb(
-            bucket, fen_encoding=bucket["key"].partition(" ")[0]
-        )
+    for bucket in response["aggregations"]["positions"]["buckets"]:
+        chess_position_pb = _es_bucket_to_chess_position_pb(bucket)
         chess_positions_pb.append(chess_position_pb)
 
     return chess_positions_pb
@@ -173,14 +174,15 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=ssl_context)
         self.max_result_size = int(os.getenv("ELASTICSEARCH_RESULT_MAX_SIZE", "10"))
 
-        logger.info(f"Initialised Search Engine Controller at {url}.")
+        logger.info("initialised search engine controller")
 
     @_exception_handler
     def get_chess_position_pb(self, fen_encoding: str) -> positions_pb2.ChessPosition:
-        query = es_query.get_chess_position_query(fen_encoding)
-        aggs = es_query.get_chess_position_aggs(fen_encoding)
+        (query, runtime_mappings, aggs) = es_query.get_chess_position_query(fen_encoding)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", query=query, aggs=aggs)
+            response = self.client.search(
+                index="games", query=query, runtime_mappings=runtime_mappings, aggs=aggs
+            )
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -188,20 +190,16 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             )
 
         with tracer.start_as_current_span("output: pb conversion"):
-            chess_position_pb = _es_response_to_chess_position_pb(
-                response, fen_encoding=fen_encoding
-            )
+            chess_position_pb = _es_response_to_chess_position_pb(response)
 
         return chess_position_pb
 
     def _get_similar_chess_position_fen_encodings(self, similarity_encoding: str) -> list[str]:
         query = es_query.get_similar_positions_query(similarity_encoding)
         with tracer.start_as_current_span("Elasticsearch/positions/_search"):
-            response_sim_pos = self.client.search(
-                index="positions", query=query, size=self.max_result_size
-            )
+            response = self.client.search(index="positions", query=query, size=self.max_result_size)
 
-        if response_sim_pos["_shards"]["total"] != response_sim_pos["_shards"]["successful"]:
+        if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
                 f"Query unsuccessful: get positions by similarity encoding {similarity_encoding!r}."
             )
@@ -209,8 +207,17 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         # FEN encodings of the similar positions
         fen_encodings = [
             chess_position["_source"]["position"]["fen_encoding"]
-            for chess_position in response_sim_pos["hits"]["hits"]
+            for chess_position in response["hits"]["hits"]
         ]
+        trace.get_current_span().add_event(
+            "similar positions found",
+            {
+                "similar_positions": [
+                    f"{(chess_position['_source']['position']['fen_encoding'], chess_position['_score'])}"
+                    for chess_position in response["hits"]["hits"]
+                ]
+            },
+        )
 
         return fen_encodings
 
@@ -218,24 +225,19 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
         self, similarity_encoding: str
     ) -> list[positions_pb2.ChessPosition]:
         fen_encodings = self._get_similar_chess_position_fen_encodings(similarity_encoding)
-
-        query = es_query.get_chess_positions_query(fen_encodings)
-        aggs = es_query.get_chess_position_aggs(fen_encodings)
+        (query, runtime_mappings, aggs) = es_query.get_chess_positions_query(fen_encodings)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response_positions_stats = self.client.search(
-                index="games", query=query, aggs=aggs, size=self.max_result_size
+            response = self.client.search(
+                index="games", query=query, runtime_mappings=runtime_mappings, aggs=aggs
             )
 
-        if (
-            response_positions_stats["_shards"]["total"]
-            != response_positions_stats["_shards"]["successful"]
-        ):
+        if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
                 f"Query unsuccessful: get positions stats by FEN encodings {fen_encodings!r}."
             )
 
         with tracer.start_as_current_span("output: pb conversion"):
-            chess_positions_pb = _es_response_to_chess_positions_pb(response_positions_stats)
+            chess_positions_pb = _es_response_to_chess_positions_pb(response)
 
         return chess_positions_pb
 
