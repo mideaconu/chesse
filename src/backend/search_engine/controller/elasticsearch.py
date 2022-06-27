@@ -172,7 +172,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         ssl_context = ssl.create_default_context(cafile=cert_path)
         self.client = es.Elasticsearch(url, http_auth=(username, password), ssl_context=ssl_context)
-        self.max_result_size = int(os.getenv("ELASTICSEARCH_RESULT_MAX_SIZE", "10"))
+
+        self.scroll_timeout = os.getenv("ELASTICSEARCH_SCROLL_TIMEOUT", "1m")
 
         logger.info("initialised search engine controller")
 
@@ -194,10 +195,18 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         return chess_position_pb
 
-    def _get_similar_chess_position_fen_encodings(self, similarity_encoding: str) -> list[str]:
+    def _get_similar_chess_position_fen_encodings(
+        self, similarity_encoding: str, *, page_size: int, page_token: str
+    ) -> tuple[list[str], int, str]:
         query = es_query.get_similar_positions_query(similarity_encoding)
-        with tracer.start_as_current_span("Elasticsearch/positions/_search"):
-            response = self.client.search(index="positions", query=query, size=self.max_result_size)
+        if not page_token:
+            with tracer.start_as_current_span("Elasticsearch/positions/_search"):
+                response = self.client.search(
+                    index="positions", query=query, size=page_size, scroll=self.scroll_timeout
+                )
+        else:
+            with tracer.start_as_current_span("Elasticsearch/_search/scroll"):
+                response = self.client.scroll(scroll_id=page_token, scroll=self.scroll_timeout)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -209,22 +218,34 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             chess_position["_source"]["position"]["fen_encoding"]
             for chess_position in response["hits"]["hits"]
         ]
+        total_size = len(fen_encodings)
+        next_page_token = response["_scroll_id"]
+
         trace.get_current_span().add_event(
             "similar positions found",
             {
                 "similar_positions": [
                     f"{(chess_position['_source']['position']['fen_encoding'], chess_position['_score'])}"
                     for chess_position in response["hits"]["hits"]
-                ]
+                ],
+                "total_size": total_size,
+                "next_page_token": next_page_token,
             },
         )
 
-        return fen_encodings
+        return (fen_encodings, total_size, next_page_token)
 
-    def _get_chess_positions_by_similarity_encoding(
-        self, similarity_encoding: str
-    ) -> list[positions_pb2.ChessPosition]:
-        fen_encodings = self._get_similar_chess_position_fen_encodings(similarity_encoding)
+    @_exception_handler
+    def get_chess_positions_pb(
+        self, similarity_encoding: str, page_size: int, page_token: str
+    ) -> tuple[list[positions_pb2.ChessPosition], int, str]:
+        (
+            fen_encodings,
+            total_size,
+            next_page_token,
+        ) = self._get_similar_chess_position_fen_encodings(
+            similarity_encoding, page_size=page_size, page_token=page_token
+        )
         (query, runtime_mappings, aggs) = es_query.get_chess_positions_query(fen_encodings)
         with tracer.start_as_current_span("Elasticsearch/games/_search"):
             response = self.client.search(
@@ -238,20 +259,14 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         with tracer.start_as_current_span("output: pb conversion"):
             chess_positions_pb = _es_response_to_chess_positions_pb(response)
+        if total_size != len(chess_positions_pb):
+            logger.warning(
+                "elasticsearch returned less positions than the number of similar positions found",
+                {"nr_similar_positions": total_size, "nr_chess_positions": len(chess_positions_pb)},
+            )
+            total_size = len(chess_positions_pb)
 
-        return chess_positions_pb
-
-    @_exception_handler
-    def get_chess_positions_pb(self, **kwargs: Any) -> list[positions_pb2.ChessPosition]:
-        match list(kwargs.keys()):
-            case ["similarity_encoding"]:
-                return self._get_chess_positions_by_similarity_encoding(
-                    similarity_encoding=kwargs["similarity_encoding"]
-                )
-            case _:
-                raise exception.IllegalArgumentError(
-                    f"Invalid arguments to function get_chess_positions: {kwargs}."
-                )
+        return chess_positions_pb, total_size, next_page_token
 
     @_exception_handler
     def get_chess_game_pb(self, id: str) -> games_pb2.ChessGame:
