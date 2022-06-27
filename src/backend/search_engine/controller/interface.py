@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from typing import Any, List
 
 from chesse.v1alpha1 import games_pb2, positions_pb2
 
@@ -30,27 +29,30 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_chess_positions_pb(self, **kwargs: Any) -> List[positions_pb2.ChessPosition]:
-        """Returns a list of chess positions. One of the following sets of
-        arguments can be passed to the function:
-
-        - (similarity_encoding): Returns a list of chess positions similar to
-        the position for which the encoding is given. The returned
-        positions are ordered by similarity.
+    def get_chess_positions_pb(
+        self, similarity_encoding: str, page_size: int, page_token: str
+    ) -> tuple[list[positions_pb2.ChessPosition], int, str]:
+        """Returns a list of chess positions.
 
         Args:
             similarity_encoding (str): The encoding of the chess position that
             similar positions should be returned for. See Ganguly, D.,
             Leveling, J., & Jones, G. (2014). Retrieval of similar chess
             positions.
+            page_size (str): The maximum number of chess positions to return.
+            page_token (str): Pointer to a specific chess position where to
+                start from in the list.
 
         Raises:
             InternalServerError: If there is a server side error raised upon
             making the request.
 
         Returns:
-            List[positions_pb2.ChessPosition]: List of chess position pb
-            objects.
+            tuple
+                list[positions_pb2.ChessPosition]: List of chess position pb
+                objects.
+                int: The total number of elements in the returned list.
+                str: The token for the next batch of elements.
         """
         raise NotImplementedError()
 
@@ -67,7 +69,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_chess_games_pb(self, **kwargs) -> List[games_pb2.ChessGame]:
+    def get_chess_games_pb(self, **kwargs) -> list[games_pb2.ChessGame]:
         """Returns a collection of chess games. One of the following sets of
         arguments can be passed to the function:
 
@@ -84,6 +86,6 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             making the request.
 
         Returns:
-            List[games_pb2.ChessGame]: List of chess games pb objects.
+            list[games_pb2.ChessGame]: List of chess games pb objects.
         """
         raise NotImplementedError()
