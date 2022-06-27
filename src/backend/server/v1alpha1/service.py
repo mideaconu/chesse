@@ -10,9 +10,7 @@ from google.protobuf import json_format
 import encoding
 from backend.search_engine import factory
 from backend.tracing import trace, tracer
-from backend.utils import exception
-from backend.utils import fen as chess_utils
-from backend.utils import meta, typing
+from backend.utils import exception, meta, typing, validation
 
 logger = structlog.get_logger()
 
@@ -37,7 +35,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         structlog.threadlocal.bind_threadlocal(request_args=json_format.MessageToDict(request))
 
         with tracer.start_as_current_span("input: validation"):
-            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+            validation.validate_fen_encoding(request.fen_encoding)
 
         chess_position_pb = self.search_engine_ctrl.get_chess_position_pb(request.fen_encoding)
         response = backend_service_pb2.GetChessPositionResponse(position=chess_position_pb)
@@ -57,28 +55,40 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         structlog.threadlocal.bind_threadlocal(request_args=json_format.MessageToDict(request))
 
         with tracer.start_as_current_span("input: validation"):
-            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+            validation.validate_fen_encoding(request.fen_encoding)
+            validation.validate_pagination_params(
+                page_size=request.page_size, page_token=request.page_token
+            )
 
         similarity_encoding = encoding.get_similarity_encoding(request.fen_encoding)
         trace.get_current_span().add_event(
             "similarity encoding generated", {"similarity_encoding": similarity_encoding}
         )
 
-        chess_positions_pb = self.search_engine_ctrl.get_chess_positions_pb(
-            similarity_encoding=similarity_encoding
+        (
+            chess_positions_pb,
+            total_size,
+            next_page_token,
+        ) = self.search_engine_ctrl.get_chess_positions_pb(
+            similarity_encoding=similarity_encoding,
+            page_size=request.page_size,
+            page_token=request.page_token,
         )
-        response = backend_service_pb2.GetChessPositionsResponse(positions=chess_positions_pb)
+        response = backend_service_pb2.GetChessPositionsResponse(
+            positions=chess_positions_pb, total_size=total_size, next_page_token=next_page_token
+        )
 
         trace.get_current_span().add_event(
             "request successful",
             {
-                "response.nr_positions": f"{len(chess_positions_pb)}",
+                "response.total_size": str(total_size),
                 "response.positions": ", ".join(
                     [
                         f"{(position.fen_encoding, position.position_stats.nr_games)}"
                         for position in chess_positions_pb
                     ]
                 ),
+                "response.next_page_token": next_page_token,
             },
         )
 
@@ -105,7 +115,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
         structlog.threadlocal.bind_threadlocal(request_args=json_format.MessageToDict(request))
 
         with tracer.start_as_current_span("input: validation"):
-            chess_utils.check_fen_encoding_is_valid(request.fen_encoding)
+            validation.validate_fen_encoding(request.fen_encoding)
 
         chess_games_pb = self.search_engine_ctrl.get_chess_games_pb(
             fen_encoding=request.fen_encoding
