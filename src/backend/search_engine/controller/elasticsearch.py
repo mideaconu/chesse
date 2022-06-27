@@ -128,12 +128,22 @@ def _es_response_to_chess_position_pb(response: dict[str, Any]) -> positions_pb2
 
 
 def _es_response_to_chess_positions_pb(
-    response: dict[str, Any]
+    response: dict[str, Any], fen_encodings: list[str]
 ) -> list[positions_pb2.ChessPosition]:
-    chess_positions_pb = []
+    chess_positions_pb = [None] * len(fen_encodings)
     for bucket in response["aggregations"]["positions"]["buckets"]:
         chess_position_pb = _es_bucket_to_chess_position_pb(bucket)
-        chess_positions_pb.append(chess_position_pb)
+        chess_positions_pb[fen_encodings.index(chess_position_pb.fen_encoding)] = chess_position_pb
+
+    if None in chess_positions_pb:
+        chess_positions_pb = [elem for elem in chess_positions_pb if elem is not None]
+        logger.warning(
+            "elasticsearch returned less positions than the number of similar positions found",
+            {
+                "nr_similar_positions": len(fen_encodings),
+                "nr_chess_positions": len(chess_positions_pb),
+            },
+        )
 
     return chess_positions_pb
 
@@ -197,7 +207,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
     def _get_similar_chess_position_fen_encodings(
         self, similarity_encoding: str, *, page_size: int, page_token: str
-    ) -> tuple[list[str], int, str]:
+    ) -> tuple[list[str], str]:
         query = es_query.get_similar_positions_query(similarity_encoding)
         if not page_token:
             with tracer.start_as_current_span("Elasticsearch/positions/_search"):
@@ -218,7 +228,6 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             chess_position["_source"]["position"]["fen_encoding"]
             for chess_position in response["hits"]["hits"]
         ]
-        total_size = len(fen_encodings)
         next_page_token = response["_scroll_id"]
 
         trace.get_current_span().add_event(
@@ -228,22 +237,18 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
                     f"{(chess_position['_source']['position']['fen_encoding'], chess_position['_score'])}"
                     for chess_position in response["hits"]["hits"]
                 ],
-                "total_size": total_size,
+                "total_size": len(fen_encodings),
                 "next_page_token": next_page_token,
             },
         )
 
-        return (fen_encodings, total_size, next_page_token)
+        return (fen_encodings, next_page_token)
 
     @_exception_handler
     def get_chess_positions_pb(
         self, similarity_encoding: str, page_size: int, page_token: str
     ) -> tuple[list[positions_pb2.ChessPosition], int, str]:
-        (
-            fen_encodings,
-            total_size,
-            next_page_token,
-        ) = self._get_similar_chess_position_fen_encodings(
+        (fen_encodings, next_page_token,) = self._get_similar_chess_position_fen_encodings(
             similarity_encoding, page_size=page_size, page_token=page_token
         )
         (query, runtime_mappings, aggs) = es_query.get_chess_positions_query(fen_encodings)
@@ -258,13 +263,8 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
             )
 
         with tracer.start_as_current_span("output: pb conversion"):
-            chess_positions_pb = _es_response_to_chess_positions_pb(response)
-        if total_size != len(chess_positions_pb):
-            logger.warning(
-                "elasticsearch returned less positions than the number of similar positions found",
-                {"nr_similar_positions": total_size, "nr_chess_positions": len(chess_positions_pb)},
-            )
-            total_size = len(chess_positions_pb)
+            chess_positions_pb = _es_response_to_chess_positions_pb(response, fen_encodings)
+        total_size = len(chess_positions_pb)
 
         return chess_positions_pb, total_size, next_page_token
 
