@@ -18,11 +18,18 @@ const client = new services.BackendServiceClient(
 router.get('/', function(req, res, next) {
 	var request = new messages.GetChessPositionsRequest();
 	request.setFenEncoding(req.query.fen);
+	request.setPageSize(`${process.env.DEFAULT_PAGE_SIZE}`)
+	if (typeof req.query.token != "undefined") {
+		request.setPageToken(`${req.query.token}`)
+	} else {
+		request.setPageToken("")
+	}
 
 	var positions;
 
 	client.getChessPositions(request, function(err, response) {
 		var positionsPb = response.getPositionsList();
+		var nextPageToken = response.getNextPageToken();
 
 		positions = [];
 		for (let positionPb of positionsPb) {
@@ -44,7 +51,7 @@ router.get('/', function(req, res, next) {
 			});
 		}
 
-		res.render('search', { title: 'CheSSE', queryFenEncoding: req.query.fen, positions: positions });
+		res.render('search', { title: 'CheSSE', queryFenEncoding: req.query.fen, positions: positions, nextPageToken: nextPageToken });
   	});
 });
 
