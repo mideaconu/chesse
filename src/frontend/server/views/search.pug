@@ -13,6 +13,10 @@ block scripts
         src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
         crossorigin="anonymous")
+    script(
+        src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js",
+        integrity="sha384-+83ma0Y8eQWtTIhmx2gjueu3BY0XU4gX4EkL12u3M+WPc4SDskKaIpIL7QiB8ikh"
+        crossorigin="anonymous")
 
 block content
     #search-container
@@ -23,26 +27,42 @@ block content
         #search-container-search-board-area
             #search-board
         #search-container-search-results-area
-            - var i = 0
             each position in positions
-                - i++
-                - var resultBoardId = "result-board-" + i
+                -function create_UUID(){
+                -    var dt = new Date().getTime();
+                -    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                -        var r = (dt + Math.random()*16)%16 | 0;
+                -        dt = Math.floor(dt/16);
+                -        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+                -    });
+                -    return uuid;
+                -}
+                - var uuid = create_UUID()
+                - var resultBoardId = `result-board-${uuid}`
                 a(href=`/games?fen=${position.fenEncoding}`).search-result
                     div(id=resultBoardId).result-board
                     .result-stats
                         p #[strong #{position.stats.nrGames}] games found
                         p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} avg, #{position.stats.rating.max} max
                         p Win rate: #{Math.round(position.stats.result.whiteWinPct * 100) / 100}% white, #{Math.round(position.stats.result.drawPct * 100) / 100}% draw, #{Math.round(position.stats.result.blackWinPct * 100) / 100}% black
-                script.
-                    var board_config = {
-                        pieceTheme: 'images/chesspieces/default/{piece}.png',
-                        position: "#{position.fenEncoding}",
-                        showNotation: false
-                    };
-                    Chessboard("#{resultBoardId}", board_config);
+                    script.
+                        var board_config = {
+                            pieceTheme: 'images/chesspieces/default/{piece}.png',
+                            position: "#{position.fenEncoding}",
+                            showNotation: false
+                        };
+                        Chessboard("#{resultBoardId}", board_config);
     script.
         var side_board_config = {
             pieceTheme: 'images/chesspieces/default/{piece}.png',
             position: "#{queryFenEncoding}"
         };
         Chessboard("search-board", side_board_config);
+
+        $('#search-container-search-results-area').infiniteScroll({
+            path: function() {
+                return `/search?fen=#{queryFenEncoding}&token=#{nextPageToken}`;
+            },
+            append: '.search-result',
+            history: false,
+        });
