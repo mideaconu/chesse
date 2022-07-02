@@ -19,6 +19,12 @@ const client = new services.BackendServiceClient(
 router.get('/', function(req, res, next) {
 	var request = new messages.GetChessGamesRequest();
 	request.setFenEncoding(req.query.fen);
+	request.setPageSize(50)//(`${process.env.DEFAULT_PAGE_SIZE}`)
+	if (typeof req.query.token != "undefined") {
+		request.setPageToken(`${req.query.token}`)
+	} else {
+		request.setPageToken("")
+	}
 
 	var games = [];
     client.getChessGames(request, function(err, response) {
@@ -26,6 +32,7 @@ router.get('/', function(req, res, next) {
             // TODO
         } else {
             var gamesPb = response.getGamesList();
+            var nextPageToken = response.getNextPageToken();
             for (let gamePb of gamesPb) {
                 games.push({
                     id: gamePb.getId(),
@@ -52,6 +59,7 @@ router.get('/', function(req, res, next) {
                 });
             }
             res.locals.games = games
+            res.locals.nextPageToken = nextPageToken
             next();
 		}
   	});
@@ -83,7 +91,7 @@ router.get('/', function(req, res, next) {
                 }
             };
         }
-        res.render('games', { title: 'CheSSE', position: position, games: res.locals.games });
+        res.render('games', { title: 'CheSSE', position: position, games: res.locals.games, nextPageToken: res.locals.nextPageToken });
     });
 });
 

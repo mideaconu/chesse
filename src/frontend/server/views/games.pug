@@ -13,6 +13,10 @@ block scripts
         src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
         crossorigin="anonymous")
+    script(
+        src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js",
+        integrity="sha384-+83ma0Y8eQWtTIhmx2gjueu3BY0XU4gX4EkL12u3M+WPc4SDskKaIpIL7QiB8ikh"
+        crossorigin="anonymous")
 
 block content
     #games-container
@@ -20,46 +24,58 @@ block content
             #title CheSSE
             hr
             #subtitle Chess Similarity Search Engine
+
         #games-container-board-area
             #position-board
+
         #games-container-position-stats-area 
             p #{position.stats.nrGames} games found
             p Rating: #{position.stats.rating.min} min, #{position.stats.rating.avg} avg, #{position.stats.rating.max} max
             p Win rate: #{Math.round(position.stats.result.whiteWinPct * 100) / 100}% white, #{Math.round(position.stats.result.drawPct * 100) / 100}% draw, #{Math.round(position.stats.result.blackWinPct * 100) / 100}% black
+        
         #games-container-games-list-area
-            table(cellspacing="0")#games-table
-                tr 
-                    th WHITE
-                    th BLACK
-                    th EVENT
-                    th DATE 
-                    th RD
-                    th RES
-                    th # MVS
-                each game in games
-                    tr(data-href=`/games/${encodeURIComponent(game.id)}`).clickable-row.game-item
-                        td #{game.white.name} (#{game.white.elo})
-                        td #{game.black.name} (#{game.black.elo})
-                        td #{game.context.event}
-                        td #{game.context.date}
-                        td #{game.context.round}
-                        if game.result == 1
-                            td 1-0
-                        else if game.result == 0.5
-                            td 1/2
-                        else if game.result == 0
-                            td 0-1
-                        else 
-                            td N/A
-                        td #{Math.round(game.moves.length/2)}
+            #games-table
+                table(cellspacing="0")
+                    thead
+                        tr 
+                            th WHITE
+                            th BLACK
+                            th EVENT
+                            th DATE 
+                            th RD
+                            th RES
+                            th # MVS
+
+                    tbody#abc
+                            each game in games
+                                tr(onclick=`window.location='/games/${encodeURIComponent(game.id)}'`).game-item
+                                    td #{game.white.name} (#{game.white.elo})
+                                    td #{game.black.name} (#{game.black.elo})
+                                    td #{game.context.event}
+                                    td #{game.context.date}
+                                    td #{game.context.round}
+                                    if game.result == 1
+                                        td 1-0
+                                    else if game.result == 0.5
+                                        td 1/2
+                                    else if game.result == 0
+                                        td 0-1
+                                    else 
+                                        td N/A
+                                    td #{Math.round(game.moves.length/2)}
+
     script.
         var board_config = {
             pieceTheme: 'images/chesspieces/default/{piece}.png',
             position: "#{position.fenEncoding}"
         };
         Chessboard("position-board", board_config);
-        jQuery(document).ready(function($) {
-            $(".clickable-row").click(function() {
-                window.location = $(this).data("href");
-            });
+
+        $('#abc').infiniteScroll({
+            path: function() {
+                return `/games?fen=#{position.fenEncoding}&token=#{nextPageToken}`;
+            },
+            append: '.game-item',
+            history: false,
+            elementScroll: '#games-table',
         });
