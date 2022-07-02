@@ -41,7 +41,7 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
             positions.
             page_size (str): The maximum number of chess positions to return.
             page_token (str): Pointer to a specific chess position where to
-                start from in the list.
+            start from in the list.
 
         Raises:
             InternalServerError: If there is a server side error raised upon
@@ -69,23 +69,27 @@ class AbstractSearchEngineController(metaclass=meta.SingletonABCMeta):
         raise NotImplementedError()
 
     @abstractmethod
-    def get_chess_games_pb(self, **kwargs) -> list[games_pb2.ChessGame]:
-        """Returns a collection of chess games. One of the following sets of
-        arguments can be passed to the function:
-
-        - (fen_encoding): Returns the chess games for the position given as the
-        FEN encoding.
+    def get_chess_games_pb(
+        self, fen_encoding: str, page_size: int, page_token: str
+    ) -> tuple[list[games_pb2.ChessGame], int, str]:
+        """Returns a collection of chess games.
 
         Args:
             fen_encoding (str): Forsyth-Edwards Notation (FEN) encoding of a
             chess position. Example: the encoding for the starting position is
             rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
+            page_size (str): The maximum number of chess games to return.
+            page_token (str): Pointer to a specific chess game where to start
+            from in the list.
 
         Raises:
             InternalServerError: If there is a server side error raised upon
             making the request.
 
         Returns:
-            list[games_pb2.ChessGame]: List of chess games pb objects.
+            tuple
+                list[positions_pb2.ChessGame]: List of chess game pb objects.
+                int: The total number of elements in the returned list.
+                str: The token for the next batch of elements.
         """
         raise NotImplementedError()
