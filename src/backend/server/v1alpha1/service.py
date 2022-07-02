@@ -116,17 +116,25 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
 
         with tracer.start_as_current_span("input: validation"):
             validation.validate_fen_encoding(request.fen_encoding)
+            validation.validate_pagination_params(
+                page_size=request.page_size, page_token=request.page_token
+            )
 
-        chess_games_pb = self.search_engine_ctrl.get_chess_games_pb(
-            fen_encoding=request.fen_encoding
+        (chess_games_pb, total_size, next_page_token,) = self.search_engine_ctrl.get_chess_games_pb(
+            fen_encoding=request.fen_encoding,
+            page_size=request.page_size,
+            page_token=request.page_token,
         )
-        response = backend_service_pb2.GetChessGamesResponse(games=chess_games_pb)
+        response = backend_service_pb2.GetChessGamesResponse(
+            games=chess_games_pb, total_size=total_size, next_page_token=next_page_token
+        )
 
         trace.get_current_span().add_event(
             "request successful",
             {
-                "response.nr_games": f"{len(chess_games_pb)}",
+                "response.total_size": str(total_size),
                 "response.games.ids": ", ".join([game.id for game in chess_games_pb]),
+                "response.next_page_token": next_page_token,
             },
         )
 
