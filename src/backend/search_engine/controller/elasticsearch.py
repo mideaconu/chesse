@@ -284,10 +284,19 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         return chess_game_pb
 
-    def _get_chess_games_by_fen_encoding(self, fen_encoding: str) -> list[games_pb2.ChessGame]:
+    @_exception_handler
+    def get_chess_games_pb(
+        self, fen_encoding: str, page_size: int, page_token: str
+    ) -> tuple[list[games_pb2.ChessGame], int, str]:
         query = es_query.get_chess_games_query(fen_encoding)
-        with tracer.start_as_current_span("Elasticsearch/games/_search"):
-            response = self.client.search(index="games", query=query, size=self.max_result_size)
+        if not page_token:
+            with tracer.start_as_current_span("Elasticsearch/games/_search"):
+                response = self.client.search(
+                    index="games", query=query, size=page_size, scroll=self.scroll_timeout
+                )
+        else:
+            with tracer.start_as_current_span("Elasticsearch/_search/scroll"):
+                response = self.client.scroll(scroll_id=page_token, scroll=self.scroll_timeout)
 
         if response["_shards"]["total"] != response["_shards"]["successful"]:
             raise exception.SearchEngineQueryError(
@@ -296,15 +305,7 @@ class ElasticsearchController(controller_if.AbstractSearchEngineController):
 
         with tracer.start_as_current_span("output: pb conversion"):
             chess_games_pb = _es_response_to_chess_games_pb(response)
+        total_size = len(chess_games_pb)
+        next_page_token = response["_scroll_id"]
 
-        return chess_games_pb
-
-    @_exception_handler
-    def get_chess_games_pb(self, **kwargs: Any) -> list[games_pb2.ChessGame]:
-        match list(kwargs.keys()):
-            case ["fen_encoding"]:
-                return self._get_chess_games_by_fen_encoding(fen_encoding=kwargs["fen_encoding"])
-            case _:
-                raise exception.IllegalArgumentError(
-                    f"Invalid arguments to function get_chess_positions: {kwargs}."
-                )
+        return chess_games_pb, total_size, next_page_token
