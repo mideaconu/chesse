@@ -6,332 +6,94 @@
 /* Title */
 /* Header */
 /* Footer */
-/* Buttons */
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-#sitename {
-  color: #b58863;
-  font-size: 27px;
-  font-weight: 500;
-  padding: 15px 30px;
-  text-decoration: none;
+/* Elements */
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.element {
-  color: #f0d9b5;
-  font-size: 22px;
-  font-weight: 300;
-  padding: 15px 30px;
-  text-decoration: none;
-}
-
-.element:hover {
-  color: #b58863;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  padding: 5px 20px;
-  background-color: #444;
-  height: 60px;
-}
-
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-footer {
-  background-color: #444;
-  height: 60px;
-  align-items: center;
-}
-
-.credits {
-  color: #f0d9b5;
-  font-size: 22px;
-  text-align: center;
-  margin-top: 18px;
-}
-
-#index-container {
+body {
   background-color: #fff;
+  font-family: "Raleway", sans-serif;
+  letter-spacing: 1px;
+  /* Grid layout for header and footer. */
   display: grid;
-  grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
-  grid-template-rows: 95px 78px 127px 650px 100px auto;
-  grid-template-areas: "title . . ." "title search-board . ." "title search-board side-buttons ." ". search-board side-buttons ." ". search-button . ." ". . . .";
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
 }
 
-#index-container-title-area {
-  grid-area: title;
-  place-self: center;
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
-#index-container-search-board-area {
-  grid-area: search-board;
-  justify-self: center;
-  margin: 0 auto;
+a {
+  text-decoration: none;
 }
-#index-container-search-board-area #search-board {
+
+.button {
+  color: #b58863;
+  background-color: #fff;
+  letter-spacing: 2px;
+  border-color: #b58863;
+  border-radius: 10px;
+  border-width: 1px;
+  transition: 0.3s;
+}
+.button:hover {
+  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.5);
+}
+
+.button--fa {
+  font-family: "Raleway", sans-serif;
+}
+.button--fa::before {
+  font-family: "FontAwesome";
+}
+
+#search-board {
   width: 650px;
 }
 
-#index-container-search-button-area {
-  grid-area: search-button;
-  place-self: center;
-}
-#index-container-search-button-area #search-button {
-  text-align: center;
-  font-size: 25px;
-  font-weight: 300;
-  height: 65px;
-  width: 200px;
-  padding: 12px;
-}
-
-#index-container-side-buttons-area {
-  grid-area: side-buttons;
-  justify-self: left;
-  margin: 0 auto;
-}
-#index-container-side-buttons-area .side-button.fa::before {
-  font-family: "FontAwesome";
-}
-#index-container-side-buttons-area .side-button.fa {
-  font-family: "Raleway", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  text-align: left;
-  width: 85%;
-  margin: 7px;
-  padding: 13px;
-}
-
-/* ----------- iPhone 6, 6S, 7 and 8 ----------- */
-/* Portrait and Landscape */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
-  #start-button {
-    text-align: center;
-  }
-
-  #clear-button {
-    text-align: center;
-  }
-
-  #flip-button {
-    text-align: center;
-  }
-}
-/* Portrait */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
-  .search-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto, 1fr, auto, auto;
-    grid-template-areas: "title" "util-buttons" "search-board" "search-button";
-  }
-
-  #title {
-    text-align: center;
-  }
-
-  #subtitle {
-    text-align: center;
-  }
-
-  .util-buttons {
-    padding: 20px 0;
-  }
-}
-/* Landscape */
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
-  .search-container {
-    background-color: white;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto, 1fr, auto;
-    grid-template-areas: "title search-board" "util-buttons search-board" "util-buttons search-button";
-    gap: 10px;
-  }
-
-  .util-buttons {
-    padding: 0;
-  }
-
-  #search-board {
-    width: 95%;
-    margin: 0 auto;
-    padding: 40px 0;
-    grid-area: search-board;
-    place-self: center;
-  }
-}
-/* ----------- Non-Retina Screens ----------- */
-/* ----------- Retina Screens ----------- */
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-#sitename {
-  color: #b58863;
-  font-size: 27px;
-  font-weight: 500;
-  padding: 15px 30px;
-  text-decoration: none;
-}
-
-.element {
-  color: #f0d9b5;
-  font-size: 22px;
-  font-weight: 300;
-  padding: 15px 30px;
-  text-decoration: none;
-}
-
-.element:hover {
-  color: #b58863;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  padding: 5px 20px;
-  background-color: #444;
-  height: 60px;
-}
-
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-footer {
-  background-color: #444;
-  height: 60px;
-  align-items: center;
-}
-
-.credits {
-  color: #f0d9b5;
-  font-size: 22px;
-  text-align: center;
-  margin-top: 18px;
-}
-
-#search-container {
-  background-color: #fff;
-  display: grid;
-  grid-template-columns: 1fr 1.5fr 0.5fr;
-  grid-template-rows: 300px 450px auto;
-  grid-template-areas: "title search-results ." "search-board search-results ." ". search-results .";
-}
-
-#search-container-title-area {
-  grid-area: title;
-  place-self: center;
-}
-
-#search-container-search-board-area {
-  grid-area: search-board;
-  place-self: center;
-}
-#search-container-search-board-area #search-board {
+#side-board {
   width: 400px;
   margin: 0 auto;
 }
 
-#search-container-search-results-area {
-  grid-area: search-results;
-  place-self: left;
-  margin: 50px;
-}
-#search-container-search-results-area .search-result {
-  display: grid;
-  grid-template-columns: 300px 1fr auto;
-  grid-template-areas: "board stats .";
-  padding: 15px 30px;
-  font-size: 20px;
+.title {
+  text-align: center;
   color: #444;
-  text-decoration: none;
-  border-radius: 10px;
-}
-#search-container-search-results-area .search-result:hover {
-  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.5);
-}
-#search-container-search-results-area .result-board {
-  grid-area: board;
-  place-self: left;
-  width: 275px;
-}
-#search-container-search-results-area .result-stats {
-  grid-area: stats;
-  place-self: left;
-}
-#search-container-search-results-area .result-stats p {
-  padding: 5px 0;
+  font-size: 100px;
+  font-weight: 300;
+  letter-spacing: 8px;
 }
 
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-#sitename {
-  color: #b58863;
-  font-size: 27px;
-  font-weight: 500;
-  padding: 15px 30px;
-  text-decoration: none;
+.subtitle {
+  margin: 10px;
+  text-align: center;
+  font-size: 29px;
+  font-weight: 400;
 }
 
-.element {
+.footer {
+  background-color: #444;
+  height: 60px;
+  align-items: center;
+}
+
+.footer__credits {
   color: #f0d9b5;
   font-size: 22px;
-  font-weight: 300;
-  padding: 15px 30px;
-  text-decoration: none;
+  text-align: center;
+  margin-top: 18px;
 }
 
-.element:hover {
-  color: #b58863;
-}
-
-header {
+.header {
   display: flex;
   align-items: center;
   padding: 5px 20px;
@@ -339,159 +101,22 @@ header {
   height: 60px;
 }
 
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-footer {
-  background-color: #444;
-  height: 60px;
-  align-items: center;
+.header__logo {
+  max-height: 100%;
+  padding: 0 30px;
 }
 
-.credits {
-  color: #f0d9b5;
+.header-menu {
   font-size: 22px;
-  text-align: center;
-  margin-top: 18px;
-}
-
-#games-container {
-  background-color: #fff;
-  display: grid;
-  grid-template-columns: 1fr 1.5fr 0.5fr;
-  grid-template-rows: 180px 120px 450px auto;
-  grid-template-areas: "title . ." "title games ." "position-board games ." "position-stats games .";
-}
-
-#games-container-title-area {
-  grid-area: title;
-  place-self: center;
-}
-
-#games-container-board-area {
-  grid-area: position-board;
-  place-self: center;
-}
-#games-container-board-area #position-board {
-  width: 400px;
-  margin: 0 auto;
-}
-
-#games-container-position-stats-area {
-  grid-area: position-stats;
-  align-self: left;
-}
-#games-container-position-stats-area p {
-  font-size: 20px;
-  margin: 5px 175px;
-}
-
-#games-container-games-list-area {
-  grid-area: games;
-  place-self: left;
-}
-#games-container-games-list-area #games-table {
-  width: 100%;
-  height: 450px;
-  overflow: auto;
-}
-#games-container-games-list-area #games-table table {
-  table-layout: fixed;
-}
-#games-container-games-list-area #games-table thead tr th {
-  position: sticky;
-  top: 0;
-  z-index: 99;
-}
-#games-container-games-list-area #games-table tbody tr {
-  cursor: pointer;
-}
-#games-container-games-list-area #games-table th, #games-container-games-list-area #games-table td {
-  text-align: left;
-  padding: 10px;
-}
-#games-container-games-list-area #games-table th {
-  font-size: 18px;
-  background-color: #f0d9b5;
-}
-#games-container-games-list-area #games-table .game-item {
-  padding: 10px;
-  border-radius: 5px;
-  font-family: "Raleway", sans-serif;
-  font-size: 18px;
-}
-#games-container-games-list-area #games-table .game-item:hover {
-  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.5);
-}
-
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-#sitename {
-  color: #b58863;
-  font-size: 27px;
-  font-weight: 500;
   padding: 15px 30px;
-  text-decoration: none;
 }
 
-.element {
+.header-menu__item {
   color: #f0d9b5;
-  font-size: 22px;
   font-weight: 300;
-  padding: 15px 30px;
-  text-decoration: none;
 }
-
-.element:hover {
+.header-menu__item:hover {
   color: #b58863;
-}
-
-header {
-  display: flex;
-  align-items: center;
-  padding: 5px 20px;
-  background-color: #444;
-  height: 60px;
-}
-
-/* Colour scheme */
-/* Shadow */
-/* Chess board sizes */
-/* Font */
-/* Title */
-/* Header */
-/* Footer */
-/* Buttons */
-footer {
-  background-color: #444;
-  height: 60px;
-  align-items: center;
-}
-
-.credits {
-  color: #f0d9b5;
-  font-size: 22px;
-  text-align: center;
-  margin-top: 18px;
 }
 
 #game-container {
@@ -578,59 +203,171 @@ footer {
   cursor: pointer;
 }
 
-html {
-  box-sizing: border-box;
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-body {
+#games-container {
   background-color: #fff;
-  min-height: 100vh;
-  font-family: "Raleway", sans-serif;
-  letter-spacing: 1px;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  grid-template-rows: 180px 120px 450px auto;
+  grid-template-areas: "title . ." "title games ." "position-board games ." "position-stats games .";
 }
 
-button {
+#games-container-title-area {
+  grid-area: title;
+  place-self: center;
+}
+
+#games-container-board-area {
+  grid-area: position-board;
+  place-self: center;
+}
+#games-container-board-area #position-board {
+  width: 400px;
+  margin: 0 auto;
+}
+
+#games-container-position-stats-area {
+  grid-area: position-stats;
+  align-self: left;
+}
+#games-container-position-stats-area p {
+  font-size: 20px;
+  margin: 5px 175px;
+}
+
+#games-container-games-list-area {
+  grid-area: games;
+  place-self: left;
+}
+#games-container-games-list-area #games-table {
+  width: 100%;
+  height: 450px;
+  overflow: auto;
+}
+#games-container-games-list-area #games-table table {
+  table-layout: fixed;
+}
+#games-container-games-list-area #games-table thead tr th {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+#games-container-games-list-area #games-table tbody tr {
   cursor: pointer;
-  color: #b58863;
-  background-color: #fff;
-  letter-spacing: 2px;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: #b58863;
-  transition: 0.3s;
 }
-
-button:hover {
+#games-container-games-list-area #games-table th, #games-container-games-list-area #games-table td {
+  text-align: left;
+  padding: 10px;
+}
+#games-container-games-list-area #games-table th {
+  font-size: 18px;
+  background-color: #f0d9b5;
+}
+#games-container-games-list-area #games-table .game-item {
+  padding: 10px;
+  border-radius: 5px;
+  font-family: "Raleway", sans-serif;
+  font-size: 18px;
+}
+#games-container-games-list-area #games-table .game-item:hover {
   box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.5);
 }
 
-/* Title */
-#title {
-  text-align: center;
-  color: #444;
-  font-size: 100px;
-  font-weight: 300;
-  letter-spacing: 8px;
+.homepage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
+  grid-template-rows: 95px 78px 127px 650px 100px auto;
+  grid-template-areas: "title . . ." "title search-board . ." "title search-board side-buttons ." ". search-board side-buttons ." ". search-button . ." ". . . .";
 }
 
-#subtitle {
-  margin: 10px;
-  text-align: center;
-  font-size: 29px;
-  font-weight: 400;
+.homepage-grid__title {
+  grid-area: title;
+  place-self: center;
+}
+
+.homepage-grid__search-board {
+  grid-area: search-board;
+  justify-self: center;
+  margin: 0 auto;
+}
+
+.homepage-grid__search-button {
+  grid-area: search-button;
+  place-self: center;
+}
+
+.homepage-grid__side-button {
+  grid-area: side-buttons;
+  justify-self: left;
+  margin: 0 auto;
+}
+
+.button--search {
+  font-size: 25px;
+  font-weight: 300;
+  height: 65px;
+  width: 200px;
+  padding: 12px;
+}
+
+.button--side {
+  text-align: left;
+  font-size: 20px;
+  font-weight: 500;
+  width: 300px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.positions-page-grid {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 0.5fr;
+  grid-template-rows: 300px 450px auto;
+  grid-template-areas: "title search-results ." "search-board search-results ." ". search-results .";
+}
+
+.positions-page-grid__title {
+  grid-area: title;
+  place-self: center;
+}
+
+.positions-page-grid__side-board {
+  grid-area: search-board;
+  place-self: center;
+}
+
+.positions-page-grid__search-results {
+  grid-area: search-results;
+  place-self: left;
+  margin: 50px;
+}
+
+.search-result {
+  display: grid;
+  grid-template-columns: 300px 1fr auto;
+  grid-template-areas: "board stats .";
+  padding: 15px 30px;
+  font-size: 20px;
+  color: #444;
+  text-decoration: none;
+  border-radius: 10px;
+}
+.search-result:hover {
+  box-shadow: 2px 8px 15px rgba(68, 68, 68, 0.5);
+}
+
+.result-board {
+  grid-area: board;
+  place-self: left;
+  width: 275px;
+}
+
+.result-stats {
+  grid-area: stats;
+  place-self: left;
+}
+.result-stats p {
+  padding: 5px 0;
 }
 
 /*# sourceMappingURL=style.css.map */
