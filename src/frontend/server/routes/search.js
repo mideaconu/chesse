@@ -16,7 +16,7 @@ const client = new services.BackendServiceClient(
 
 /* GET /search. */
 router.get('/', function(req, res, next) {
-	var request = new messages.GetChessPositionsRequest();
+	var request = new messages.ListChessPositionsRequest();
 	request.setFenEncoding(req.query.fen);
 	request.setPageSize(`${process.env.DEFAULT_PAGE_SIZE}`)
 	if (typeof req.query.token != "undefined") {
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
 
 	var positions;
 
-	client.getChessPositions(request, function(err, response) {
+	client.listChessPositions(request, function(err, response) {
 		var positionsPb = response.getPositionsList();
 		var nextPageToken = response.getNextPageToken();
 
