@@ -17,7 +17,7 @@ const client = new services.BackendServiceClient(
 
 /* GET /games. */
 router.get('/', function(req, res, next) {
-	var request = new messages.GetChessGamesRequest();
+	var request = new messages.ListChessGamesRequest();
 	request.setFenEncoding(req.query.fen);
 	request.setPageSize(50)//(`${process.env.DEFAULT_PAGE_SIZE}`)
 	if (typeof req.query.token != "undefined") {
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
 	}
 
 	var games = [];
-    client.getChessGames(request, function(err, response) {
+    client.listChessGames(request, function(err, response) {
         if (err) {
             // TODO
         } else {
