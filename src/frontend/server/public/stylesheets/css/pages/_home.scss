@@ -1,0 +1,53 @@
+.homepage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
+    grid-template-rows: 95px 78px 127px 650px 100px auto;
+    grid-template-areas:
+        "title . . ."
+        "title search-board . ."
+        "title search-board side-buttons ."
+        ". search-board side-buttons ."
+        ". search-button . ."
+        ". . . .";
+}
+
+.homepage-grid__title {
+    grid-area: title;
+    place-self: center;
+}
+
+.homepage-grid__search-board  {
+    grid-area: search-board;
+    justify-self: center;
+    margin: 0 auto;
+}
+
+.homepage-grid__search-button {
+    grid-area: search-button;
+    place-self: center;
+}
+
+.homepage-grid__side-button {
+    grid-area: side-buttons;
+    justify-self: left;
+    margin: 0 auto;
+}
+
+.button--search {
+    font-size: 25px;
+    font-weight: $font-weight-light;
+
+    height: 65px;
+    width: 200px;
+    padding: 12px;
+}
+
+.button--side {
+    text-align: left;
+    font-size: 20px;
+    font-weight: $font-weight-medium;
+
+    width: 300px;
+    margin: 5px;
+    padding: 10px;
+}

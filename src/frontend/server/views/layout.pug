@@ -3,17 +3,19 @@ html
 	head
 		meta(name='viewport', content='width=device-width, initial-scale=1')
 		base(href="/")
+		link(rel="icon", type="image/x-icon", href="/images/logo/chesse.ico?v=1")
+		link(rel="shortcut icon", type="image/x-icon", href="/images/logo/chesse.ico?v=1")
 		style
 			include ../public/stylesheets/css/style.css
 		title #{title}
 		block scripts
 	body
-		header
-			a#sitename(href="/") CheSSE
-				//- span#domain(href="/") .io
-			a.element(href="/") Home
+		header.header
+			a.header(href="/")
+				img.header__logo(src="/images/logo/chesse.png")
+			a.header-menu.header-menu__item(href="/") Home
 		block content
-		footer
-			.credits &copy; Mihai Ionut Deaconu 
+		footer.footer
+			.footer__credits &copy; Mihai Ionut Deaconu 
 				script.
 					document.write(/\d{4}/.exec(Date())[0])

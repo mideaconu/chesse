@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    background-color: $dark-colour;
+    height: $header-height;
+}
+
+.header__logo {
+    max-height: 100%;
+    padding: $header-logo-padding;
+}
+
+.header-menu {
+    font-size: 22px;
+    padding: $header-elements-padding;
+}
+
+.header-menu__item {
+    color: $light-squares-colour;
+    font-weight: $font-weight-light;
+
+    &:hover {
+        color: $dark-squares-colour;
+    }
+}

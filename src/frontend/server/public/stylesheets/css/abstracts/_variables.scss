@@ -14,7 +14,7 @@ $side-board-size: 400px;
 $result-board-size: 275px;
 
 /* Font */
-$font-family: "Raleway", sans-serif;
+$font-family: ("Raleway", sans-serif);
 $font-family-icons: "FontAwesome";
 
 $font-weight-light: 300;
@@ -34,11 +34,12 @@ $subtitle-font-size: 29px;
 
 /* Header */
 $header-height: 60px;
+$header-logo-padding: 0 30px;
 $header-elements-padding: 15px 30px;
 
 /* Footer */
 $footer-height: 60px;
 $footer-font-size: 23px;
 
-/* Buttons */
+/* Elements */
 $border-radius: 10px;

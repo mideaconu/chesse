@@ -1,0 +1,24 @@
+.button {
+    color: $dark-squares-colour;
+    background-color: $light-colour;
+
+    letter-spacing: 2px;
+
+    border-color: $dark-squares-colour;
+    border-radius: $border-radius;
+    border-width: 1px;
+
+    transition: 0.3s;
+
+    &:hover {
+        box-shadow: $border-shadow;
+    }
+}
+
+.button--fa {
+    font-family: $font-family;
+
+    &::before {
+        font-family: $font-family-icons;
+    }
+}

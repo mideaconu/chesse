@@ -5,39 +5,26 @@ block scripts
         href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css",
         integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU",
         crossorigin="anonymous")
-    script(
-        src="https://code.jquery.com/jquery-3.5.1.min.js",
+    script(src="https://code.jquery.com/jquery-3.5.1.min.js",
         integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2",
         crossorigin="anonymous")
-    script(
-        src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
+    script(src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js",
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD",
         crossorigin="anonymous")
-    script(
-        src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js",
+    script(src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js",
         integrity="sha384-+83ma0Y8eQWtTIhmx2gjueu3BY0XU4gX4EkL12u3M+WPc4SDskKaIpIL7QiB8ikh"
         crossorigin="anonymous")
 
 block content
-    #search-container
-        #search-container-title-area
-            #title CheSSE
-            hr
-            #subtitle Chess Similarity Search Engine
-        #search-container-search-board-area
-            #search-board
-        #search-container-search-results-area
+    .positions-page-grid
+        .positions-page-grid__title
+            include includes/title.pug
+        .positions-page-grid__side-board
+            #side-board
+        .positions-page-grid__search-results
             each position in positions
-                -function create_UUID(){
-                -    var dt = new Date().getTime();
-                -    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                -        var r = (dt + Math.random()*16)%16 | 0;
-                -        dt = Math.floor(dt/16);
-                -        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-                -    });
-                -    return uuid;
-                -}
-                - var uuid = create_UUID()
+                include includes/uuid.js.pug
+                - var uuid = createUUID()
                 - var resultBoardId = `result-board-${uuid}`
                 a(href=`/games?fen=${position.fenEncoding}`).search-result
                     div(id=resultBoardId).result-board
@@ -53,11 +40,10 @@ block content
                         };
                         Chessboard("#{resultBoardId}", board_config);
     script.
-        var side_board_config = {
+        Chessboard("side-board", {
             pieceTheme: 'images/chesspieces/default/{piece}.png',
             position: "#{queryFenEncoding}"
-        };
-        Chessboard("search-board", side_board_config);
+        });
 
         $('#search-container-search-results-area').infiniteScroll({
             path: function() {

@@ -1,13 +1,10 @@
-@import "../common/variables";
-
-
-footer {
+.footer {
     background-color: $dark-colour;
     height: $footer-height;
     align-items: center;
 }
 
-.credits {
+.footer__credits {
     color: $light-squares-colour;
     font-size: 22px;
     text-align: center;

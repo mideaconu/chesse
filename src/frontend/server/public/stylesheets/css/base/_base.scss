@@ -1,0 +1,30 @@
+html {
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: $light-colour;
+
+    font-family: $font-family;
+    letter-spacing: $letter-spacing;
+    
+    /* Grid layout for header and footer. */
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
