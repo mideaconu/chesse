@@ -20,7 +20,7 @@ message GetChessPositionResponse {
 }
 
 // Request to fetch a list of chess positions.
-message GetChessPositionsRequest {
+message ListChessPositionsRequest {
     // Forsyth–Edwards Notation (FEN) encoding of the position to be compared 
     // to. Example: the encoding for the starting position is 
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR. The positions that are most
@@ -35,7 +35,7 @@ message GetChessPositionsRequest {
 }
 
 // Response to fetch a list of chess positions.
-message GetChessPositionsResponse {
+message ListChessPositionsResponse {
     // The chess positions.
     repeated chesse.v1alpha1.ChessPosition positions = 1;
     // Size of the results list. Used for pagination.
@@ -57,7 +57,7 @@ message GetChessGameResponse {
 }
 
 // Request to fetch a list of chess games.
-message GetChessGamesRequest {
+message ListChessGamesRequest {
     // Forsyth–Edwards Notation (FEN) encoding of the position. Example:
     // the encoding for the starting position is
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR.
@@ -71,7 +71,7 @@ message GetChessGamesRequest {
 }
 
 // Response to fetch a list of chess games.
-message GetChessGamesResponse {
+message ListChessGamesResponse {
     // The chess games.
     repeated chesse.v1alpha1.ChessGame games = 1;
     // Size of the results list. Used for pagination.
