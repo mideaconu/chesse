@@ -49,9 +49,9 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
 
         return response
 
-    def GetChessPositions(
-        self, request: backend_service_pb2.GetChessPositionsRequest, context: grpc.ServicerContext
-    ) -> backend_service_pb2.GetChessPositionsResponse:
+    def ListChessPositions(
+        self, request: backend_service_pb2.ListChessPositionsRequest, context: grpc.ServicerContext
+    ) -> backend_service_pb2.ListChessPositionsResponse:
         structlog.threadlocal.bind_threadlocal(request_args=json_format.MessageToDict(request))
 
         with tracer.start_as_current_span("input: validation"):
@@ -74,7 +74,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
             page_size=request.page_size,
             page_token=request.page_token,
         )
-        response = backend_service_pb2.GetChessPositionsResponse(
+        response = backend_service_pb2.ListChessPositionsResponse(
             positions=chess_positions_pb, total_size=total_size, next_page_token=next_page_token
         )
 
@@ -109,9 +109,9 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
 
         return response
 
-    def GetChessGames(
-        self, request: backend_service_pb2.GetChessGamesRequest, context: grpc.ServicerContext
-    ) -> backend_service_pb2.GetChessGamesResponse:
+    def ListChessGames(
+        self, request: backend_service_pb2.ListChessGamesRequest, context: grpc.ServicerContext
+    ) -> backend_service_pb2.ListChessGamesResponse:
         structlog.threadlocal.bind_threadlocal(request_args=json_format.MessageToDict(request))
 
         with tracer.start_as_current_span("input: validation"):
@@ -125,7 +125,7 @@ class BackendService(services_pb2_grpc.BackendServiceServicer, metaclass=meta.Si
             page_size=request.page_size,
             page_token=request.page_token,
         )
-        response = backend_service_pb2.GetChessGamesResponse(
+        response = backend_service_pb2.ListChessGamesResponse(
             games=chess_games_pb, total_size=total_size, next_page_token=next_page_token
         )
 
