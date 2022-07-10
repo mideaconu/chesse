@@ -16,7 +16,7 @@ _sym_db = _symbol_database.Default()
 from chesse.v1alpha1 import backend_service_pb2 as chesse_dot_v1alpha1_dot_backend__service__pb2
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b"\n\x1e\x63hesse/v1alpha1/services.proto\x12\x0f\x63hesse.v1alpha1\x1a%chesse/v1alpha1/backend_service.proto2\xa2\x03\n\x0e\x42\x61\x63kendService\x12g\n\x10GetChessPosition\x12(.chesse.v1alpha1.GetChessPositionRequest\x1a).chesse.v1alpha1.GetChessPositionResponse\x12j\n\x11GetChessPositions\x12).chesse.v1alpha1.GetChessPositionsRequest\x1a*.chesse.v1alpha1.GetChessPositionsResponse\x12[\n\x0cGetChessGame\x12$.chesse.v1alpha1.GetChessGameRequest\x1a%.chesse.v1alpha1.GetChessGameResponse\x12^\n\rGetChessGames\x12%.chesse.v1alpha1.GetChessGamesRequest\x1a&.chesse.v1alpha1.GetChessGamesResponseb\x06proto3"
+    b"\n\x1e\x63hesse/v1alpha1/services.proto\x12\x0f\x63hesse.v1alpha1\x1a%chesse/v1alpha1/backend_service.proto2\xa8\x03\n\x0e\x42\x61\x63kendService\x12g\n\x10GetChessPosition\x12(.chesse.v1alpha1.GetChessPositionRequest\x1a).chesse.v1alpha1.GetChessPositionResponse\x12m\n\x12ListChessPositions\x12*.chesse.v1alpha1.ListChessPositionsRequest\x1a+.chesse.v1alpha1.ListChessPositionsResponse\x12[\n\x0cGetChessGame\x12$.chesse.v1alpha1.GetChessGameRequest\x1a%.chesse.v1alpha1.GetChessGameResponse\x12\x61\n\x0eListChessGames\x12&.chesse.v1alpha1.ListChessGamesRequest\x1a'.chesse.v1alpha1.ListChessGamesResponseb\x06proto3"
 )
 
 
@@ -25,5 +25,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
     DESCRIPTOR._options = None
     _BACKENDSERVICE._serialized_start = 91
-    _BACKENDSERVICE._serialized_end = 509
+    _BACKENDSERVICE._serialized_end = 515
 # @@protoc_insertion_point(module_scope)

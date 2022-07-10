@@ -18,20 +18,20 @@ class BackendServiceStub(object):
             request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionRequest.SerializeToString,
             response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionResponse.FromString,
         )
-        self.GetChessPositions = channel.unary_unary(
-            "/chesse.v1alpha1.BackendService/GetChessPositions",
-            request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsRequest.SerializeToString,
-            response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsResponse.FromString,
+        self.ListChessPositions = channel.unary_unary(
+            "/chesse.v1alpha1.BackendService/ListChessPositions",
+            request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsRequest.SerializeToString,
+            response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsResponse.FromString,
         )
         self.GetChessGame = channel.unary_unary(
             "/chesse.v1alpha1.BackendService/GetChessGame",
             request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGameRequest.SerializeToString,
             response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGameResponse.FromString,
         )
-        self.GetChessGames = channel.unary_unary(
-            "/chesse.v1alpha1.BackendService/GetChessGames",
-            request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesRequest.SerializeToString,
-            response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesResponse.FromString,
+        self.ListChessGames = channel.unary_unary(
+            "/chesse.v1alpha1.BackendService/ListChessGames",
+            request_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesRequest.SerializeToString,
+            response_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesResponse.FromString,
         )
 
 
@@ -44,7 +44,7 @@ class BackendServiceServicer(object):
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
-    def GetChessPositions(self, request, context):
+    def ListChessPositions(self, request, context):
         """Fetch a list of chess positions."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -56,7 +56,7 @@ class BackendServiceServicer(object):
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
-    def GetChessGames(self, request, context):
+    def ListChessGames(self, request, context):
         """Fetch a list of chess games."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
@@ -70,20 +70,20 @@ def add_BackendServiceServicer_to_server(servicer, server):
             request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionRequest.FromString,
             response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionResponse.SerializeToString,
         ),
-        "GetChessPositions": grpc.unary_unary_rpc_method_handler(
-            servicer.GetChessPositions,
-            request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsRequest.FromString,
-            response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsResponse.SerializeToString,
+        "ListChessPositions": grpc.unary_unary_rpc_method_handler(
+            servicer.ListChessPositions,
+            request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsRequest.FromString,
+            response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsResponse.SerializeToString,
         ),
         "GetChessGame": grpc.unary_unary_rpc_method_handler(
             servicer.GetChessGame,
             request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGameRequest.FromString,
             response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGameResponse.SerializeToString,
         ),
-        "GetChessGames": grpc.unary_unary_rpc_method_handler(
-            servicer.GetChessGames,
-            request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesRequest.FromString,
-            response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesResponse.SerializeToString,
+        "ListChessGames": grpc.unary_unary_rpc_method_handler(
+            servicer.ListChessGames,
+            request_deserializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesRequest.FromString,
+            response_serializer=chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -126,7 +126,7 @@ class BackendService(object):
         )
 
     @staticmethod
-    def GetChessPositions(
+    def ListChessPositions(
         request,
         target,
         options=(),
@@ -141,9 +141,9 @@ class BackendService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/chesse.v1alpha1.BackendService/GetChessPositions",
-            chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsRequest.SerializeToString,
-            chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessPositionsResponse.FromString,
+            "/chesse.v1alpha1.BackendService/ListChessPositions",
+            chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsRequest.SerializeToString,
+            chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessPositionsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -184,7 +184,7 @@ class BackendService(object):
         )
 
     @staticmethod
-    def GetChessGames(
+    def ListChessGames(
         request,
         target,
         options=(),
@@ -199,9 +199,9 @@ class BackendService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/chesse.v1alpha1.BackendService/GetChessGames",
-            chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesRequest.SerializeToString,
-            chesse_dot_v1alpha1_dot_backend__service__pb2.GetChessGamesResponse.FromString,
+            "/chesse.v1alpha1.BackendService/ListChessGames",
+            chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesRequest.SerializeToString,
+            chesse_dot_v1alpha1_dot_backend__service__pb2.ListChessGamesResponse.FromString,
             options,
             channel_credentials,
             insecure,
